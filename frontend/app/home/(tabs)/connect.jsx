@@ -1,143 +1,107 @@
 
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, Text, StyleSheet, Button, ScrollView } from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 
 // WebSocket URL for signaling server
 
 
 export default function Connect() {
-  const [isRemoteVideoOn, setIsRemoteVideoOn] = useState(false);
-  const remoteUrl = useRef('ass')
+  
+  
   const socket = new WebSocket('ws://localhost:3000');
   const peerConnection = new RTCPeerConnection();
 
-  // Handling WebSocket messages
-  useEffect(() => {
-    socket.onmessage = async (event) => {
-      console.log(event.data)
-      const message = JSON.parse(event.data);
 
-      if (message.type === 'offer') {
-        await handleOffer(message.offer);
-      } else if (message.type === 'answer') {
-        await handleAnswer(message.answer);
-      } else if (message.type === 'candidate') {
-        handleCandidate(message.candidate);
-      }
-    };
-  }, []);
+  socket.onmessage = async (event) => {
+  const message = JSON.parse(event.data);
 
-  useEffect(() => {
-    console.log("Component has mounted, remoteUrl:", remoteUrl.current);
-  }, []);  // Empty dependency array means this runs only once after component mounts
-  
+  if (message.type === 'matched') {
+
+    console.log('This is the message server sending back: ',message)
 
 
-
-  const startConnection = async () => {
-
+    // if matched, begin loading local Video Stream to show and send
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
     
 
-    
-
-    try {
-
-      //get local video stream and make viewable
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-
-      stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
-
-      const localVideoElement = document.getElementById('localVideo');
+    //show it to user
+    const localVideoElement = document.getElementById('localVideo');
       console.log('This is STREAM #1:', stream)
       localVideoElement.srcObject = stream;
 
-  
-
-    // Handle ICE candidates and send to server
-    peerConnection.onicecandidate = (event) => {
-      if (event.candidate) {
-        socket.send(JSON.stringify({ type: 'candidate', candidate: event.candidate }));
-      }
-    };
-
-    peerConnection.ontrack = (event) => {
-      console.log("this is an onTrack log:", event);
-    
-      if (event.streams[0]) {
-        console.log('This is STREAM #2:', event.streams[0].getTracks());
-  
-        const remoteVideoElement = document.getElementById('remoteVideo');
-      
-      remoteVideoElement.srcObject = event.streams[0];
-    
-        
-        
-      }
-    
-      setIsRemoteVideoOn(true);
-    };
-    
-
-    // Create and send offer
+    stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
+    // Initiate connection if matched
     const offer = await peerConnection.createOffer();
     await peerConnection.setLocalDescription(offer);
-
-    console.log(offer)
     socket.send(JSON.stringify({ type: 'offer', offer }));
-    } catch (error) {
-      console.log(error);
-    }
-
-  };
 
 
 
-
-
-
-  // Handle offer from other peer
-  const handleOffer = async (offer) => {
-    try {
-      console.log('Received offer:', offer);
   
-      // Set the remote description with the received offer first
-      await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-      
-      // Then create and send an answer
+  } else if (message.type === 'offer') {
+
+
+    console.log('This is the message server sending back: ',message)
+    // Only set the remote description if in the correct state
+    if (peerConnection.signalingState === "stable") {
+      await peerConnection.setRemoteDescription(new RTCSessionDescription(message.offer));
       const answer = await peerConnection.createAnswer();
       await peerConnection.setLocalDescription(answer);
       socket.send(JSON.stringify({ type: 'answer', answer }));
-    } catch (error) {
-      console.error('Error handling offer:', error);
+    } else {
+      console.warn("Received offer while in an unexpected signaling state:", peerConnection.signalingState);
     }
-  };
 
-  // Handle answer from other peer
-  const handleAnswer = async (answer) => {
-    console.log('This is an snswer: ', answer);
-    await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
-  };
-
-  // Handle ICE candidates
-  const handleCandidate = (candidate) => {
-    try {
-      console.log('Received ICE candidate:', candidate);
   
-      // Add the ICE candidate only if remote description is set
-      if (peerConnection.remoteDescription) {
-        peerConnection.addIceCandidate(new RTCIceCandidate(candidate))
-          .catch(error => console.error('Error adding ICE candidate:', error));
-      } else {
-        console.warn("Remote description is not set yet, ignoring candidate");
-      }
-    } catch (error) {
-      console.error('Error handling candidate:', error);
+  } else if (message.type === 'answer') {
+
+    console.log('This is the message server sending back: ',message)
+    console.log('peer state: ', peerConnection.signalingState)
+    // Set the answer only if in the correct state
+    if (peerConnection.signalingState === "have-local-offer") {
+      console.log('we setting the remote as their local baby')
+      await peerConnection.setRemoteDescription(new RTCSessionDescription(message.answer));
+      
+    } else {
+      console.warn("Received answer while in an unexpected signaling state:", peerConnection.signalingState);
     }
-  };
+
+
+
+
+  
+  } else if (message.type === 'candidate') {
+
+    console.log('This is the message server sending back: ',message)
+    // Handle ICE candidate only if remote description is set
+    if (peerConnection.remoteDescription) {
+      await peerConnection.addIceCandidate(new RTCIceCandidate(message.candidate));
+    } else {
+      console.warn("Received ICE candidate but remote description is not set.");
+    }
+  }
+};
+
+
+peerConnection.ontrack = (event) =>{
+  
+  if(event.streams[0])
+  {
+    console.log('eat ass puss boi')
+    const remoteVideoElement = document.getElementById('remoteVideo');
+      
+    remoteVideoElement.srcObject = event.streams[0];
+  }
+
+}
+
+
+
 
   return (
+    <ScrollView>
     <View style={styles.container}>
-      <Button title="Join" onPress={startConnection} />
+      <Button title="Join" onPress="" />
 
       {/* Display the local video */}
       <video id="localVideo" style={styles.video} autoPlay muted playsInline />
@@ -153,6 +117,7 @@ export default function Connect() {
         />
       
     </View>
+    </ScrollView>
   );
 }
 
