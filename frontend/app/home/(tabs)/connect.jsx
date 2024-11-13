@@ -7,8 +7,10 @@ import React, { useState, useEffect, useRef } from 'react';
 
 export default function Connect() {
   
+
   
-  const socket = new WebSocket('ws://localhost:3000');
+  const socket = new WebSocket('wss://stream-ses0.onrender.com/');
+
   const peerConnection = new RTCPeerConnection();
 
 
