@@ -1,5 +1,5 @@
 
-import { View, Text, StyleSheet, Button, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 
 // WebSocket URL for signaling server
@@ -10,7 +10,7 @@ export default function Connect() {
 
   
   const socket = new WebSocket('wss://stream-ses0.onrender.com/');
-
+  //const socket = new WebSocket('ws://localhost:3000');
   const peerConnection = new RTCPeerConnection();
 
 
@@ -101,45 +101,149 @@ peerConnection.ontrack = (event) =>{
 
 
   return (
-    <ScrollView>
-    <View style={styles.container}>
-      <Button title="Join" onPress="" />
+    <ScrollView contentContainerStyle={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <View>
+          <Text style={styles.profileName}>bijlee Sharma</Text>
+          <Text style={styles.country}>🇮🇳 India</Text>
+        </View>
+        <TouchableOpacity style={styles.closeButton}>
+          <Text style={styles.closeText}>✖️</Text>
+        </TouchableOpacity>
+      </View>
 
-      {/* Display the local video */}
-      <video id="localVideo" style={styles.video} autoPlay muted playsInline />
+      {/* Interests */}
+      <View style={styles.interestsContainer}>
+        {['Music', 'Dance', 'Shopping', 'Travel', 'Food'].map((interest) => (
+          <View key={interest} style={styles.interestTag}>
+            <Text style={styles.interestText}>{interest}</Text>
+          </View>
+        ))}
+      </View>
 
-      {/* Render remote video only when ready */}
+      {/* Video Placeholders */}
       
-        <video
-          id='remoteVideo'
-          style={styles.video}
-          autoPlay
-          muted
-          playsInline
-        />
-      
-    </View>
+      <View style={styles.videosContainer}>
+        <View style={styles.videoContainer}>
+          <video id="localVideo" style={styles.video} autoPlay muted playsInline />
+        </View>
+        <View style={styles.videoContainer}>
+          <video id="remoteVideo" style={styles.video} autoPlay playsInline />
+        </View>
+      </View>
+
+      {/* Like and Next Buttons */}
+      <View style={styles.actionContainer}>
+        <TouchableOpacity style={styles.likeButton}>
+          <Text style={styles.likeText}>❤️</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.nextButton}>
+          <Text style={styles.nextText}>Next ➡️</Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 }
 
+
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
+    flexGrow: 1,
     alignItems: 'center',
-    backgroundColor: '#f7f7f7',
+    paddingVertical: 20,
+    backgroundColor: '#e0f8e6',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '90%',
+    marginBottom: 10,
+  },
+  profileName: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#2b2b2b',
+  },
+  country: {
+    fontSize: 14,
+    color: '#2b2b2b',
+  },
+  closeButton: {
+    backgroundColor: '#000',
+    borderRadius: 20,
+    padding: 5,
+  },
+  closeText: {
+    color: '#fff',
+    fontSize: 16,
+  },
+  interestsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    width: '90%',
+    marginBottom: 20,
+  },
+  interestTag: {
+    backgroundColor: '#f0f0f0',
+    borderRadius: 15,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    margin: 5,
+  },
+  interestText: {
+    fontSize: 12,
+    color: '#2b2b2b',
+  },
+  videosContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '90%',
+    marginBottom: 20,
+  },
+  videoContainer: {
+    width: '45%',
+    aspectRatio: 1,
+    backgroundColor: '#000',
+    borderRadius: 10,
+    overflow: 'hidden', // Ensures video stays within rounded corners
   },
   video: {
-    width: 300,
-    height: 200,
-    backgroundColor: 'black',
-    marginTop: 10,
+    width: '100%',
+    height: '100%',
+    borderRadius: 10, // Matches container for consistent rounding
+    objectFit: 'cover', // Ensures video fits within the frame
   },
-  text: {
-    marginTop: 20,
+  actionContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    width: '90%',
+    marginBottom: 20,
+  },
+  likeButton: {
+    backgroundColor: '#e0ffe0',
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  likeText: {
+    fontSize: 28,
+    color: '#ff6b6b',
+  },
+  nextButton: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: '#000',
+    borderRadius: 20,
+  },
+  nextText: {
+    color: '#fff',
     fontSize: 16,
-    color: '#333',
   },
 });
 
@@ -148,193 +252,6 @@ const styles = StyleSheet.create({
 
 
 
-
-
-
-
-
-
-
-
-
-
-// import { View, Text, StyleSheet, Button } from 'react-native'
-// import React, {useEffect, useState, useRef} from 'react'
-// import { types } from '@babel/core'
-
-// export default function connect() {
-  
-//   const [isRemoteVideoOn, setisRemoteVideoOn] = useState(false)
-
-//   const remoteUrl = useRef(null);
-//   const socket = new WebSocket('ws://localhost:3000')
-
-  
-//   useEffect(() =>{
-
-    
-
-//     socket.onopen = () =>{
-//       console.log('WebSocket connection established')
-//     }
-
-//     socket.onclose = () =>{
-//       console.log('WebSocket connection closed')
-//     }
-
-//     socket.onmessage = async(event) =>{
-//       console.log('Received Something:', event)
-//       if (event.data)
-//       {
-//         console.log('we are inside stepmom')
-//       }
-//       else
-//       {
-//         try {
-//           const message = JSON.parse(event.data);
-    
-//           switch (message.type) {
-//             case 'offer':
-//               await handleOffer(message.offer);
-//               break;
-//             case 'answer':
-//               await handleAnswer(message.answer);
-//               break;
-//             case 'candidate':
-//               await handleCandidate(message.candidate);
-//               break;
-//             default:
-//               console.warn('Unknown message type:', message.type);
-//           }
-//         } catch (error) {
-//           console.error('Error parsing message:', error);
-//         }
-//       }
-//     }
-
-//   },[])
-
-//   const getLocalData = async () =>{
-//     try {
-
-//         //this function receives the audio and video from whatever device is being used
-//         const stream = await navigator.mediaDevices.getUserMedia({video:true, audio:true})
-        
-
-//         const localStream = document.getElementById('localVideo');
-
-//         //this sets that exact stream to the canvas video tag
-//         localStream.srcObject = stream
-
-//         //create new class for peers
-//         const peerConnection = new RTCPeerConnection();
-
-        
-
-//         //load the class with the audio and video stream from the local device to send to the peer
-//         stream.getTracks().forEach(track => {
-          
-//           peerConnection.addTrack(track, stream)
-          
-//         });
-//         //ability to connect through firewalls and ips
-//         peerConnection.onicecandidate = (event) =>{
-//           if(event.candidate)
-//           {
-//             console.log(event.candidate)
-//             socket.send(JSON.stringify({type:'candidate', candidate: event.candidate}))
-//           }
-//         }
-
-//         //event of receiving the remote track
-//         peerConnection.ontrack = (event) =>{
-//           console.log('remote track received', event)
-
-//           if(event.streams)
-//           {
-//             //event at the first array positions should be the stream for the remote video
-//             remoteUrl.current = event.streams[0]
-//             const remoteStream = document.getElementById('remoteVideo');
-
-//             remoteStream.srcObject = remoteUrl.current
-//             setisRemoteVideoOn(true);
-
-//           }
-//           else
-//           {
-//             console.log('error setting the track to the html div')
-//           }
-        
-//         }
-    
-//     //function sending information to the server so another person can connect
-//     const offer = await peerConnection.createOffer()
-//     console.log(offer)
-//     socket.send(JSON.stringify({types:'offer', offer}))
-
-//     } catch (error) {
-//       console.log(error)
-//     }
-
-//   }
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-//   return (
-//     <View style={styles.container}>
-//       <Button title="Join" onPress={getLocalData} />
-
-//       {/* Display the local video */}
-//       <video id="localVideo" style={styles.video} autoPlay muted playsInline />
-
-//       {/* Render remote video only when ready */}
-//       {isRemoteVideoOn ? (
-//         <video
-//           id="remoteVideo"
-//           ref={remoteUrl}
-//           style={styles.video}
-//           autoPlay
-//           muted
-//           playsInline
-//           onLoadedMetadata={() => console.log('Remote video metadata loaded')}
-//         />
-//       ) : (
-//         <Text style={styles.text}>Waiting for remote video...</Text>
-//       )}
-//     </View>
-//   )
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     backgroundColor: '#f7f7f7',
-//   },
-//   video: {
-//     width: 300,
-//     height: 200,
-//     backgroundColor: 'black',
-//     marginTop: 10,
-//   },
-//   text: {
-//     marginTop: 20,
-//     fontSize: 16,
-//     color: '#333',
-//   },
-// });
 
 
 
