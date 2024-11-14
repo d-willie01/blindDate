@@ -1,11 +1,19 @@
 const express = require('express');
-const https = require('https');
+const http = require('http');
 const WebSocket = require('ws');
+const path = require('path');
 
 const app = express();
-const server = https.createServer(app);
+const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 const waitingClients = []; // Stores unmatched clients
+
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/.well-known/pki-validation/EDE245C398D75E46C508D677D80C17F7.txt', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', '.well-known', 'pki-validation', 'EDE245C398D75E46C508D677D80C17F7.txt'));
+});
 
 wss.on('connection', (ws) => {
   console.log('New client connected.');
