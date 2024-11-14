@@ -15,81 +15,57 @@ export default function Connect() {
 
 
   socket.onmessage = async (event) => {
-  const message = JSON.parse(event.data);
-
-  if (message.type === 'matched') {
-
-    console.log('This is the message server sending back: ',message)
-
-
-    // if matched, begin loading local Video Stream to show and send
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-    
-
-    //show it to user
-    const localVideoElement = document.getElementById('localVideo');
-      console.log('This is STREAM #1:', stream)
-      localVideoElement.srcObject = stream;
-
-    stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
-    // Initiate connection if matched
-    const offer = await peerConnection.createOffer();
-    await peerConnection.setLocalDescription(offer);
-    socket.send(JSON.stringify({ type: 'offer', offer }));
-
-
-
+    const message = JSON.parse(event.data);
   
-  } else if (message.type === 'offer') {
-
-
-    console.log('This is the message server sending back: ',message)
-    // Only set the remote description if in the correct state
-    if (peerConnection.signalingState === "stable") {
-      await peerConnection.setRemoteDescription(new RTCSessionDescription(message.offer));
-      const answer = await peerConnection.createAnswer();
-      await peerConnection.setLocalDescription(answer);
-      socket.send(JSON.stringify({ type: 'answer', answer }));
-    } else {
-      console.warn("Received offer while in an unexpected signaling state:", peerConnection.signalingState);
-    }
-
+    if (message.type === 'matched') {
+      // Proceed only if in a stable state (no remote offer exists)
+      if (peerConnection.signalingState === "stable") {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        const localVideoElement = document.getElementById('localVideo');
+        localVideoElement.srcObject = stream;
   
-  } else if (message.type === 'answer') {
-
-    console.log('This is the message server sending back: ',message)
-    console.log('peer state: ', peerConnection.signalingState)
-    // Set the answer only if in the correct state
-    if (peerConnection.signalingState === "have-local-offer") {
-      console.log('we setting the remote as their local baby')
-      await peerConnection.setRemoteDescription(new RTCSessionDescription(message.answer));
-      
-    } else {
-      console.warn("Received answer while in an unexpected signaling state:", peerConnection.signalingState);
+        // Add tracks and create an offer
+        stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
+        const offer = await peerConnection.createOffer();
+        await peerConnection.setLocalDescription(offer);
+        socket.send(JSON.stringify({ type: 'offer', offer }));
+      } else {
+        console.warn("Cannot create offer, peerConnection is not in stable state:", peerConnection.signalingState);
+      }
+    } else if (message.type === 'offer') {
+      // Check if remote description can be set
+      if (peerConnection.signalingState === "stable" || peerConnection.signalingState === "have-local-offer") {
+        await peerConnection.setRemoteDescription(new RTCSessionDescription(message.offer));
+        const answer = await peerConnection.createAnswer();
+        await peerConnection.setLocalDescription(answer);
+        socket.send(JSON.stringify({ type: 'answer', answer }));
+      } else {
+        console.warn("Received offer in unexpected state:", peerConnection.signalingState);
+      }
+    } else if (message.type === 'answer') {
+      // Only set the remote description if there's a local offer
+      if (peerConnection.signalingState === "have-local-offer") {
+        await peerConnection.setRemoteDescription(new RTCSessionDescription(message.answer));
+      } else {
+        console.warn("Received answer in unexpected state:", peerConnection.signalingState);
+      }
+    } else if (message.type === 'candidate') {
+      // Add ICE candidate only if the remote description is already set
+      if (peerConnection.remoteDescription) {
+        await peerConnection.addIceCandidate(new RTCIceCandidate(message.candidate));
+      } else {
+        console.warn("Received ICE candidate but remote description is not set.");
+      }
     }
-
-
-
-
+  };
   
-  } else if (message.type === 'candidate') {
-
-    console.log('This is the message server sending back: ',message)
-    // Handle ICE candidate only if remote description is set
-    if (peerConnection.remoteDescription) {
-      await peerConnection.addIceCandidate(new RTCIceCandidate(message.candidate));
-    } else {
-      console.warn("Received ICE candidate but remote description is not set.");
-    }
-  }
-};
 
 
 peerConnection.ontrack = (event) =>{
   
   if(event.streams[0])
   {
-    console.log('eat ass puss boi')
+    console.log("receiving video")
     const remoteVideoElement = document.getElementById('remoteVideo');
       
     remoteVideoElement.srcObject = event.streams[0];
@@ -129,7 +105,7 @@ peerConnection.ontrack = (event) =>{
           <video id="localVideo" style={styles.video} autoPlay muted playsInline />
         </View>
         <View style={styles.videoContainer}>
-          <video id="remoteVideo" style={styles.video} autoPlay playsInline />
+          <video id="remoteVideo" style={styles.video} autoPlay muted playsInline />
         </View>
       </View>
 
