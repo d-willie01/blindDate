@@ -16,8 +16,8 @@ const VideoChatScreen = () => {
 
   useEffect(() => {
     // Initialize WebSocket connection
-    socket.current = new WebSocket('ws://localhost:3000');
-    //socket.current = new WebSocket('wss://stream-ses0.onrender.com/');
+    //socket.current = new WebSocket('ws://localhost:3000');
+    socket.current = new WebSocket('wss://stream-ses0.onrender.com/');
 
     // Set up WebSocket event listeners
     socket.current.onmessage = handleSocketMessage;
