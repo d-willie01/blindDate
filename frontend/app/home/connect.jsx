@@ -1,9 +1,11 @@
-import React, {useRef, useEffect} from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
+import React, {useRef, useEffect, useState, } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ActivityIndicator } from 'react-native';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 
 const VideoChatScreen = () => {
-    const socket = useRef(null);
+
+  const [loading, setLoading] = useState(true);
+  const socket = useRef(null);
   const peerConnection = useRef(null);
   const pendingCandidates = useRef([]); // Buffer for ICE candidates
   const stateStore = useRef({
@@ -64,6 +66,7 @@ const VideoChatScreen = () => {
 
     switch (message.type) {
       case 'matched':
+        setLoading(false)
         if (stateStore.current.peerConnectionState === "new" || stateStore.current.peerConnectionState === "stable") {
           await handleMatched();
         }
@@ -171,6 +174,12 @@ const VideoChatScreen = () => {
         </View>
         <View style={styles.videoWrapper}>
           <video id="remoteVideo" style={styles.video} autoPlay playsInline />
+          {loading && (
+        <View style={styles.overlay}>
+          <ActivityIndicator size="large" color="#ffffff" />
+          <Text style={styles.loadingText}>Loading...</Text>
+        </View>
+      )}
         </View>
       </View>
 
@@ -194,6 +203,7 @@ const VideoChatScreen = () => {
         <Ionicons name="hand" size={24} color="white" />
         <Ionicons name="heart" size={24} color="white" />
       </View>
+      
     </SafeAreaView>
   );
 };
@@ -256,6 +266,18 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     backgroundColor: '#222',
   },
+  overlay: {
+    ...StyleSheet.absoluteFillObject, // Fills the entire screen
+    backgroundColor: 'rgba(0, 0, 0, 0.8)', // Semi-transparent black
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    color: '#fff',
+    fontSize: 16,
+    marginTop: 10,
+  },
+  
 });
 
 export default VideoChatScreen;
