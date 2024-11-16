@@ -6,7 +6,7 @@ export default function _layout() {
     <Stack screenOptions={{
         headerShown: false
     }}>
-        <Stack.Screen name='(tabs)'/>
+        <Stack.Screen name='connect'/>
         
     </Stack>
   )

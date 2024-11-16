@@ -34,7 +34,7 @@ export default function index() {
       <Text style={styles.subText}>1v1Chat - Real People, Real Connections</Text>
 
       {/* Buttons */}
-      <Link href={'/home/(tabs)'}>
+      <Link href={'/home'}>
       <TouchableOpacity style={styles.startButton}>
         <Text style={styles.startButtonText}>Start Dating</Text>
         
