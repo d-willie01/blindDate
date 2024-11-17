@@ -1,6 +1,6 @@
 import React, {useRef, useEffect, useState, } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ActivityIndicator } from 'react-native';
-import { Ionicons, FontAwesome } from '@expo/vector-icons';
+import { Ionicons, FontAwesome, Entypo } from '@expo/vector-icons';
 
 const VideoChatScreen = () => {
 
@@ -17,8 +17,8 @@ const VideoChatScreen = () => {
 
   useEffect(() => {
     // Initialize WebSocket connection
-    //socket.current = new WebSocket('ws://localhost:3000');
-    socket.current = new WebSocket('wss://stream-ses0.onrender.com/');
+    socket.current = new WebSocket('ws://localhost:3000');
+    //socket.current = new WebSocket('wss://stream-ses0.onrender.com/');
 
     // Set up WebSocket event listeners
     socket.current.onmessage = handleSocketMessage;
@@ -130,6 +130,7 @@ const VideoChatScreen = () => {
     await peerConnection.current.setRemoteDescription(new RTCSessionDescription(offer));
     stateStore.current.remoteDescriptionSet = true;
 
+
     // Process buffered candidates
     while (pendingCandidates.current.length > 0) {
       const candidate = pendingCandidates.current.shift();
@@ -148,10 +149,16 @@ const VideoChatScreen = () => {
     stateStore.current.remoteDescriptionSet = true;
 
     // Process buffered candidates
-    while (pendingCandidates.current.length > 0) {
-      const candidate = pendingCandidates.current.shift();
-      await peerConnection.current.addIceCandidate(new RTCIceCandidate(candidate));
+    while (pendingCandidates.current.length > 0 && stateStore.current.remoteDescriptionSet) {
+      try {
+        const candidate = pendingCandidates.current.shift();
+        await peerConnection.current.addIceCandidate(new RTCIceCandidate(candidate));
+        console.log('Added ICE candidate:', candidate);
+      } catch (error) {
+        console.error('Error adding ICE candidate:', error);
+      }
     }
+    
 
     stateStore.current.peerConnectionState = "stable";
   };
@@ -175,6 +182,8 @@ const VideoChatScreen = () => {
     const remoteVideoElement = document.getElementById('remoteVideo');
     if (localVideoElement) localVideoElement.srcObject = null;
     if (remoteVideoElement) remoteVideoElement.srcObject = null;
+     // Reset candidate queue when moving to the next match
+  pendingCandidates.current = [];
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -224,12 +233,10 @@ const VideoChatScreen = () => {
 
       {/* Icons at the bottom */}
       <View style={styles.iconsContainer}>
-        <FontAwesome name="refresh" size={24} color="white" />
-        <Ionicons name="heart" size={24} color="white" />
-        <Ionicons name="happy" size={24} color="white" />
-        <Ionicons name="thumbs-up" size={24} color="white" />
-        <Ionicons name="smile" size={24} color="white" />
-        <Ionicons name="hand" size={24} color="white" />
+
+        
+      <Ionicons name="heart-dislike" size={24} color="white" />
+      <Entypo name="flag" size={24} color="white" />
         <Ionicons name="heart" size={24} color="white" />
       </View>
       
