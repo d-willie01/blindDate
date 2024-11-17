@@ -149,6 +149,7 @@ const VideoChatScreen = () => {
 
   const handleNext = () => {
     // Close current peer connection and reset state
+    setLoading(true);
     if (peerConnection.current) {
       peerConnection.current.close();
       peerConnection.current = null;
@@ -183,7 +184,7 @@ const VideoChatScreen = () => {
     height: '100%',
     objectFit: 'cover',
     transform: 'scaleX(-1)', // Flip horizontally for a mirrored effect
-  }} autoPlay playsInline />
+  }} autoPlay muted playsInline />
           {loading && (
         <View style={styles.overlay}>
           <ActivityIndicator size="large" color="#ffffff" />
@@ -198,7 +199,7 @@ const VideoChatScreen = () => {
         <TouchableOpacity style={styles.stopButton}>
           <Text style={styles.stopButtonText}>STOP</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.nextButton}>
+        <TouchableOpacity onPress={handleNext} style={styles.nextButton}>
           <Text style={styles.nextButtonText}>NEXT</Text>
         </TouchableOpacity>
       </View>
