@@ -5,6 +5,7 @@ import { Ionicons, FontAwesome } from '@expo/vector-icons';
 const VideoChatScreen = () => {
 
   const [loading, setLoading] = useState(true);
+  const [partnerLeft, setPartnerLeft] = useState(false)
   const socket = useRef(null);
   const peerConnection = useRef(null);
   const pendingCandidates = useRef([]); // Buffer for ICE candidates
@@ -16,8 +17,8 @@ const VideoChatScreen = () => {
 
   useEffect(() => {
     // Initialize WebSocket connection
-    //socket.current = new WebSocket('ws://localhost:3000');
-    socket.current = new WebSocket('wss://stream-ses0.onrender.com/');
+    socket.current = new WebSocket('ws://localhost:3000');
+    //socket.current = new WebSocket('wss://stream-ses0.onrender.com/');
 
     // Set up WebSocket event listeners
     socket.current.onmessage = handleSocketMessage;
@@ -67,6 +68,7 @@ const VideoChatScreen = () => {
     switch (message.type) {
       case 'matched':
         setLoading(false)
+        
         if (stateStore.current.peerConnectionState === "new" || stateStore.current.peerConnectionState === "stable") {
           await handleMatched();
         }
@@ -93,6 +95,13 @@ const VideoChatScreen = () => {
           pendingCandidates.current.push(message.candidate);
         }
         break;
+      
+
+      case 'partnerDisconnected':
+        setPartnerLeft(true);
+
+
+      break;
 
       default:
         console.warn("Unknown message type:", message.type);
@@ -150,6 +159,7 @@ const VideoChatScreen = () => {
   const handleNext = () => {
     // Close current peer connection and reset state
     setLoading(true);
+    setPartnerLeft(false);
     if (peerConnection.current) {
       peerConnection.current.close();
       peerConnection.current = null;
@@ -191,6 +201,14 @@ const VideoChatScreen = () => {
           <Text style={styles.loadingText}>Loading...</Text>
         </View>
       )}
+
+{partnerLeft && (
+        <View style={styles.overlay}>
+          
+          <Text style={styles.loadingText}>Partner Gone, Press Next!</Text>
+        </View>
+      )}
+      
         </View>
       </View>
 
