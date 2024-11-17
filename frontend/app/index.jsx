@@ -10,7 +10,7 @@ export default function index() {
         <TouchableOpacity style={styles.menuIcon}>
           <Text style={styles.menuText}>☰</Text>
         </TouchableOpacity>
-        <Text style={styles.title}>BLIND DATE</Text>
+        <Text style={styles.title}>BLINDER</Text>
         <TouchableOpacity style={styles.loginButton}>
           <Text style={styles.loginText}>Login</Text>
         </TouchableOpacity>
@@ -19,24 +19,24 @@ export default function index() {
       {/* Profile Images */}
       <View style={styles.imagesContainer}>
         <View style={styles.imageWrapper}>
-          <Image source={{ uri: 'faceShot' }} style={styles.image} />
+          <Image source={{ uri: 'https://cdn2.stylecraze.com/wp-content/uploads/2013/06/Different-Beautiful-American-Girls.jpg' }} style={styles.image} />
         </View>
         <View style={styles.imageWrapper}>
-          <Image source={{ uri: 'faceShot' }} style={styles.image} />
+          <Image source={{ uri: 'https://t3.ftcdn.net/jpg/06/95/65/86/360_F_695658623_qQOKTAa5f0NJ9QIvwDoImSiYGQvRbltI.jpg' }} style={styles.image} />
         </View>
         <View style={styles.imageWrapper}>
-          <Image source={{ uri: 'faceShot' }} style={styles.image} />
+          <Image source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRa_giq5ZzKgf_VqDfEZGyFHl9TH0dkiyZH5tkIqN55B7Y7bnnI8kuKyOq-N4y6ov7cGe4&usqp=CAU' }} style={styles.image} />
         </View>
       </View>
 
       {/* Main Text */}
       <Text style={styles.mainText}>BLIND DATE VIDEO CHAT</Text>
       <Text style={styles.subText}>1v1Chat - Real People, Real Connections</Text>
-
+      
       {/* Buttons */}
       <Link href={'/home'}>
       <TouchableOpacity style={styles.startButton}>
-        <Text style={styles.startButtonText}>Start Dating</Text>
+        <Text style={styles.startButtonText}>Start BLINDER</Text>
         
       </TouchableOpacity>
       </Link>
