@@ -17,8 +17,8 @@ const VideoChatScreen = () => {
 
   useEffect(() => {
     // Initialize WebSocket connection
-    socket.current = new WebSocket('ws://localhost:3000');
-    //socket.current = new WebSocket('wss://stream-ses0.onrender.com/');
+    //socket.current = new WebSocket('ws://localhost:3000');
+    socket.current = new WebSocket('wss://stream-ses0.onrender.com/');
 
     // Set up WebSocket event listeners
     socket.current.onmessage = handleSocketMessage;
@@ -127,7 +127,7 @@ const VideoChatScreen = () => {
   const handleOffer = async (offer) => {
     if (!peerConnection.current) initializePeerConnection();
 
-    await peerConnection.current.setRemoteDescription(new RTCSessionDescription(offer));
+    await peerConnection.current.(new RTCSessionDescription(offer));
     stateStore.current.remoteDescriptionSet = true;
 
 
@@ -145,7 +145,7 @@ const VideoChatScreen = () => {
   };
 
   const handleAnswer = async (answer) => {
-    await peerConnection.current.setRemoteDescription(new RTCSessionDescription(answer));
+    await peerConnection.current.(new RTCSessionDescription(answer));
     stateStore.current.remoteDescriptionSet = true;
 
     // Process buffered candidates
