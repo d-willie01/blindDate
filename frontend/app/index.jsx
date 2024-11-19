@@ -1,6 +1,7 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import React from 'react'
-import { Link } from 'expo-router'
+import React from 'react';
+import { Link } from 'expo-router';
+import Logo from '../assets/images/blinderLogo.png';
 
 export default function index() {
   return (
@@ -10,7 +11,7 @@ export default function index() {
         <TouchableOpacity style={styles.menuIcon}>
           <Text style={styles.menuText}>☰</Text>
         </TouchableOpacity>
-        <Text style={styles.title}>BLINDER</Text>
+        <Image style={styles.logo} source={Logo} />
         <TouchableOpacity style={styles.loginButton}>
           <Text style={styles.loginText}>Login</Text>
         </TouchableOpacity>
@@ -19,32 +20,46 @@ export default function index() {
       {/* Profile Images */}
       <View style={styles.imagesContainer}>
         <View style={styles.imageWrapper}>
-          <Image source={{ uri: 'https://cdn2.stylecraze.com/wp-content/uploads/2013/06/Different-Beautiful-American-Girls.jpg' }} style={styles.image} />
+          <Image
+            source={{
+              uri: 'https://cdn2.stylecraze.com/wp-content/uploads/2013/06/Different-Beautiful-American-Girls.jpg',
+            }}
+            style={styles.image}
+          />
         </View>
         <View style={styles.imageWrapper}>
-          <Image source={{ uri: 'https://t3.ftcdn.net/jpg/06/95/65/86/360_F_695658623_qQOKTAa5f0NJ9QIvwDoImSiYGQvRbltI.jpg' }} style={styles.image} />
+          <Image
+            source={{
+              uri: 'https://t3.ftcdn.net/jpg/06/95/65/86/360_F_695658623_qQOKTAa5f0NJ9QIvwDoImSiYGQvRbltI.jpg',
+            }}
+            style={styles.image}
+          />
         </View>
         <View style={styles.imageWrapper}>
-          <Image source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRa_giq5ZzKgf_VqDfEZGyFHl9TH0dkiyZH5tkIqN55B7Y7bnnI8kuKyOq-N4y6ov7cGe4&usqp=CAU' }} style={styles.image} />
+          <Image
+            source={{
+              uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRa_giq5ZzKgf_VqDfEZGyFHl9TH0dkiyZH5tkIqN55B7Y7bnnI8kuKyOq-N4y6ov7cGe4&usqp=CAU',
+            }}
+            style={styles.image}
+          />
         </View>
       </View>
 
       {/* Main Text */}
       <Text style={styles.mainText}>BLIND DATE VIDEO CHAT</Text>
       <Text style={styles.subText}>1v1Chat - Real People, Real Connections</Text>
-      
+
       {/* Buttons */}
       <Link href={'/home'}>
-      <TouchableOpacity style={styles.startButton}>
-        <Text style={styles.startButtonText}>Start BLINDER</Text>
-        
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.startButton}>
+          <Text style={styles.startButtonText}>Start BLINDER</Text>
+        </TouchableOpacity>
       </Link>
       <TouchableOpacity style={styles.downloadButton}>
         <Text style={styles.downloadButtonText}>Download App</Text>
       </TouchableOpacity>
     </ScrollView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -62,24 +77,32 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   menuIcon: {
-    padding: 10,
+    flex: 1,
+    alignItems: 'flex-start',
   },
   menuText: {
     fontSize: 24,
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#2b2b2b',
+  logo: {
+    flex: 2,
+    width: 150, // Increased size
+    height: 80, // Increased size
+    resizeMode: 'contain',
+    alignSelf: 'center',
   },
   loginButton: {
-    backgroundColor: '#000',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: 10,
     paddingVertical: 8,
     paddingHorizontal: 16,
+    borderWidth: 2,
+    borderColor: '#b9ffb8', // Light green border
+    backgroundColor: '#b9ffb8', // Transparent background
   },
   loginText: {
-    color: '#fff',
+    color: '#2b2b2b', // Dark text for better visibility
     fontSize: 14,
   },
   imagesContainer: {
@@ -133,3 +156,4 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
 });
+
