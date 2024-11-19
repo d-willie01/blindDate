@@ -64,8 +64,6 @@ const VideoChatScreen = () => {
 
     peerConnection.onicecandidateerror = (event) => {
       console.error("ICE Candidate Error:", event);
-      peerConnection.current.restartIce();
-
     };
   };
 
@@ -89,9 +87,9 @@ const VideoChatScreen = () => {
         break;
 
       case 'answer':
-        console.log("answer state? :", peerConnection.current)
-        
-
+        if (stateStore.current.peerConnectionState === "have-local-offer") {
+          await handleAnswer(message.answer);
+        }
         break;
 
       case 'candidate':
@@ -139,7 +137,7 @@ const VideoChatScreen = () => {
 
     // Process buffered candidates
     while (pendingCandidates.current.length > 0) {
-      console.log("processing in OFFER", pendingCandidates.current )
+      console.log("prcessing in OFFER", pendingCandidates.current )
       const candidate = pendingCandidates.current.shift();
       await peerConnection.current.addIceCandidate(new RTCIceCandidate(candidate));
     }
@@ -154,7 +152,26 @@ const VideoChatScreen = () => {
     socket.current.send(JSON.stringify({ type: 'answer', answer }));
   };
 
- 
+  const handleAnswer = async (answer) => {
+    await peerConnection.current.setRemoteDescription(new RTCSessionDescription(answer));
+    stateStore.current.remoteDescriptionSet = true;
+
+    // Process buffered candidates
+    while (pendingCandidates.current.length > 0 && stateStore.current.remoteDescriptionSet) {
+      console.log("prcessing in ANSWER", pendingCandidates.current )
+      try {
+        const candidate = pendingCandidates.current.shift();
+        await peerConnection.current.addIceCandidate(new RTCIceCandidate(candidate));
+        console.log('Added ICE candidate:', candidate);
+      } catch (error) {
+        console.error('Error adding ICE candidate:', error);
+      }
+    }
+    
+
+    stateStore.current.peerConnectionState = "stable";
+  };
+
   const handleNext = () => {
     // Close current peer connection and reset state
     setLoading(true);
@@ -195,7 +212,7 @@ const VideoChatScreen = () => {
     height: '100%',
     objectFit: 'cover',
     transform: 'scaleX(-1)', // Flip horizontally for a mirrored effect
-  }} autoPlay playsInline />
+  }} autoPlay muted playsInline />
           {loading && (
         <View style={styles.overlay}>
           <ActivityIndicator size="large" color="#ffffff" />
