@@ -45,9 +45,11 @@ const VideoChatScreen = () => {
     // Track event for remote media
     peerConnection.current.ontrack = (event) => {
       if (event.streams[0]) {
-        console.log("Adding remote video...");
-        const remoteVideoElement = document.getElementById('remoteVideo');
-        remoteVideoElement.srcObject = event.streams[0];
+
+        console.log("track drop boi: ", event.streams[0].getTracks())
+      
+         const remoteVideoElement = document.getElementById('remoteVideo');
+         remoteVideoElement.srcObject = event.streams[0];
       }
     };
 
@@ -59,11 +61,17 @@ const VideoChatScreen = () => {
     peerConnection.current.onconnectionstatechange = () => {
       console.log("Connection State:", peerConnection.current.connectionState);
     };
+
+    peerConnection.onicecandidateerror = (event) => {
+      console.error("ICE Candidate Error:", event);
+      peerConnection.current.restartIce();
+
+    };
   };
 
   const handleSocketMessage = async (event) => {
     const message = JSON.parse(event.data);
-    console.log(message);
+    
 
     switch (message.type) {
       case 'matched':
@@ -81,19 +89,17 @@ const VideoChatScreen = () => {
         break;
 
       case 'answer':
-        if (stateStore.current.peerConnectionState === "have-local-offer") {
-          await handleAnswer(message.answer);
-        }
+        console.log("answer state? :", peerConnection.current)
+        
+
         break;
 
       case 'candidate':
-        if (stateStore.current.remoteDescriptionSet) {
-          console.log("Adding ICE candidate directly...");
-          await peerConnection.current.addIceCandidate(new RTCIceCandidate(message.candidate));
-        } else {
-          console.log("Queuing ICE candidate...");
+        
+        
+        
           pendingCandidates.current.push(message.candidate);
-        }
+        
         break;
       
 
@@ -133,9 +139,13 @@ const VideoChatScreen = () => {
 
     // Process buffered candidates
     while (pendingCandidates.current.length > 0) {
+      console.log("processing in OFFER", pendingCandidates.current )
       const candidate = pendingCandidates.current.shift();
       await peerConnection.current.addIceCandidate(new RTCIceCandidate(candidate));
     }
+    peerConnection.onicecandidateerror = (event) => {
+      console.error('ICE Candidate Error in OFFER:', event);
+    };
 
     const answer = await peerConnection.current.createAnswer();
     await peerConnection.current.setLocalDescription(answer);
@@ -144,25 +154,7 @@ const VideoChatScreen = () => {
     socket.current.send(JSON.stringify({ type: 'answer', answer }));
   };
 
-  const handleAnswer = async (answer) => {
-    await peerConnection.current.setRemoteDescription(new RTCSessionDescription(answer));
-    stateStore.current.remoteDescriptionSet = true;
-
-    // Process buffered candidates
-    while (pendingCandidates.current.length > 0 && stateStore.current.remoteDescriptionSet) {
-      try {
-        const candidate = pendingCandidates.current.shift();
-        await peerConnection.current.addIceCandidate(new RTCIceCandidate(candidate));
-        console.log('Added ICE candidate:', candidate);
-      } catch (error) {
-        console.error('Error adding ICE candidate:', error);
-      }
-    }
-    
-
-    stateStore.current.peerConnectionState = "stable";
-  };
-
+ 
   const handleNext = () => {
     // Close current peer connection and reset state
     setLoading(true);
@@ -203,7 +195,7 @@ const VideoChatScreen = () => {
     height: '100%',
     objectFit: 'cover',
     transform: 'scaleX(-1)', // Flip horizontally for a mirrored effect
-  }} autoPlay muted playsInline />
+  }} autoPlay playsInline />
           {loading && (
         <View style={styles.overlay}>
           <ActivityIndicator size="large" color="#ffffff" />
