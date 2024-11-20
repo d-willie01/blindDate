@@ -7,6 +7,11 @@ export default function _layout() {
         headerShown: false
     }}>
         <Stack.Screen name='home'/>
+        <Stack.Screen options={{
+          presentation: 'transparentModal',
+          animation: 'fade',
+          headerShown: false,
+        }} name="auth"/>
         
     </Stack>
   )

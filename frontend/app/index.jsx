@@ -84,7 +84,7 @@ export default function index() {
         <Text style={styles.subText}>1v1Chat - Real People, Real Connections</Text>
 
         {/* Buttons */}
-        <Link href={'/home'}>
+        <Link href={'/auth'}>
           <Animated.View style={[styles.startButton, { transform: [{ translateY: bobbingAnimation }] }]}>
             <Text style={styles.startButtonText}>Start BLINDER</Text>
           </Animated.View>
@@ -231,6 +231,7 @@ const styles = StyleSheet.create({
     width: 40,  // Adjust size as needed
     height: 40, // Adjust size as needed
     resizeMode: 'contain',
+    borderRadius: 5,
   },
 });
 

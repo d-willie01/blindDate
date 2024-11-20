@@ -196,41 +196,54 @@ const VideoChatScreen = () => {
   };
   return (
     <SafeAreaView style={styles.container}>
-      {/* Videos Container */}
       <View style={styles.videosContainer}>
-        <View style={styles.videoWrapper}>
-          <video id="localVideo" style={{
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-    transform: 'scaleX(-1)', // Flip horizontally for a mirrored effect
-  }} autoPlay muted playsInline />
+        {/* Local Video */}
+        <View style={[styles.videoWrapper, styles.topVideoWrapper]}>
+          <video
+            id="localVideo"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              transform: 'scaleX(-1)',
+            }}
+            autoPlay
+            muted
+            playsInline
+          />
         </View>
+  
+        {/* Remote Video */}
         <View style={styles.videoWrapper}>
-          <video id="remoteVideo" style={{
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-    transform: 'scaleX(-1)', // Flip horizontally for a mirrored effect
-  }} autoPlay muted playsInline />
+          <video
+            id="remoteVideo"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              transform: 'scaleX(-1)',
+            }}
+            autoPlay
+            muted
+            playsInline
+          />
+          {/* Loader */}
           {loading && (
-        <View style={styles.overlay}>
-          <ActivityIndicator size="large" color="#ffffff" />
-          <Text style={styles.loadingText}>Loading...</Text>
-        </View>
-      )}
-
-{partnerLeft && (
-        <View style={styles.overlay}>
-          
-          <Text style={styles.loadingText}>Partner Gone, Press Next!</Text>
-        </View>
-      )}
-      
+            <View style={styles.overlay}>
+              <ActivityIndicator size="large" color="#ffffff" />
+              <Text style={styles.loadingText}>Loading...</Text>
+            </View>
+          )}
+          {/* Partner left message */}
+          {partnerLeft && (
+            <View style={styles.overlay}>
+              <Text style={styles.loadingText}>Partner Gone, Press Next!</Text>
+            </View>
+          )}
         </View>
       </View>
-
-      {/* Stop and Next buttons overlay */}
+  
+      {/* Buttons */}
       <View style={styles.buttonsContainer}>
         <TouchableOpacity style={styles.stopButton}>
           <Text style={styles.stopButtonText}>STOP</Text>
@@ -239,18 +252,9 @@ const VideoChatScreen = () => {
           <Text style={styles.nextButtonText}>NEXT</Text>
         </TouchableOpacity>
       </View>
-
-      {/* Icons at the bottom */}
-      <View style={styles.iconsContainer}>
-
-        
-      <Ionicons name="heart-dislike" size={24} color="white" />
-      <Entypo name="flag" size={24} color="white" />
-        <Ionicons name="heart" size={24} color="white" />
-      </View>
-      
     </SafeAreaView>
   );
+  
 };
 
 const styles = StyleSheet.create({
@@ -260,33 +264,46 @@ const styles = StyleSheet.create({
   },
   videosContainer: {
     flex: 1,
-    flexDirection: 'column',
     justifyContent: 'space-between',
   },
   videoWrapper: {
     flex: 1,
-    backgroundColor: '#333',
+    backgroundColor: '#000', // Black background for both video screens
+    position: 'relative', // Allow absolute positioning for overlay
   },
-  video: {
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover', // Ensures the video fills its container
+  topVideoWrapper: {
+    borderBottomWidth: 4, // Add dividing line
+    borderBottomColor: '#90EE90', // Light green color
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+  },
+  loadingText: {
+    marginTop: 10,
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   buttonsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    paddingVertical: 10,
-    backgroundColor: 'transparent', // Makes it overlay and see-through
-    position: 'absolute',
-    bottom: 60, // Positioned above the icons bar
-    width: '100%',
+    justifyContent: 'space-between',
+    padding: 10,
   },
   stopButton: {
+    flex: 1,
     borderColor: 'red',
     borderWidth: 2,
     paddingVertical: 10,
-    paddingHorizontal: 20,
+    marginHorizontal: 5,
     borderRadius: 5,
+    alignItems: 'center',
   },
   stopButtonText: {
     color: 'red',
@@ -294,40 +311,21 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   nextButton: {
+    flex: 1,
     borderColor: 'green',
     borderWidth: 2,
     paddingVertical: 10,
-    paddingHorizontal: 20,
+    marginHorizontal: 5,
     borderRadius: 5,
+    alignItems: 'center',
   },
   nextButtonText: {
     color: 'green',
     fontSize: 16,
     fontWeight: 'bold',
   },
-  iconsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 20,
-    backgroundColor: '#222',
-  },
-  overlay: {
-    ...StyleSheet.absoluteFillObject, // Fills the entire screen
-    backgroundColor: 'rgba(0, 0, 0, 0.8)', // Semi-transparent black
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loadingText: {
-    color: '#fff',
-    fontSize: 16,
-    marginTop: 10,
-  },
-  mirrorVideo: {
-    transform: [{ scaleX: -1 }], // Flips the video horizontally
-  },
-  
-  
 });
+
 
 export default VideoChatScreen;
 
