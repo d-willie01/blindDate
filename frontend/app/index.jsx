@@ -2,7 +2,9 @@ import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView, Animated }
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'expo-router';
 import Logo from '../assets/images/blinderLogo.png';
+import * as WebBrowser from 'expo-web-browser';
 
+WebBrowser.maybeCompleteAuthSession();
 export default function index() {
   const bobbingAnimation = useRef(new Animated.Value(0)).current;
 
