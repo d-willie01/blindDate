@@ -59,10 +59,20 @@ export default function index() {
               style={styles.image}
             />
           </View>
+          
+         
           <View style={styles.imageWrapper}>
             <Image
               source={{
                 uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRa_giq5ZzKgf_VqDfEZGyFHl9TH0dkiyZH5tkIqN55B7Y7bnnI8kuKyOq-N4y6ov7cGe4&usqp=CAU',
+              }}
+              style={styles.image}
+            />
+          </View>
+          <View style={styles.imageWrapper}>
+            <Image
+              source={{
+                uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwuwRiZVscOhwKhyHTXcqd_Q0_U90Npu5WTg&s',
               }}
               style={styles.image}
             />
