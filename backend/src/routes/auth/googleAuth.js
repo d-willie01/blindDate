@@ -13,6 +13,7 @@ const getGoogleAuth = async(req, res) => {
     const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 
     const client = new OAuth2Client(GOOGLE_CLIENT_ID);
+
     
     // Function to verify Google ID token
     async function verifyGoogleToken(idToken) {
@@ -26,14 +27,17 @@ const getGoogleAuth = async(req, res) => {
     
     // Function to create or find the user in MongoDB
     async function findOrCreateUser(googleUser) {
+      let isNewUser = false
       const { sub: googleId, email, name } = googleUser;
       let user = await User.findOne({ googleId });
     
       if (!user) {
         user = await User.create({ googleId, email, name });
+        console.log("New User Create", user);
+        isNewUser = true
       }
     
-      return user;
+      return {user, isNewUser};
     }
     
     // Function to generate a custom JWT for your app
@@ -54,15 +58,17 @@ const getGoogleAuth = async(req, res) => {
       try {
         // Verify Google ID token
         const googleUser = await verifyGoogleToken(idToken);
+
+        console.log('Google User Payload:', googleUser)
     
         // Create or find user in MongoDB
-        const user = await findOrCreateUser(googleUser);
+        const {user, isNewUser} = await findOrCreateUser(googleUser);
     
         // Generate a JWT for the user
         const jwtToken = generateToken(user);
     
         // Send the JWT back to the frontend
-        res.json({ token: jwtToken });
+        res.json({ token: jwtToken, NewUser: isNewUser  });
       } catch (error) {
     
         console.error("Authentication error:", error);
