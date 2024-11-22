@@ -7,6 +7,7 @@ export default function _layout() {
         headerShown: false
     }}>
         <Stack.Screen name='connect'/>
+        <Stack.Screen name = "registration"/>
         
     </Stack>
   )
