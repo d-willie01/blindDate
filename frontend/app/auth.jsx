@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import {
   Pressable,
   StyleSheet,
@@ -13,13 +13,15 @@ import Animated, { FadeIn, SlideInDown } from 'react-native-reanimated';
 import Logo from '../assets/images/blinderLogo.png';
 import GoogleLogo from '../assets/images/googleLogo.png';
 import * as AuthSession from 'expo-auth-session';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
 export default function SignInPage() {
 
   const [loading, setLoading] = useState(false);
-
+  const router = useRouter();
   console.log(AuthSession.makeRedirectUri({ useProxy: true }))
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
     {
@@ -32,9 +34,55 @@ export default function SignInPage() {
     { authorizationEndpoint: 'https://accounts.google.com/o/oauth2/auth' }
   );
 
+  const sendToken = async (authentication) => {
+    try {
+      
+      const response = await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/auth/google`, { authentication });
+      
+      if (response.status === 200) {
+        
+        console.log("Finally inside boi yessirrrr:", response.data);
+
+        if(response?.data?.NewUser)
+        {
+          
+          router.replace('/home/registration')
+
+        }
+        else
+        {
+        
+        await AsyncStorage.setItem("AccessToken", response.data.token)
+        router.replace('/home/connect')
+        setLoading(false)
+        }
+        
+      }
+    } catch (error) {
+      console.log(error);
+      alert(error.message);
+      setLoading(false);
+      
+    }
+  };
+
   useEffect(() => {
-    console.log(response)
+    //console.log(response)
+
+    if( response?.type ==='success')
+    {
+      const authToken = response.params.id_token
+      sendToken(authToken);
+    }
+    else if(response?.type ==='dismiss' || response?.type ==='cancel')
+    {
+      alert('login unsuccessful')
+      setLoading(false);
+    }
+
   }, [response]);
+
+ 
 
   
 
