@@ -218,11 +218,13 @@ const styles = StyleSheet.create({
   bottomHeader: {
     backgroundColor: '#b9ffb8', // Green background matching the login button
     width: '100%',
+    borderTopColor:"black",
+    borderWidth:1,
     paddingVertical: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    position: 'absolute', // This will pin it to the bottom
-    bottom: 0,
+    //position: 'absolute', // This will pin it to the bottom
+    ///bottom: 0,
   },
   socialMediaWrapper: {
     flexDirection: 'row',
