@@ -3,16 +3,70 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Modal,
 import { SafeAreaView } from "react-native-safe-area-context";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Link } from 'expo-router';
+import { useRouter } from 'expo-router';
+import axios from 'axios'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function SignupScreen() {
+
+  const router = useRouter();
   const [dateOfBirth, setDateOfBirth] = useState(null); // State to hold selected date
   const [selectedGender, setSelectedGender] = useState(null); // State to hold selected gender
+  const [name, setName] = useState("");
+
 
   const formatDate = (date) => {
     if (!date) return "";
     return date.toISOString().split("T")[0]; // Format as YYYY-MM-DD
   };
+
+  const updateUser = async() => {
+
+      console.log(name)
+      console.log(selectedGender);
+      console.log(dateOfBirth)
+      const value = await AsyncStorage.getItem('AccessToken');
+
+      console.log(value);
+
+      
+    try {
+
+      const response = await axios.post(
+        `${process.env.EXPO_PUBLIC_API_URL}/user/registration`,
+        {
+          name,
+          gender: selectedGender,
+          dateOfBirth: formatDate(dateOfBirth)
+        },
+        
+        {
+        headers:
+        {
+          'Authorization': `Bearer ${value}`,
+          'Content-Type': 'application/json',
+        },
+
+      })
+
+      if(response.status === 200)
+      {
+          router.replace('/home/preferences');
+      }
+
+      console.log(response)
+      
+      
+    } catch (error) {
+      
+      console.log(error)
+    }
+
+      
+
+
+
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -22,12 +76,14 @@ export default function SignupScreen() {
           <Text style={styles.logoText}>BLINDER</Text>
         </View>
 
+        <Text style={styles.labelText}>Enter Your Name:</Text>
         {/* Name Input */}
         <TextInput
           style={styles.input}
           placeholder="Name / Nickname"
           placeholderTextColor="#A0A0A0"
           maxLength={50}
+          onChangeText={(event) => setName(event)}
         />
 
         {/* Gender Selection */}
@@ -90,11 +146,11 @@ export default function SignupScreen() {
 
         {/* Next Button */}
         
-        <Link style={styles.nextButton}href={'/home/preferences'}>
-        <TouchableOpacity style={styles.nextButton}>
+        
+        <TouchableOpacity onPress={updateUser} style={styles.nextButton}>
           <Text style={styles.nextButtonText}>Next</Text>
         </TouchableOpacity>
-        </Link>
+        
 
       </ScrollView>
     </SafeAreaView>
