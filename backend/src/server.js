@@ -12,6 +12,10 @@ const cors = require('cors');
 const app = express();
 const server = http.createServer(app);
 
+// Middleware to parse JSON
+app.use(express.json());
+
+
 
 // Set up WebSocket route
 setupWebSocket(server);

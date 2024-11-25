@@ -2,7 +2,6 @@ const express = require('express');
 const { OAuth2Client } = require('google-auth-library');
 const jwt = require('jsonwebtoken');
 const User = require('../../models/User'); // Adjust this path based on your structure
-const router = express.Router();
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -40,7 +39,7 @@ const getGoogleAuth = async(req, res) => {
       return {user, isNewUser};
     }
     
-    // Function to generate a custom JWT for your app
+    // Function to generate a custom JWT ACCESS for your app
     function generateToken(user) {
       const payload = {
         userId: user._id,
@@ -48,6 +47,16 @@ const getGoogleAuth = async(req, res) => {
       };
       return jwt.sign(payload, process.env.JWT_SECRET_KEY, { algorithm: "HS256", expiresIn: '1h' });
     }
+
+    //REFRESH TOKEN
+    function generateRefreshToken(user) {
+      const payload = {
+        userId: user._id,
+        email: user.email,
+      };
+      return jwt.sign(payload, process.env.JWT_REFRESH_SECRET_KEY, { algorithm: "HS256", expiresIn: "7d" });
+    }
+    
     
     // Route handler
 
@@ -59,16 +68,23 @@ const getGoogleAuth = async(req, res) => {
         // Verify Google ID token
         const googleUser = await verifyGoogleToken(idToken);
 
-        console.log('Google User Payload:', googleUser)
     
         // Create or find user in MongoDB
         const {user, isNewUser} = await findOrCreateUser(googleUser);
     
         // Generate a JWT for the user
-        const jwtToken = generateToken(user);
+        const jwtAccessToken = generateToken(user);
+        const refreshToken = generateRefreshToken(user);
+
+            user.refreshToken = refreshToken;
+            await user.save();
     
-        // Send the JWT back to the frontend
-        res.json({ token: jwtToken, NewUser: isNewUser  });
+        // Send the JWT & Refresh token back to the frontend
+        res.json({ 
+          jwtAccessToken, 
+          refreshToken, 
+          NewUser: isNewUser 
+        });
       } catch (error) {
     
         console.error("Authentication error:", error);
