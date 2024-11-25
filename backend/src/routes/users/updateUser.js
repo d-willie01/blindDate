@@ -19,8 +19,10 @@ try {
 
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY)
 
-    console.log(decodedToken);
+    console.log("this is the user token:",decodedToken);
     console.log(name, gender, dateOfBirth);
+
+    console.log("this is the ENV variable:", process.env.JWT_SECRET_KEY)
 
     const updatedUser = await User.findOneAndUpdate(
         {email: decodedToken.email},
