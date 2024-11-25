@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 
 const updateUser = async(req, res) =>{
 
+    console.log("Headers for the UPDATE REQUEST:", req.headers);
 
 const {name, gender, dateOfBirth} = req.body
 
@@ -20,9 +21,7 @@ try {
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY)
 
     console.log("this is the user token:",decodedToken);
-    console.log(name, gender, dateOfBirth);
-
-    console.log("this is the ENV variable:", process.env.JWT_SECRET_KEY)
+    
 
     const updatedUser = await User.findOneAndUpdate(
         {email: decodedToken.email},
