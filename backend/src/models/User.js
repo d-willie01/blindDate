@@ -29,6 +29,10 @@ const userSchema = new mongoose.Schema({
     type: Date,
     required: false, // Optional field for the user's date of birth
   },
+  refreshToken: {
+    type: String,
+    //required: true,
+  },
   createdAt: {
     type: Date,
     default: Date.now, // Automatically set the creation date
