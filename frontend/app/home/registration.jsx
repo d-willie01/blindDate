@@ -4,8 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useRouter } from 'expo-router';
-import axios from 'axios'
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import api from "../../api/apiCalls"
 
 export default function SignupScreen() {
 
@@ -20,53 +19,31 @@ export default function SignupScreen() {
     return date.toISOString().split("T")[0]; // Format as YYYY-MM-DD
   };
 
-  const updateUser = async() => {
-
-      console.log(name)
-      console.log(selectedGender);
-      console.log(dateOfBirth)
-      const value = await AsyncStorage.getItem('AccessToken');
-
-      console.log(value);
-
-      
+  const updateUser = async () => {
     try {
-
-      const response = await axios.post(
-        `${process.env.EXPO_PUBLIC_API_URL}/user/registration`,
-        {
-          name,
-          gender: selectedGender,
-          dateOfBirth: formatDate(dateOfBirth)
-        },
-        
-        {
-        headers:
-        {
-          'Authorization': `Bearer ${value}`,
-          'Content-Type': 'application/json',
-        },
-
-      })
-
-      if(response.status === 200)
-      {
-          router.replace('/home/preferences');
+      console.log(name);
+      console.log(selectedGender);
+      console.log(dateOfBirth);
+  
+      const response = await api.post('/user/registration', {
+        name,
+        gender: selectedGender,
+        dateOfBirth: formatDate(dateOfBirth),
+      });
+  
+      if (response.status === 200) {
+        router.replace('/home/preferences');
       }
-
-      console.log(response)
-      
-      
+  
+      console.log(response.data);
     } catch (error) {
-      
-      console.log(error)
+      console.log('Error updating user:', error);
+      if (error.response) {
+        console.log('Server response:', error.response.data);
+      }
     }
-
-      
-
-
-
-  }
+  };
+  
 
   return (
     <SafeAreaView style={styles.container}>
