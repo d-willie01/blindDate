@@ -13,8 +13,8 @@ import Animated, { FadeIn, SlideInDown } from 'react-native-reanimated';
 import Logo from '../assets/images/blinderLogo.png';
 import GoogleLogo from '../assets/images/googleLogo.png';
 import * as AuthSession from 'expo-auth-session';
-import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import api from '../api/apiCalls'
 
 
 
@@ -34,37 +34,72 @@ export default function SignInPage() {
     { authorizationEndpoint: 'https://accounts.google.com/o/oauth2/auth' }
   );
 
+  const saveTokens = async(accessToken, refreshToken) => {
+
+    if(accessToken)
+    {
+        await AsyncStorage.setItem('accessToken', accessToken);
+    }
+    if(refreshToken)
+    {
+        await AsyncStorage.setItem('refreshToken', refreshToken)
+    }
+}
+
+  
   const sendToken = async (authentication) => {
     try {
-      
-      const response = await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/auth/google`, { authentication });
-      
+      const response = await api.post('/auth/google', { authentication });
       if (response.status === 200) {
-        
-        console.log("Finally inside boi yessirrrr:", response.data);
-
-        if(response?.data?.NewUser)
-        {
-          
-          router.replace('/home/registration')
-
+        const { jwtAccessToken, refreshToken, NewUser } = response.data;
+        if (NewUser) {
+          router.replace('/home/registration');
+        } else {
+          await saveTokens(jwtAccessToken, refreshToken);
+          router.replace('/home/connect');
         }
-        else
-        {
-        
-        await AsyncStorage.setItem("AccessToken", response.data.token)
-        router.replace('/home/connect')
-        setLoading(false)
-        }
-        
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       alert(error.message);
       setLoading(false);
-      
     }
   };
+  
+
+
+  // const sendToken = async (authentication) => {
+  //   try {
+      
+  //     const response = await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/auth/google`, { authentication });
+      
+  //     if (response.status === 200) {
+        
+  //       console.log("Finally inside boi yessirrrr:", response.data);
+
+  //       if(response?.data?.NewUser)
+  //       {
+          
+  //         router.replace('/home/registration')
+
+  //       }
+  //       else
+  //       {
+        
+  //       await AsyncStorage.setItem("accessToken", response.data.jwtAccessToken)
+  //       await AsyncStorage.setItem("refreshToken", response.data.refreshToken)
+  //       router.replace('/home/connect')
+  //       setLoading(false)
+  //       }
+        
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     alert(error.message);
+  //     setLoading(false);
+      
+  //   }
+  // };
 
   useEffect(() => {
     //console.log(response)
