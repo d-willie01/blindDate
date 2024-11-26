@@ -1,6 +1,7 @@
 import React, {useRef, useEffect, useState, } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ActivityIndicator } from 'react-native';
 import { Ionicons, FontAwesome, Entypo } from '@expo/vector-icons';
+import { Link } from 'expo-router';
 
 const VideoChatScreen = () => {
 
@@ -246,7 +247,9 @@ const VideoChatScreen = () => {
       {/* Buttons */}
       <View style={styles.buttonsContainer}>
         <TouchableOpacity style={styles.stopButton}>
+          <Link href={'/home/profile'}>
           <Text style={styles.stopButtonText}>STOP</Text>
+          </Link>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleNext} style={styles.nextButton}>
           <Text style={styles.nextButtonText}>NEXT</Text>

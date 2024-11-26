@@ -34,13 +34,15 @@ export default function index() {
       <ScrollView contentContainerStyle={styles.container}>
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity style={styles.menuIcon}>
+          {/* <TouchableOpacity style={styles.menuIcon}>
             <Text style={styles.menuText}>☰</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <Image style={styles.logo} source={Logo} />
+          <Link href={'/auth'}>
           <TouchableOpacity style={styles.loginButton}>
             <Text style={styles.loginText}>Login</Text>
           </TouchableOpacity>
+          </Link>
         </View>
 
         {/* Profile Images */}

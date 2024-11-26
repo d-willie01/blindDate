@@ -2,8 +2,8 @@ import axios from 'axios'
 import AsycStorage from '@react-native-async-storage/async-storage'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const BASE_URL = 'https://stream-ses0.onrender.com'
-//const BASE_URL = 'http://localhost:3000'
+const BASE_URL = 'https://stream-ses0.onrender.com/'
+// const BASE_URL = 'http://localhost:3000'
 
 
 const api = axios.create({
@@ -38,7 +38,9 @@ const saveTokens = async(accessToken, refreshToken) => {
 api.interceptors.request.use(
     async (config) =>
     {
+        
         const {accessToken} = await getStoredTokens();
+        console.log("This is users token:", accessToken)
 
         if(accessToken)
         {
@@ -68,7 +70,7 @@ api.interceptors.response.use(
                     throw new Error("no refresh token")
                 }
 
-                const response = await axios.post(`${EXPO_PUBLIC_API_URL}/auth/refreshToken`, {refreshToken})
+                const response = await axios.post(`${BASE_URL}/auth/refreshToken`, {refreshToken})
 
                 const newAccessToken = response.data.token;
 
