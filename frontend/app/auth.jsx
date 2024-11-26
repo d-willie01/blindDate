@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     width: '90%',
     padding: 20,
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#1E1E1E',
     borderRadius: 15,
   },
   logo: {
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#3AC13A',
+    color: '#b9ffb8',
     marginBottom: 20,
   },
   authButton: {
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 12,
-    color: '#777',
+    color: 'white',
     textAlign: 'center',
     marginTop: 20,
   },

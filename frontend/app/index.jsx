@@ -5,6 +5,7 @@ import Logo from '../assets/images/blinderLogo.png';
 import * as WebBrowser from 'expo-web-browser';
 
 WebBrowser.maybeCompleteAuthSession();
+
 export default function index() {
   const bobbingAnimation = useRef(new Animated.Value(0)).current;
 
@@ -34,14 +35,11 @@ export default function index() {
       <ScrollView contentContainerStyle={styles.container}>
         {/* Header */}
         <View style={styles.header}>
-          {/* <TouchableOpacity style={styles.menuIcon}>
-            <Text style={styles.menuText}>☰</Text>
-          </TouchableOpacity> */}
           <Image style={styles.logo} source={Logo} />
           <Link href={'/auth'}>
-          <TouchableOpacity style={styles.loginButton}>
-            <Text style={styles.loginText}>Login</Text>
-          </TouchableOpacity>
+            <TouchableOpacity style={styles.loginButton}>
+              <Text style={styles.loginText}>Login</Text>
+            </TouchableOpacity>
           </Link>
         </View>
 
@@ -63,8 +61,6 @@ export default function index() {
               style={styles.image}
             />
           </View>
-          
-         
           <View style={styles.imageWrapper}>
             <Image
               source={{
@@ -96,8 +92,7 @@ export default function index() {
         <TouchableOpacity style={styles.downloadButton}>
           <Text style={styles.downloadButtonText}>Download App</Text>
         </TouchableOpacity>
-      </ScrollView>
-
+        
       {/* Bottom Header with Social Media Logos */}
       <View style={styles.bottomHeader}>
         <View style={styles.socialMediaWrapper}>
@@ -115,6 +110,8 @@ export default function index() {
           />
         </View>
       </View>
+      </ScrollView>
+
     </View>
   );
 }
@@ -122,14 +119,15 @@ export default function index() {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    justifyContent: 'space-between', // This makes sure content is above and below the bottom header
+    justifyContent: 'space-between',
+    position: 'relative', // To position the bottom header absolutely
   },
   container: {
     flexGrow: 1,
     alignItems: 'center',
     paddingVertical: 20,
-    backgroundColor: '#e0f8e6',
-    paddingBottom: 80, // Adding some space for the bottom header
+    backgroundColor: '#1E1E1E', // Dark background to match registration screen
+    paddingBottom: 120, // Adjust space to accommodate the bottom header (more space for scrollable content)
   },
   header: {
     flexDirection: 'row',
@@ -138,17 +136,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 20,
   },
-  menuIcon: {
-    flex: 1,
-    alignItems: 'flex-start',
-  },
-  menuText: {
-    fontSize: 24,
-  },
   logo: {
     flex: 2,
-    width: 150, // Increased size
-    height: 80, // Increased size
+    width: 150,
+    height: 80,
     resizeMode: 'contain',
     alignSelf: 'center',
   },
@@ -160,11 +151,11 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderWidth: 2,
-    borderColor: '#b9ffb8', // Light green border
-    backgroundColor: '#b9ffb8', // Transparent background
+    borderColor: '#b9ffb8', // Green border
+    backgroundColor: '#1A1A1A', // Dark background for button
   },
   loginText: {
-    color: '#2b2b2b', // Dark text for better visibility
+    color: '#b9ffb8', // Light green text
     fontSize: 14,
   },
   imagesContainer: {
@@ -176,7 +167,7 @@ const styles = StyleSheet.create({
   imageWrapper: {
     width: 90,
     height: 130,
-    backgroundColor: '#e0f8e6',
+    backgroundColor: '#1E1E1E', // Dark background for image wrappers
     borderRadius: 20,
     overflow: 'hidden',
   },
@@ -188,16 +179,16 @@ const styles = StyleSheet.create({
   mainText: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#2b2b2b',
+    color: '#fff', // White text to contrast with dark background
     marginVertical: 10,
   },
   subText: {
     fontSize: 14,
-    color: '#2b2b2b',
+    color: '#b9ffb8', // Green text to match the theme
     marginBottom: 20,
   },
   startButton: {
-    backgroundColor: '#b9ffb8',
+    backgroundColor: '#b9ffb8', // Green button
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 50,
@@ -208,25 +199,25 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   downloadButton: {
-    backgroundColor: '#000',
+    backgroundColor: '#000', // Dark background
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 50,
   },
   downloadButtonText: {
     fontSize: 18,
-    color: '#fff',
+    color: '#fff', // White text for download button
   },
   bottomHeader: {
-    backgroundColor: '#b9ffb8', // Green background matching the login button
+    position: 'absolute', // Fix the bottom header to the bottom of the screen
+    bottom: 0, // Place it at the very bottom
+    backgroundColor: '#1E1E1E', // Dark background matching the theme
     width: '100%',
-    borderTopColor:"black",
-    borderWidth:1,
+    borderTopColor: "#b9ffb8", // Green border at the top
+    borderWidth: 1,
     paddingVertical: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    //position: 'absolute', // This will pin it to the bottom
-    ///bottom: 0,
   },
   socialMediaWrapper: {
     flexDirection: 'row',
@@ -234,12 +225,14 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   socialLogo: {
-    width: 40,  // Adjust size as needed
-    height: 40, // Adjust size as needed
+    width: 40,
+    height: 40,
     resizeMode: 'contain',
     borderRadius: 5,
   },
 });
+
+
 
 
 
