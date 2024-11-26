@@ -18,8 +18,8 @@ const VideoChatScreen = () => {
 
   useEffect(() => {
     // Initialize WebSocket connection
-    //socket.current = new WebSocket('ws://localhost:3000');
-    socket.current = new WebSocket('wss://stream-ses0.onrender.com/');
+    socket.current = new WebSocket('ws://localhost:3000');
+    // socket.current = new WebSocket('wss://stream-ses0.onrender.com/');
 
     // Set up WebSocket event listeners
     socket.current.onmessage = handleSocketMessage;
@@ -243,6 +243,24 @@ const VideoChatScreen = () => {
           )}
         </View>
       </View>
+
+       {/* Filters Overlay */}
+       <View style={styles.filtersOverlay}>
+  <Link href={'/home/filter'} style={{ flex: 1 }}>
+    <View style={styles.filterOption}>
+      <Text style={styles.filterText}>👫 Gender</Text>
+    </View>
+  </Link>
+
+  <View style={styles.filterDivider} />
+
+  <Link href={'/home/filter'} style={{ flex: 1 }}>
+    <View style={styles.filterOption}>
+      <Text style={styles.filterText}>Preferences</Text>
+    </View>
+  </Link>
+</View>
+
   
       {/* Buttons */}
       <View style={styles.buttonsContainer}>
@@ -328,39 +346,41 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  filtersOverlay: {
+    flexDirection: 'row',
+    justifyContent: 'space-around', // Distribute space evenly
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)', // Semi-transparent black
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 10, // Rounded edges for a softer appearance
+    marginHorizontal: 10,
+    marginBottom: 10, // Spacing from the bottom buttons
+    flexWrap: 'wrap', // Allow items to wrap if space is limited
+  },
+  filterOption: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 5, // Add spacing between options
+    paddingVertical: 5, // Padding for touch-friendly size
+  },
+  filterText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center', // Center text inside the option
+  },
+  filterDivider: {
+    width: 1,
+    height: '70%', // Adjust height to make it proportional
+    backgroundColor: '#ffffff',
+    opacity: 0.5,
+    marginHorizontal: 5, // Add spacing between the divider and options
+  },
+  
+  
 });
 
 
 export default VideoChatScreen;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
