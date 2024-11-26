@@ -263,7 +263,7 @@ const VideoChatScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: "#1E1E1E",
   },
   videosContainer: {
     flex: 1,
@@ -271,10 +271,11 @@ const styles = StyleSheet.create({
   },
   videoWrapper: {
     flex: 1,
-    backgroundColor: '#000', // Black background for both video screens
+    backgroundColor: "#1E1E1E", // Black background for both video screens
     position: 'relative', // Allow absolute positioning for overlay
   },
   topVideoWrapper: {
+    
     borderBottomWidth: 4, // Add dividing line
     borderBottomColor: '#90EE90', // Light green color
   },
@@ -315,7 +316,7 @@ const styles = StyleSheet.create({
   },
   nextButton: {
     flex: 1,
-    borderColor: 'green',
+    borderColor: "#b9ffb8",
     borderWidth: 2,
     paddingVertical: 10,
     marginHorizontal: 5,
@@ -323,7 +324,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   nextButtonText: {
-    color: 'green',
+    color: "#b9ffb8",
     fontSize: 16,
     fontWeight: 'bold',
   },
