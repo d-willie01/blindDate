@@ -53,6 +53,7 @@ export default function SignInPage() {
       if (response.status === 200) {
         const { jwtAccessToken, refreshToken, NewUser } = response.data;
         if (NewUser) {
+          await saveTokens(jwtAccessToken, refreshToken);
           router.replace('/home/registration');
         } else {
           await saveTokens(jwtAccessToken, refreshToken);

@@ -25,7 +25,7 @@ export default function SignupScreen() {
       console.log(selectedGender);
       console.log(dateOfBirth);
   
-      const response = await api.post('/user/registration', {
+      const response = await api.post('/user/registration/', {
         name,
         gender: selectedGender,
         dateOfBirth: formatDate(dateOfBirth),
@@ -37,10 +37,7 @@ export default function SignupScreen() {
   
       console.log(response.data);
     } catch (error) {
-      console.log('Error updating user:', error);
-      if (error.response) {
-        console.log('Server response:', error.response.data);
-      }
+      console.log("this is the error:", error)
     }
   };
   
