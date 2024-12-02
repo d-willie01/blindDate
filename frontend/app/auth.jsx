@@ -15,24 +15,20 @@ import GoogleLogo from '../assets/images/googleLogo.png';
 import * as AuthSession from 'expo-auth-session';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../api/apiCalls'
+import { auth } from '../firebaseConfig';
+import { signInWithPopup, GoogleAuthProvider, TwitterAuthProvider } from "firebase/auth";
+
 
 
 
 export default function SignInPage() {
 
   const [loading, setLoading] = useState(false);
+  const googleProvider = new GoogleAuthProvider();
+  const twitterProvider = new TwitterAuthProvider()
+
   const router = useRouter();
-  console.log(AuthSession.makeRedirectUri({ useProxy: true }))
-  const [request, response, promptAsync] = AuthSession.useAuthRequest(
-    {
-      clientId: process.env.EXPO_PUBLIC_GOOGLE_API,
-      responseType: "id_token",
-      redirectUri: AuthSession.makeRedirectUri({ useProxy: true }),
-      scopes: ['profile', 'email','openid'], // Adjust scopes if needed
-      usePKCE: false, // Ensure PKCE is disabled
-    },
-    { authorizationEndpoint: 'https://accounts.google.com/o/oauth2/auth' }
-  );
+ 
 
   const saveTokens = async(accessToken, refreshToken) => {
 
@@ -47,9 +43,42 @@ export default function SignInPage() {
 }
 
   
-  const sendToken = async (authentication) => {
+  const sendGoogleToken = async (authentication) => {
     try {
       const response = await api.post('/auth/google', { authentication });
+      if (response.status === 200) {
+        const { jwtAccessToken, refreshToken, NewUser } = response.data;
+        if (NewUser) {
+          await saveTokens(jwtAccessToken, refreshToken);
+          router.replace('/home/registration');
+        } else {
+          await saveTokens(jwtAccessToken, refreshToken);
+          router.replace('/home/connect');
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      alert(error.message);
+      setLoading(false);
+    }
+  };
+
+  const sendTwitterToken = async (authentication) => {
+    try {
+
+      console.log("these are the two things twitter needs before they are sent:",authentication.token, authentication.secret   )
+
+      const token = authentication.token
+      const secret = authentication.secret
+
+      const response = await api.post('/auth/twitter', { token, secret  });
+
+      console.log(response);
+
+
+
+
+
       if (response.status === 200) {
         const { jwtAccessToken, refreshToken, NewUser } = response.data;
         if (NewUser) {
@@ -69,57 +98,48 @@ export default function SignInPage() {
   
 
 
-  // const sendToken = async (authentication) => {
-  //   try {
-      
-  //     const response = await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/auth/google`, { authentication });
-      
-  //     if (response.status === 200) {
-        
-  //       console.log("Finally inside boi yessirrrr:", response.data);
 
-  //       if(response?.data?.NewUser)
-  //       {
-          
-  //         router.replace('/home/registration')
+  const handleGoogle = () => {
+    signInWithPopup(auth, googleProvider)
+  .then((result) => {
+    const credential = GoogleAuthProvider.credentialFromResult(result);
+    const idToken = credential.idToken; // Extract the ID token here
+    const user = result.user;
 
-  //       }
-  //       else
-  //       {
-        
-  //       await AsyncStorage.setItem("accessToken", response.data.jwtAccessToken)
-  //       await AsyncStorage.setItem("refreshToken", response.data.refreshToken)
-  //       router.replace('/home/connect')
-  //       setLoading(false)
-  //       }
-        
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     alert(error.message);
-  //     setLoading(false);
-      
-  //   }
-  // };
-
-  useEffect(() => {
-    //console.log(response)
-
-    if( response?.type ==='success')
-    {
-      const authToken = response.params.id_token
-      sendToken(authToken);
+    if (idToken) {
+      console.log(idToken);
+      console.log(user);
+      sendGoogleToken(idToken); // Send the ID token, not the access token
     }
-    else if(response?.type ==='dismiss' || response?.type ==='cancel')
-    {
-      alert('login unsuccessful')
-      setLoading(false);
-    }
+  })
+  .catch((error) => {
+    console.error("Error during Google Sign-In:", error.message);
+  });
 
-  }, [response]);
+  };
 
- 
+  const handleTwitter = () => {
 
+    console.log("wtf")
+    
+    signInWithPopup(auth, twitterProvider)
+    .then((result) => {
+      const credential = TwitterAuthProvider.credentialFromResult(result);
+      const token = credential.accessToken;
+      const secret = credential.secret; // Capture the secret
+
+      const user = result.user;
+
+      console.log("This is the twitter user and the token:", user, token);
+
+      // Send both token and secret to the backend
+      sendTwitterToken({ token, secret });
+    })
+    .catch((error) => {
+      console.error("Twitter Sign-In Error:", error.message);
+    });
+
+  }
   
 
   return (
@@ -136,7 +156,14 @@ export default function SignInPage() {
       <Text style={styles.title}>1v1 connections that last</Text>
 
       {/* Authentication buttons */}
-      <TouchableOpacity  onPress={() => {promptAsync({ useProxy: true }),setLoading(true)}} style={[styles.authButton, styles.googleButton]}>
+      <TouchableOpacity  onPress={() => {
+        
+        
+        // promptAsync({ useProxy: true }),
+        handleGoogle(),
+        setLoading(true)
+        
+        }} style={[styles.authButton, styles.googleButton]}>
         <View style={styles.buttonContent}>
           <Text style={styles.authButtonText}>Sign up with</Text>
           <Image
@@ -147,12 +174,12 @@ export default function SignInPage() {
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity style={[styles.authButton, styles.appleButton]}>
+      <TouchableOpacity onPress={handleTwitter} style={[styles.authButton, styles.appleButton]}>
         <View style={styles.buttonContent}>
           <Text style={styles.authButtonText}>Sign up with</Text>
           <Image
             source={{
-              uri: 'https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F8ed3d547-94ff-48e1-9f20-8c14a7030a02_2000x2000.jpeg',
+              uri: 'https://cdn.prod.website-files.com/5d66bdc65e51a0d114d15891/64cebdd90aef8ef8c749e848_X-EverythingApp-Logo-Twitter.jpg',
             }}
             style={styles.authLogo}
           />
