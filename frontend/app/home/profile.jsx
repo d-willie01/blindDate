@@ -141,24 +141,44 @@ export default function ProfileScreen() {
 </View>
 
         <View style={styles.section}>
+          
           <Text style={styles.sectionHeader}>Profile</Text>
+
+
+
+            
           <TouchableOpacity style={styles.option}>
-            <Text style={styles.optionText}>Manage Preferences</Text>
+          <Link href={'/home/userSettings/editProfile'}>
+            <Text style={styles.optionText}>Edit Profile </Text>
             <Text style={styles.optionText}>›</Text>
+            </Link>
           </TouchableOpacity>
+          
+
+
+
           <TouchableOpacity style={styles.option}>
+         <Link href={'/home/userSettings/reportAbuse'}>
             <Text style={styles.optionText}>Report Abuse</Text>
             <Text style={styles.optionText}>›</Text>
+            </Link>
           </TouchableOpacity>
           
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionHeader}>Settings</Text>
+
+
+
           <TouchableOpacity style={styles.option}>
+            <Link href={'/home/userSettings/supportFeedback'}>
             <Text style={styles.optionText}>Support & Feedback</Text>
             <Text style={styles.optionText}>›</Text>
+            </Link>
           </TouchableOpacity>
+
+
           <View style={styles.option}>
             <Text style={styles.optionText}>Dark Mode</Text>
             <Switch
