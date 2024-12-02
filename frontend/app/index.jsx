@@ -46,7 +46,7 @@ console.log(auth);
         {/* Header */}
         <View style={styles.header}>
           <Image style={styles.logo} source={Logo} />
-          <Link href={'/auth'}>
+          <Link href={'/auth/index'}>
             <TouchableOpacity style={styles.loginButton}>
               <Text style={styles.loginText}>Login</Text>
             </TouchableOpacity>

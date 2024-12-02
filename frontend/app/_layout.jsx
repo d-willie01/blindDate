@@ -11,7 +11,8 @@ export default function _layout() {
           presentation: 'transparentModal',
           animation: 'fade',
           headerShown: false,
-        }} name="auth"/>
+        }} name="/auth/index"/>
+        
         
     </Stack>
   )

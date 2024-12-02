@@ -10,12 +10,20 @@ import {
   ActivityIndicator
 } from 'react-native';
 import Animated, { FadeIn, SlideInDown } from 'react-native-reanimated';
-import Logo from '../assets/images/blinderLogo.png';
-import GoogleLogo from '../assets/images/googleLogo.png';
+
+//blinderLogo right here
+import Logo from '../../assets/images/blinderLogo.png';
+
+//Google Logo
+import GoogleLogo from '../../assets/images/googleLogo.png';
 import * as AuthSession from 'expo-auth-session';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import api from '../api/apiCalls'
-import { auth } from '../firebaseConfig';
+
+//update api call
+import api from '../../api/apiCalls'
+
+//update auth call
+import { auth } from '../../firebaseConfig';
 import { signInWithPopup, GoogleAuthProvider, TwitterAuthProvider } from "firebase/auth";
 
 
@@ -50,7 +58,7 @@ export default function SignInPage() {
         const { jwtAccessToken, refreshToken, NewUser } = response.data;
         if (NewUser) {
           await saveTokens(jwtAccessToken, refreshToken);
-          router.replace('/home/registration');
+          router.replace('/auth/registration');
         } else {
           await saveTokens(jwtAccessToken, refreshToken);
           router.replace('/home/connect');
@@ -83,7 +91,7 @@ export default function SignInPage() {
         const { jwtAccessToken, refreshToken, NewUser } = response.data;
         if (NewUser) {
           await saveTokens(jwtAccessToken, refreshToken);
-          router.replace('/home/registration');
+          router.replace('/auth/registration');
         } else {
           await saveTokens(jwtAccessToken, refreshToken);
           router.replace('/home/connect');

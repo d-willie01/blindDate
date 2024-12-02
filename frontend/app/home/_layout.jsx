@@ -15,6 +15,7 @@ export default function _layout() {
           animation: 'fade',
           headerShown: false,
         }} name="filter"/>
+        <Stack.Screen name = "userSettings"/>
     </Stack>
   )
 }
