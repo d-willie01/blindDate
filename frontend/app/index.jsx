@@ -3,6 +3,8 @@ import React, { useEffect, useRef } from 'react';
 import { Link } from 'expo-router';
 import Logo from '../assets/images/blinderLogo.png';
 import * as WebBrowser from 'expo-web-browser';
+import comingSoon from '../assets/images/comingSoon.png'
+import { auth } from '../firebaseConfig';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -29,6 +31,14 @@ export default function index() {
     bobbing.start(); // Start the animation loop
     return () => bobbing.stop(); // Cleanup when the component is unmounted
   }, []);
+
+
+  const authO = () =>{
+
+
+console.log(auth);
+
+  }
 
   return (
     <View style={styles.wrapper}>
@@ -89,9 +99,20 @@ export default function index() {
             <Text style={styles.startButtonText}>Start BLINDER</Text>
           </Animated.View>
         </Link>
-        <TouchableOpacity style={styles.downloadButton}>
+        
+        <TouchableOpacity onPress={authO} style={styles.downloadButton}>
           <Text style={styles.downloadButtonText}>Download App</Text>
         </TouchableOpacity>
+
+        <View style={{
+          //borderWidth:3
+        }}>
+        <Image style={{
+          height:100,
+          width:100,
+          resizeMode: 'contain',
+        }}source={comingSoon}/>
+        </View>
         
       {/* Bottom Header with Social Media Logos */}
       <View style={styles.bottomHeader}>

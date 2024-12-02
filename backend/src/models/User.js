@@ -4,8 +4,13 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
   googleId: {
     type: String,
-    required: true,
     unique: true, // Ensure googleId is unique across users
+    sparse: true, // Allows the field to be null without causing conflicts
+  },
+  twitterId: {
+    type: String,
+    unique: true, // Ensure twitterId is unique across users
+    sparse: true, // Allows the field to be null without causing conflicts
   },
   email: {
     type: String,
@@ -31,7 +36,7 @@ const userSchema = new mongoose.Schema({
   },
   refreshToken: {
     type: String,
-    //required: true,
+    required: false, // Optional refresh token for users
   },
   createdAt: {
     type: Date,
@@ -53,3 +58,4 @@ userSchema.pre('save', function (next) {
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
+
