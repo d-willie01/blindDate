@@ -76,7 +76,7 @@ export default function SignupScreen() {
       });
 
       if (response.status === 200) {
-        router.replace('/home/preferences');
+        router.replace('/auth/preferences');
       }
 
       console.log(response.data);
