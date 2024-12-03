@@ -16,6 +16,7 @@ export default function _layout() {
           headerShown: false,
         }} name="filter"/>
         <Stack.Screen name = "userSettings"/>
+        <Stack.Screen name = "coins"/>
     </Stack>
   )
 }
