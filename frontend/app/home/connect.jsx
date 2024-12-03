@@ -212,6 +212,10 @@ const VideoChatScreen = () => {
             muted
             playsInline
           />
+              <Link href={'/home/coins'}style={styles.coinBadge} onPress={() => console.log('Coin badge clicked')}>
+      <Text style={styles.coinCount}>46</Text>
+      <View style={styles.coinIcon} />
+    </Link>
         </View>
   
         {/* Remote Video */}
@@ -378,6 +382,38 @@ const styles = StyleSheet.create({
     opacity: 0.5,
     marginHorizontal: 5, // Add spacing between the divider and options
   },
+  coinBadge: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#6FFF6F',
+    borderRadius: 20,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5, // Adds shadow for Android
+  },
+  coinCount: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'white',
+    marginRight: 5,
+  },
+  coinIcon: {
+    width: 20,
+    height: 20,
+    backgroundColor: '#FFD700', // Gold color for the coin
+    borderRadius: 10,
+    shadowColor: '#FFD700',
+    shadowOpacity: 0.9,
+    shadowRadius: 5,
+  },
+  
   
   
 });
