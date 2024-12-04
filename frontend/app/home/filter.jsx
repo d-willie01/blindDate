@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     color: "#999",
   },
   content: {
-    borderWidth: 5,
+    //borderWidth: 5,
     paddingHorizontal: 20,
     paddingVertical: 10,
   },
