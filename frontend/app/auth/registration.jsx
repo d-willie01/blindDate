@@ -5,6 +5,7 @@ import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useRouter } from 'expo-router';
 import api from "../../api/apiCalls";
+import Logo from '../../assets/images/logo.png'
 
 export default function SignupScreen() {
   const router = useRouter();
@@ -89,7 +90,11 @@ export default function SignupScreen() {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.logoContainer}>
-          <Text style={styles.logoText}>BLINDER</Text>
+          <Image style={{
+            height:150,
+            width:150,
+            resizeMode:"contain"
+          }}source={Logo}/>
         </View>
 
         <Text style={styles.labelText}>Enter Your Name:</Text>

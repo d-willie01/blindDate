@@ -1,7 +1,7 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView, Animated } from 'react-native';
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'expo-router';
-import Logo from '../assets/images/blinderLogo.png';
+import Logo from '../assets/images/logo.png';
 import * as WebBrowser from 'expo-web-browser';
 import comingSoon from '../assets/images/comingSoon.png'
 import { auth } from '../firebaseConfig';
@@ -96,7 +96,7 @@ console.log(auth);
         {/* Buttons */}
         <Link href={'/auth'}>
           <Animated.View style={[styles.startButton, { transform: [{ translateY: bobbingAnimation }] }]}>
-            <Text style={styles.startButtonText}>Start BLINDER</Text>
+            <Text style={styles.startButtonText}>Start Linking</Text>
           </Animated.View>
         </Link>
         

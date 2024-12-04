@@ -80,13 +80,14 @@ const ChooseInterestsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#1E1E1E",
     padding: 20,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 8,
+    color:"white"
   },
   subtitle: {
     fontSize: 16,
@@ -142,7 +143,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 15,
     borderRadius: 30,
-    backgroundColor: '#b9ffb8',
+    backgroundColor: '#71FD71',
     marginRight: 10,
   },
   nextButtonText: {
