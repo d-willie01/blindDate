@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
 import goldCoins from '../../../assets/images/goldCoins.png'
 import { Link } from 'expo-router';
+import api from '../../../api/apiCalls'
 
 export default function CoinShop() {
   const [selectedIndex, setSelectedIndex] = useState(null);
+  const [selectedTransaction, setSelectedTransaction] = useState(null);
+  const [userCoins, setUserCoins] = useState(0)
 
   const coins = [
     { amount: 360, oldPrice: 3, price: 2, image: 'https://cdn.vectorstock.com/i/500p/54/84/stack-of-gold-coins-on-transparent-background-vector-18945484.jpg' },
@@ -21,6 +24,36 @@ export default function CoinShop() {
 
   const styles = createStyles(darkMode);
 
+
+  const handlePurchase = async() =>{
+
+    console.log(selectedTransaction);
+
+
+    try {
+
+
+
+      const response = await api.post('/transactions/addCoins', {
+        transaction: selectedTransaction
+      })
+
+      console.log(response);
+
+      
+
+
+
+
+      
+    } catch (error) {
+      
+    }
+
+    
+
+  }
+
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -30,7 +63,7 @@ export default function CoinShop() {
       <Link href={'/home/connect'}>
         <View style={styles.coinBadge}>
         <Text> 🢀 </Text>
-          <Text style={styles.coinCount}>46</Text>
+          <Text style={styles.coinCount}>{userCoins}</Text>
           <View style={styles.coinIcon} />
         </View>
         </Link>
@@ -47,7 +80,7 @@ export default function CoinShop() {
               styles.card,
               selectedIndex === index && styles.selectedCard, // Highlight selected card
             ]}
-            onPress={() => setSelectedIndex(index)} // Set selected index
+            onPress={() => {setSelectedIndex(index), setSelectedTransaction(coin)}} // Set selected index
           >
             <Text style={styles.coinAmount}>{coin.amount} Coins</Text>
             <Image source={goldCoins} style={styles.coinImage} />
@@ -58,7 +91,7 @@ export default function CoinShop() {
       </ScrollView>
 
       {/* Purchase Button */}
-            <TouchableOpacity
+            <TouchableOpacity onPress={handlePurchase}
                     style={[
                       styles.purchaseButton,
                       selectedIndex === null && styles.disabledPurchaseButton, // Disable button if no card is selected
