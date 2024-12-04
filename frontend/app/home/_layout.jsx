@@ -9,7 +9,7 @@ export default function _layout() {
         <Stack.Screen name='connect'/>
         <Stack.Screen name = "registration"/>
         <Stack.Screen name = "preferances"/>
-        <Stack.Screen name = "profile"/>
+        <Stack.Screen  name = "profile"/>
         <Stack.Screen options={{
           presentation: 'transparentModal',
           animation: 'fade',

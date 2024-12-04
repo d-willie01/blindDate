@@ -58,7 +58,7 @@ api.interceptors.response.use(
     {
         const originalRequest = error.config;
 
-        if(error.response?.status === 401 && !originalRequest._retry)
+        if(error.response?.status === 401 && !originalRequest._retry && error.response?.status === 404)
         {
             originalRequest._retry = true
 

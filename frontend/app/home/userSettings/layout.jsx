@@ -3,10 +3,10 @@ import React from 'react'
 
 export default function _layout() {
   return (
-    <Stack screenOptions={{
-        headerShown: false
-    }}>
-      <Stack.Screen name="editProfile"/>
+    <Stack>
+      <Stack.Screen options={{
+        headerShown: true
+      }} name="editProfile"/>
         <Stack.Screen options={{
           presentation: 'transparentModal',
           animation: 'fade',
@@ -17,6 +17,7 @@ export default function _layout() {
           animation: 'fade',
           headerShown: false,
         }} name="supportFeedback"/>
+        <Stack.Screen name="transactions"/>
 
        
         

@@ -28,7 +28,21 @@ export default function ProfileScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+
+      
+<Link href={'/home/profile'} style={{
+        alignSelf:'flex-start'
+        
+      }}>
+      <Text style={{
+          color: 'white',
+          fontWeight:"bold",
+          fontSize:20
+        }}> X  </Text>
+        </Link>
       <View style={styles.profileSection}>
+
+
         <Image
           source={{ uri: "https://via.placeholder.com/100" }}
           style={styles.profileImage}
@@ -60,7 +74,7 @@ export default function ProfileScreen() {
         </View>
 
         {/* Phone Number Input */}
-        <View style={styles.inputGroup}>
+        {/* <View style={styles.inputGroup}>
           <Text style={styles.label}>Phone Number</Text>
           <TextInput
             style={styles.input}
@@ -68,12 +82,13 @@ export default function ProfileScreen() {
             placeholderTextColor="#A0A0A0"
             keyboardType="phone-pad"
           />
-        </View>
+        </View> */}
 
         {/* Date of Birth Input */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Date of Birth</Text>
           <TextInput
+            editable={false}
             style={styles.input}
             placeholder={convertDateToDDMMYYYY(user?.dateOfBirth)}
             placeholderTextColor="#A0A0A0"
@@ -81,20 +96,26 @@ export default function ProfileScreen() {
         </View>
 
         {/* Country Input */}
-        <View style={styles.inputGroup}>
+        {/* <View style={styles.inputGroup}>
           <Text style={styles.label}>Country</Text>
           <TextInput
             style={styles.input}
             placeholder={user?.country}
             placeholderTextColor="#A0A0A0"
           />
-        </View>
+        </View> */}
+
+<View style={styles.saveButton}>
+<Link href={"/home/profile"} >
+        <Text style={styles.saveButtonText}>Save Changes</Text>
+      </Link>
+      </View>
       </View>
 
       {/* Save Changes Button */}
-      <Link href={"/home/profile"} style={styles.saveButton}>
-        <Text style={styles.saveButtonText}>Save Changes</Text>
-      </Link>
+      
+
+
     </ScrollView>
   );
 }
@@ -166,12 +187,14 @@ const styles = StyleSheet.create({
     borderColor: "#444",
   },
   saveButton: {
+    //flex:1,
     backgroundColor: "#b9ffb8", // Green button
     paddingVertical: 15,
     borderRadius: 8,
     alignItems: "center",
+    justifyContent:'center',
     marginTop: 20,
-    width: "100%",
+    //width: "100%",
   },
   saveButtonText: {
     color: "#000",

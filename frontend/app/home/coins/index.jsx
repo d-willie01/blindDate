@@ -1,13 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
 import goldCoins from '../../../assets/images/goldCoins.png'
-import { Link } from 'expo-router';
+import { Link, useRouter} from 'expo-router';
 import api from '../../../api/apiCalls'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Confetti from 'react-native-simple-confetti';
+import Coins from '../../../assets/images/goldCoins.png'
+import Logo from '../../../assets/images/logo.png'
 
 export default function CoinShop() {
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [userCoins, setUserCoins] = useState(0)
+  const tokenAmount = useRef(0);
+  const [purchaseNumber, setPurchaseNumber] = useState();
+  const [transaction, setTransaction] = useState(false);
+  const router = useRouter();
+  
+
+
+  useEffect(()=>{
+
+    const fetchUserData = async() =>{
+      const userDataRaw = await AsyncStorage.getItem('user')
+
+      const userData = JSON.parse(userDataRaw);
+      
+      tokenAmount.current = userData.tokenCount
+
+      console.log(tokenAmount.current)
+    }
+
+    fetchUserData()
+
+  },[])
 
   const coins = [
     { amount: 200, oldPrice: 3.99, price: 2, image: 'https://cdn.vectorstock.com/i/500p/54/84/stack-of-gold-coins-on-transparent-background-vector-18945484.jpg' },
@@ -25,6 +51,7 @@ export default function CoinShop() {
   const styles = createStyles(darkMode);
 
 
+
   const handlePurchase = async() =>{
 
     console.log(selectedTransaction);
@@ -32,82 +59,173 @@ export default function CoinShop() {
 
     try {
 
-
-
       const response = await api.post('/transactions/addCoins', {
         transaction: selectedTransaction
       })
 
       console.log(response);
 
-      
-
-
-
+      if(response.status == 200)
+      {
+        console.log("find the coins:", selectedTransaction.amount)
+        setTransaction(true) ;
+        setPurchaseNumber(selectedTransaction.amount);
+      }
 
       
     } catch (error) {
       
     }
-
     
+  }
+
+  const handleLinkButton = () =>{
+
+    router.replace('/home/connect');
+    setTransaction(false)
+    console.log("transaction value:",transaction)
+  }
+
+  if(!transaction)
+  {
+
+    return (
+      <View style={styles.container}>
+        {/* Header */}
+        
+        <View style={styles.header}>
+  
+       
+  
+        <Link href={'/home/connect'}>
+  
+        <View style={{
+          
+          
+        }}>
+        <Text style={{
+            color: 'white',
+            fontWeight:"bold",
+            fontSize:20
+          }}> X  </Text>
+          </View>
+  
+  
+          <View style={styles.coinBadge}>
+          
+            <Text style={styles.coinCount}>{tokenAmount.current}</Text>
+            <View style={styles.coinIcon} />
+          </View>
+          </Link>
+          
+          
+        </View>
+  
+        {/* Coins Grid */}
+        <ScrollView contentContainerStyle={styles.grid}>
+          {coins.map((coin, index) => (
+            <TouchableOpacity
+              key={index}
+              style={[
+                styles.card,
+                selectedIndex === index && styles.selectedCard, // Highlight selected card
+              ]}
+              onPress={() => {setSelectedIndex(index), setSelectedTransaction(coin)}} // Set selected index
+            >
+              <Text style={styles.coinAmount}>{coin.amount} Coins</Text>
+              <Image source={goldCoins} style={styles.coinImage} />
+              <Text style={styles.oldPrice}>${coin.oldPrice}</Text>
+              <Text style={styles.price}>${coin.price}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+  
+        {/* Purchase Button */}
+              <TouchableOpacity onPress={handlePurchase}
+                      style={[
+                        styles.purchaseButton,
+                        selectedIndex === null && styles.disabledPurchaseButton, // Disable button if no card is selected
+                      ]}
+                      disabled={selectedIndex === null} // Button is disabled until a selection is made
+                    >
+                      <Text style={styles.purchaseText}>Purchase</Text>
+              </TouchableOpacity>
+  
+        {/* Footer */}
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>All payments are refundable within 14 days.</Text>
+          <Text style={styles.footerText}>All transactions are secure and encrypted.</Text>
+        </View>
+      </View>
+    );
 
   }
 
-  return (
-    <View style={styles.container}>
-      {/* Header */}
-      
-      <View style={styles.header}>
-
-      <Link href={'/home/connect'}>
-        <View style={styles.coinBadge}>
-        <Text> 🢀 </Text>
-          <Text style={styles.coinCount}>{userCoins}</Text>
-          <View style={styles.coinIcon} />
-        </View>
-        </Link>
+  else
+  {
+      return(
         
-        
-      </View>
-
-      {/* Coins Grid */}
-      <ScrollView contentContainerStyle={styles.grid}>
-        {coins.map((coin, index) => (
-          <TouchableOpacity
-            key={index}
-            style={[
-              styles.card,
-              selectedIndex === index && styles.selectedCard, // Highlight selected card
-            ]}
-            onPress={() => {setSelectedIndex(index), setSelectedTransaction(coin)}} // Set selected index
+        <View style={styles.confettiContainer}>
+         <View
+            style={{
+              backgroundColor: '#4CAF50', // Green button
+              paddingVertical: 15,
+              paddingHorizontal: 30,
+              borderRadius: 8,
+              marginTop: 75
+            }}
           >
-            <Text style={styles.coinAmount}>{coin.amount} Coins</Text>
-            <Image source={goldCoins} style={styles.coinImage} />
-            <Text style={styles.oldPrice}>${coin.oldPrice}</Text>
-            <Text style={styles.price}>${coin.price}</Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-
-      {/* Purchase Button */}
-            <TouchableOpacity onPress={handlePurchase}
-                    style={[
-                      styles.purchaseButton,
-                      selectedIndex === null && styles.disabledPurchaseButton, // Disable button if no card is selected
-                    ]}
-                    disabled={selectedIndex === null} // Button is disabled until a selection is made
-                  >
-                    <Text style={styles.purchaseText}>Purchase</Text>
+            <TouchableOpacity onPress={handleLinkButton}>
+            <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>Start Linking</Text>
             </TouchableOpacity>
-
-      {/* Footer */}
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>All payments are refundable within 14 days.</Text>
-        <Text style={styles.footerText}>All transactions are secure and encrypted.</Text>
+          </View>
+        <View
+          style={{
+            flex: 1,
+            position:'absolute',
+            alignItems: 'center', // Centers horizontally
+            justifyContent: 'center', // Centers vertically
+            paddingHorizontal: 20, // Adds spacing for better responsiveness
+          }}
+        >
+          <Image source={Logo} style={{
+            height:150,
+            width:150,
+            resizeMode:'contain'
+          }}/>
+          <Text
+            style={{
+              fontWeight: 'bold',
+              fontSize: 40, // Adjust for better text size balance
+              textAlign: 'center', // Centers text within the container
+              marginBottom: 20, // Space between the title and subheading
+            }}
+          >
+            Congratulations on Your Purchase!
+          </Text>
+          <Text
+            style={{
+              fontSize: 20,
+              textAlign: 'center', // Centers the subheading
+              marginBottom: 20, // Space between the subheading and button
+            }}
+          >
+            Use your {purchaseNumber} <Image
+            style={{
+              height:25,
+              width:25,
+              resizeMode:'contain'
+            }} source={Coins}/> to start linking and explore more features...
+          </Text>
+          
+        </View>
+        <Confetti start={1500} itemSize={50} images={[Coins]} count={75} type="tumble" />
       </View>
-    </View>
-  );
+      
+      )
+  }
+
+  
 }
 
 const createStyles = (darkMode) =>
@@ -116,11 +234,17 @@ const createStyles = (darkMode) =>
       flex: 1,
       backgroundColor: darkMode ? '#1E1E1E' : '#F9F9F9',
     },
+    confettiContainer: {
+      flex: 1,
+      backgroundColor: darkMode ? '#1E1E1E' : '#F9F9F9',
+      justifyContent:"center",
+      alignItems:"center"
+    },
     header: {
       padding: 16,
       backgroundColor: darkMode ? '#2B2B2B' : '#FFFFFF',
       flexDirection: 'row',
-      justifyContent: 'center',
+      justifyContent: 'flex-start',
     },
     coinBadge: {
       flexDirection: 'row',

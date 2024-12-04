@@ -194,9 +194,9 @@ export default function SignInPage() {
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity style={[styles.authButton, styles.phoneButton]}>
+      {/* <TouchableOpacity style={[styles.authButton, styles.phoneButton]}>
         <Text style={styles.authButtonText}>Log in with mobile number</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       {/* Footer */}
       <Text style={styles.footerText}>
