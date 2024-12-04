@@ -12,7 +12,7 @@ import {
 import Animated, { FadeIn, SlideInDown } from 'react-native-reanimated';
 
 //blinderLogo right here
-import Logo from '../../assets/images/blinderLogo.png';
+import Logo from '../../assets/images/logo.png';
 
 //Google Logo
 import GoogleLogo from '../../assets/images/googleLogo.png';

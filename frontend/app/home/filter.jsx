@@ -7,8 +7,12 @@ import {
   ScrollView,
   Dimensions,
   Pressable,
+  Image,
 } from "react-native";
-import { useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
+import goldCoins from '../../assets/images/goldCoins.png';
+// Mock user premium status
+const isPremium = false;
 
 const ModalScreen = () => {
   const router = useRouter();
@@ -16,16 +20,21 @@ const ModalScreen = () => {
   return (
     <View style={styles.overlay}>
       {/* Dismiss Modal on Outside Press */}
-      <Pressable style={styles.overlayBackground} onPress={() => router.back()} />
+      <Link href={'/home/connect'} style={styles.overlayBackground}  />
 
       {/* Modal Content */}
       <View style={styles.modalContainer}>
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.headerText}>Filter Preferences</Text>
-          <TouchableOpacity onPress={() => router.back()} style={styles.closeButton}>
+          <View style={styles.premiumStatus}>
+            <Text style={[styles.premiumBadge, isPremium ? styles.premiumActive : styles.premiumLocked]}>
+              {isPremium ? "Premium" : "Premium Locked"}
+            </Text>
+          </View>
+          <Link href={'/home/connect'}  style={styles.closeButton}>
             <Text style={styles.closeButtonText}>✕</Text>
-          </TouchableOpacity>
+          </Link>
         </View>
 
         {/* Scrollable Content */}
@@ -33,11 +42,68 @@ const ModalScreen = () => {
           {/* Gender Filter */}
           <Text style={styles.sectionTitle}>Gender</Text>
           <View style={styles.filterOptions}>
-            <TouchableOpacity style={[styles.filterButton, styles.disabledButton]}>
-              <Text style={[styles.filterButtonText, styles.disabledText]}>Girls Only</Text>
+
+
+
+
+
+            <TouchableOpacity style={[styles.filterButton, isPremium ? styles.activeButton : styles.disabledButton]}>
+              
+              {!isPremium && (
+                <View style={styles.lockOverlay}>
+
+                  <View style={styles.lockContainer}>
+                  <Image source={{ uri: 'https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678129-lock-512.png' }} style={styles.lockIcon} />
+                  <Text style={{
+                    fontSize:50
+                  }}>👩‍🦰</Text>
+                  
+                    </View>
+
+
+                  <View style={styles.coinText}>
+                    <Image source={goldCoins} style={styles.tokenIcon} />
+                    <Text style={styles.tokenText}>250</Text>
+                    </View>
+
+
+                  
+                </View>
+              )}
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.filterButton, styles.disabledButton]}>
-              <Text style={[styles.filterButtonText, styles.disabledText]}>Guys Only</Text>
+
+
+
+
+
+
+
+
+
+
+            <TouchableOpacity style={[styles.filterButton, isPremium ? styles.activeButton : styles.disabledButton]}>
+              
+            {!isPremium && (
+                <View style={styles.lockOverlay}>
+
+                  <View style={styles.lockContainer}>
+                  <Image source={{ uri: 'https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678129-lock-512.png' }} style={styles.lockIcon} />
+                  <Text style={{
+                    fontSize:50
+                  }}>👨</Text>
+                  
+                    </View>
+
+
+                  <View style={styles.coinText}>
+                    <Image source={goldCoins} style={styles.tokenIcon} />
+                    <Text style={styles.tokenText}>250</Text>
+                    </View>
+
+
+                  
+                </View>
+              )}
             </TouchableOpacity>
             <TouchableOpacity style={[styles.filterButton, styles.activeButton]}>
               <Text style={styles.filterButtonText}>Both</Text>
@@ -50,15 +116,37 @@ const ModalScreen = () => {
             <TouchableOpacity style={[styles.filterButton, styles.activeButton]}>
               <Text style={styles.filterButtonText}>Global</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.filterButton, styles.disabledButton]}>
-              <Text style={[styles.filterButtonText, styles.disabledText]}>Europe</Text>
+            <TouchableOpacity style={[styles.filterButton, isPremium ? styles.activeButton : styles.disabledButton]}>
+              
+            {!isPremium && (
+                <View style={styles.lockOverlay}>
+
+                  <View style={styles.lockContainer}>
+                  <Image source={{ uri: 'https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678129-lock-512.png' }} style={styles.lockIcon} />
+                  <Image style={{
+                      height:50,
+                      width: 100,
+                      borderRadius:10
+                    }} source={{
+                      uri:'https://upload.wikimedia.org/wikipedia/en/thumb/a/a4/Flag_of_the_United_States.svg/440px-Flag_of_the_United_States.svg.png'
+                    }}/>
+                  
+                    </View>
+
+
+                  <View style={styles.coinText}>
+                    <Image source={goldCoins} style={styles.tokenIcon} />
+                    <Text style={styles.tokenText}>250</Text>
+                    </View>
+
+
+                  
+                </View>
+              )}
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.filterButton, styles.disabledButton]}>
-              <Text style={[styles.filterButtonText, styles.disabledText]}>Asia</Text>
-            </TouchableOpacity>
+           
           </View>
         </ScrollView>
-        
       </View>
     </View>
   );
@@ -78,13 +166,10 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     width: "100%",
-    height: height * 0.4, // Covers 3/4 of the screen
+    height: height * 0.5, // Increased height for better view
     backgroundColor: "#fff",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    shadowColor: "#000",
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
   },
   header: {
     flexDirection: "row",
@@ -99,6 +184,25 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#333",
   },
+  premiumStatus: {
+    flex: 1,
+    alignItems: "center",
+  },
+  premiumBadge: {
+    fontSize: 14,
+    fontWeight: "bold",
+    padding: 5,
+    borderRadius: 5,
+    overflow: "hidden",
+  },
+  premiumActive: {
+    color: "#fff",
+    backgroundColor: "#4caf50",
+  },
+  premiumLocked: {
+    color: "#999",
+    backgroundColor: "#ddd",
+  },
   closeButton: {
     padding: 8,
   },
@@ -107,27 +211,34 @@ const styles = StyleSheet.create({
     color: "#999",
   },
   content: {
+    borderWidth: 5,
     paddingHorizontal: 20,
     paddingVertical: 10,
   },
   sectionTitle: {
+    
     fontSize: 16,
     fontWeight: "600",
     color: "#555",
     marginBottom: 10,
   },
   filterOptions: {
+   
     flexDirection: "row",
+    flexWrap: "wrap", // Ensure filters wrap properly on smaller screens
     marginBottom: 20,
   },
   filterButton: {
+    
+    flexDirection: "row",
     flex: 1,
-    padding: 10,
+    padding: 15, // Increased padding for larger buttons
+    margin: 5,
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
-    marginHorizontal: 5,
     backgroundColor: "#f0f0f0",
+    minWidth: 100, // Ensure buttons have a minimum width
   },
   activeButton: {
     backgroundColor: "#4caf50",
@@ -136,28 +247,52 @@ const styles = StyleSheet.create({
     backgroundColor: "#ddd",
   },
   filterButtonText: {
-    fontSize: 14,
+    fontSize: 16, // Increased font size for better readability
     color: "#333",
+    
+    
   },
   disabledText: {
     color: "#999",
   },
-  footer: {
-    padding: 20,
-    borderTopWidth: 1,
-    borderTopColor: "#ddd",
-  },
-  joinButton: {
-    backgroundColor: "#ffeb3b",
-    padding: 15,
-    borderRadius: 10,
+  lockOverlay: {
+    
+    position: "absolute",
+    
+    flexDirection: "row",
+    
     alignItems: "center",
+    justifyContent: "center",
   },
-  joinButtonText: {
-    fontSize: 16,
-    fontWeight: "bold",
+  lockIcon: {
+    width: 30,
+    height: 30,
+    marginBottom: 10,
+  },
+  tokenPrice: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  tokenIcon: {
+    width: 20,
+    height: 20,
+    marginRight: 5,
+  },
+  tokenText: {
+    fontSize: 14,
     color: "#333",
   },
+  lockContainer:{
+     
+      flexDirection: "row",
+      alignItems: "center",
+  },
+  coinText:{
+    marginLeft:5,
+     
+  }
 });
 
 export default ModalScreen;
+
