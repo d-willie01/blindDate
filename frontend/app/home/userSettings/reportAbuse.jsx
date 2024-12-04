@@ -7,12 +7,22 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import Animated, { SlideInUp } from "react-native-reanimated";
 
 export default function FeedbackModal() {
-  const [selectedEmoji, setSelectedEmoji] = useState(null);
+
+  const router = useRouter()
+  
   const [selectedOption, setSelectedOption] = useState(null);
+
+ 
+  const handleSendReport = () => {
+
+          alert("Thank you, your report has been sent!")
+
+          router.replace('/home/profile')
+  }
 
   return (
     <Animated.View entering={SlideInUp} style={styles.overlay}>
@@ -65,12 +75,17 @@ export default function FeedbackModal() {
 
         {/* Footer Buttons */}
         <View style={styles.footer}>
-          <TouchableOpacity style={styles.sendButton}>
+          <TouchableOpacity onPress={handleSendReport} style={styles.sendButton}>
             <Text style={styles.sendButtonText}>Send</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.cancelButton}>
+
+          <View style={styles.cancelButton}>
+          <Link href={'/home/profile'} >
             <Text style={styles.cancelButtonText}>Cancel</Text>
-          </TouchableOpacity>
+          </Link>
+          </View>
+
+          
         </View>
       </View>
     </Animated.View>
@@ -182,7 +197,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#f5f5f5",
   },
   cancelButtonText: {
-    color: "#333",
+    color: "black",
     fontSize: 16,
+    fontWeight: "bold",
   },
 });

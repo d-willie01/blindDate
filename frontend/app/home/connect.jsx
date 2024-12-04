@@ -1,12 +1,16 @@
 import React, {useRef, useEffect, useState, } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ActivityIndicator } from 'react-native';
 import { Ionicons, FontAwesome, Entypo } from '@expo/vector-icons';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
+import api from '../../api/apiCalls';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const VideoChatScreen = () => {
 
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [partnerLeft, setPartnerLeft] = useState(false)
+  const [user, setUser] = useState();
   const socket = useRef(null);
   const peerConnection = useRef(null);
   const pendingCandidates = useRef([]); // Buffer for ICE candidates
@@ -17,9 +21,35 @@ const VideoChatScreen = () => {
 
 
   useEffect(() => {
+
+    const fetchUserData = async() =>{
+
+      try {
+        const response = await api.get("/user/self");
+
+      console.log(response);
+
+      setUser(response.data);
+
+      await AsyncStorage.setItem('user', JSON.stringify(response.data));
+      } catch (error) {
+        if(error)
+        {
+          alert('please login')
+            router.replace('/')
+        }
+      }
+
+      
+
+    }
+
+    fetchUserData();
+    
+
     // Initialize WebSocket connection
-    // socket.current = new WebSocket('ws://localhost:3000');
-    socket.current = new WebSocket('wss://stream-ses0.onrender.com/');
+    socket.current = new WebSocket('ws://localhost:3000');
+    // socket.current = new WebSocket('wss://stream-ses0.onrender.com/');
 
     // Set up WebSocket event listeners
     socket.current.onmessage = handleSocketMessage;
@@ -29,6 +59,8 @@ const VideoChatScreen = () => {
       if (peerConnection.current) peerConnection.current.close();
       if (socket.current) socket.current.close();
     };
+
+    
   }, []);
 
   const initializePeerConnection = () => {
@@ -212,8 +244,16 @@ const VideoChatScreen = () => {
             muted
             playsInline
           />
-              <Link href={'/home/coins'}style={styles.coinBadge} onPress={() => console.log('Coin badge clicked')}>
-      <Text style={styles.coinCount}>46</Text>
+              <Link href={'/home/coins'}style={styles.coinBadge} onPress={() => 
+                {
+                  
+                  console.log('Coin badge clicked')
+                  socket.current.close()
+
+
+                }
+                }>
+      <Text style={styles.coinCount}>{user?.tokenCount}</Text>
       <View style={styles.coinIcon} />
     </Link>
         </View>
