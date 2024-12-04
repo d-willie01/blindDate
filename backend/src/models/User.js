@@ -1,21 +1,22 @@
 const mongoose = require('mongoose');
+const transactionSchema = require('./Transactions'); // Import the Transaction schema
 
 // Define the User schema
 const userSchema = new mongoose.Schema({
   googleId: {
     type: String,
-    unique: true, // Ensure googleId is unique across users
-    sparse: true, // Allows the field to be null without causing conflicts
+    unique: true,
+    sparse: true,
   },
   twitterId: {
     type: String,
-    unique: true, // Ensure twitterId is unique across users
-    sparse: true, // Allows the field to be null without causing conflicts
+    unique: true,
+    sparse: true,
   },
   email: {
     type: String,
     required: true,
-    unique: true, // Ensure email is unique across users
+    unique: true,
   },
   name: {
     type: String,
@@ -23,28 +24,34 @@ const userSchema = new mongoose.Schema({
   },
   profilePicture: {
     type: String,
-    default: '', // Optional field for the user's profile picture URL
+    default: '',
   },
   gender: {
     type: String,
-    enum: ['male', 'female', 'other'], // Restrict values to predefined options
+    enum: ['male', 'female', 'other'],
     required: false,
   },
   dateOfBirth: {
     type: Date,
-    required: false, // Optional field for the user's date of birth
+    required: false,
   },
   refreshToken: {
     type: String,
-    required: false, // Optional refresh token for users
+    required: false,
   },
+  tokenCount: {
+    type: Number,
+    default: 0, // Default to 0 tokens for new users
+    min: 0, // Ensure token count cannot go below 0
+  },
+  transactions: [transactionSchema], // Use the imported Transaction schema
   createdAt: {
     type: Date,
-    default: Date.now, // Automatically set the creation date
+    default: Date.now,
   },
   updatedAt: {
     type: Date,
-    default: Date.now, // Automatically set the updated date
+    default: Date.now,
   },
 });
 
@@ -58,4 +65,5 @@ userSchema.pre('save', function (next) {
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
+
 
