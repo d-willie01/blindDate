@@ -1,9 +1,10 @@
 import React, {useRef, useEffect, useState, } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ActivityIndicator, Image } from 'react-native';
 import { Ionicons, FontAwesome, Entypo } from '@expo/vector-icons';
 import { Link, useRouter } from 'expo-router';
 import api from '../../api/apiCalls';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Logo from '../../assets/images/logo.png'
 
 const VideoChatScreen = () => {
 
@@ -220,9 +221,9 @@ const VideoChatScreen = () => {
     socket.current.send(JSON.stringify({ type: 'next' }));
 
     // Reset video elements
-    const localVideoElement = document.getElementById('localVideo');
+    // const localVideoElement = document.getElementById('localVideo');
     const remoteVideoElement = document.getElementById('remoteVideo');
-    if (localVideoElement) localVideoElement.srcObject = null;
+    // if (localVideoElement) localVideoElement.srcObject = null;
     if (remoteVideoElement) remoteVideoElement.srcObject = null;
      // Reset candidate queue when moving to the next match
   pendingCandidates.current = [];
@@ -232,6 +233,7 @@ const VideoChatScreen = () => {
       <View style={styles.videosContainer}>
         {/* Local Video */}
         <View style={[styles.videoWrapper, styles.topVideoWrapper]}>
+          
           <video
             id="localVideo"
             style={{
@@ -256,6 +258,16 @@ const VideoChatScreen = () => {
       <Text style={styles.coinCount}>{user?.tokenCount}</Text>
       <View style={styles.coinIcon} />
     </Link>
+        </View>
+
+
+        <View style={styles.logoBadge}>
+          <Image source={Logo} style={{
+            height:40,
+            width:40,
+            resizeMode:'contain'
+          }}/>
+
         </View>
   
         {/* Remote Video */}
@@ -429,6 +441,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#6FFF6F',
+    borderRadius: 20,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5, // Adds shadow for Android
+  },
+  logoBadge: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    //backgroundColor: '#6FFF6F',
     borderRadius: 20,
     paddingVertical: 5,
     paddingHorizontal: 10,

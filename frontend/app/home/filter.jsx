@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {
   View,
   Text,
@@ -8,148 +8,284 @@ import {
   Dimensions,
   Pressable,
   Image,
+
 } from "react-native";
 import { Link, useRouter } from "expo-router";
 import goldCoins from '../../assets/images/goldCoins.png';
+import Logo from '../../assets/images/logo.png';
+import api from "../../api/apiCalls";
+import Confetti from 'react-native-simple-confetti';
 // Mock user premium status
 const isPremium = false;
 
 const ModalScreen = () => {
+  
+  const [confetti, setConfetti] = useState(true)
+  const [purchasing, setPurchasing] = useState(false)
   const router = useRouter();
 
-  return (
-    <View style={styles.overlay}>
-      {/* Dismiss Modal on Outside Press */}
-      <Link href={'/home/connect'} style={styles.overlayBackground}  />
+  const handleClick = () =>{
 
-      {/* Modal Content */}
-      <View style={styles.modalContainer}>
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.headerText}>Filter Preferences</Text>
-          <View style={styles.premiumStatus}>
-            <Text style={[styles.premiumBadge, isPremium ? styles.premiumActive : styles.premiumLocked]}>
-              {isPremium ? "Premium" : "Premium Locked"}
-            </Text>
+    setPurchasing(true)
+    
+  }
+
+  const handleConfirm = async() =>{
+
+    const response = await api.post('/transactions/spendCoins', {
+      coinAmount: 250
+    })
+
+    if(response.status == 200)
+    {
+      setConfetti(true);
+    }
+
+
+
+  }
+
+  if(!purchasing)
+
+    {
+      return (
+        <View style={styles.overlay}>
+
+
+          {/* Dismiss Modal on Outside Press */}
+          <Link href={'/home/connect'} style={styles.overlayBackground}  />
+    
+          {/* Modal Content */}
+          <View style={styles.modalContainer}>
+            {/* Header */}
+            <View style={styles.header}>
+              <Text style={styles.headerText}>Filter Preferences:</Text>
+              <View style={styles.premiumStatus}>
+                <Text style={[styles.premiumBadge, isPremium ? styles.premiumActive : styles.premiumLocked]}>
+                  {isPremium ? "Premium" : "Premium Locked"}
+                </Text>
+              </View>
+              <Link href={'/home/connect'}  style={styles.closeButton}>
+                <Text style={styles.closeButtonText}>✕</Text>
+              </Link>
+            </View>
+    
+            {/* Scrollable Content */}
+            <ScrollView contentContainerStyle={styles.content}>
+              {/* Gender Filter */}
+              <Text style={styles.sectionTitle}>Gender</Text>
+              <View style={styles.filterOptions}>
+    
+    
+    
+    
+    
+                <TouchableOpacity onPress={handleClick} style={[styles.filterButton, isPremium ? styles.activeButton : styles.disabledButton]}>
+                  
+                  {!isPremium && (
+                    <View style={styles.lockOverlay}>
+    
+                      <View style={styles.lockContainer}>
+                      <Image source={{ uri: 'https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678129-lock-512.png' }} style={styles.lockIcon} />
+                      <Text style={{
+                        fontSize:50
+                      }}>👩‍🦰</Text>
+                      
+                        </View>
+    
+    
+                      <View style={styles.coinText}>
+                        <Image source={goldCoins} style={styles.tokenIcon} />
+                        <Text style={styles.tokenText}>250</Text>
+                        </View>
+    
+    
+                      
+                    </View>
+                  )}
+                </TouchableOpacity>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+                <TouchableOpacity style={[styles.filterButton, isPremium ? styles.activeButton : styles.disabledButton]}>
+                  
+                {!isPremium && (
+                    <View style={styles.lockOverlay}>
+    
+                      <View style={styles.lockContainer}>
+                      <Image source={{ uri: 'https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678129-lock-512.png' }} style={styles.lockIcon} />
+                      <Text style={{
+                        fontSize:50
+                      }}>👨</Text>
+                      
+                        </View>
+    
+    
+                      <View style={styles.coinText}>
+                        <Image source={goldCoins} style={styles.tokenIcon} />
+                        <Text style={styles.tokenText}>250</Text>
+                        </View>
+    
+    
+                      
+                    </View>
+                  )}
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.filterButton, styles.activeButton]}>
+                  <Text style={styles.filterButtonText}>Both</Text>
+                </TouchableOpacity>
+              </View>
+    
+              {/* Region Filter */}
+              <Text style={styles.sectionTitle}>Region</Text>
+              <View style={styles.filterOptions}>
+                <TouchableOpacity style={[styles.filterButton, styles.activeButton]}>
+                  <Text style={styles.filterButtonText}>Global</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.filterButton, isPremium ? styles.activeButton : styles.disabledButton]}>
+                  
+                {!isPremium && (
+                    <View style={styles.lockOverlay}>
+    
+                      <View style={styles.lockContainer}>
+                      <Image source={{ uri: 'https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678129-lock-512.png' }} style={styles.lockIcon} />
+                      <Image style={{
+                          height:50,
+                          width: 100,
+                          borderRadius:10
+                        }} source={{
+                          uri:'https://upload.wikimedia.org/wikipedia/en/thumb/a/a4/Flag_of_the_United_States.svg/440px-Flag_of_the_United_States.svg.png'
+                        }}/>
+                      
+                        </View>
+    
+    
+                      <View style={styles.coinText}>
+                        <Image source={goldCoins} style={styles.tokenIcon} />
+                        <Text style={styles.tokenText}>250</Text>
+                        </View>
+    
+    
+                      
+                    </View>
+                  )}
+                </TouchableOpacity>
+    
+                
+               
+              </View>
+              <TouchableOpacity onPress={()=>{
+                router.back();
+              }} style={styles.linkingButton}>
+                    <Text style={{
+                      fontWeight:'bold'
+                    }}>START LINKING</Text>
+                </TouchableOpacity>
+            </ScrollView>
           </View>
-          <Link href={'/home/connect'}  style={styles.closeButton}>
-            <Text style={styles.closeButtonText}>✕</Text>
-          </Link>
         </View>
+      );
+    }
 
-        {/* Scrollable Content */}
-        <ScrollView contentContainerStyle={styles.content}>
-          {/* Gender Filter */}
-          <Text style={styles.sectionTitle}>Gender</Text>
-          <View style={styles.filterOptions}>
+    else{
+      return(
+        <View style={styles.overlay}>
+            <Link href={'/home/connect'} style={styles.overlayBackground} />
 
+          <View style={styles.modalPurchaseContainer}>
+          
 
+          <View style={styles.purchaseHeader}>
 
-
-
-            <TouchableOpacity style={[styles.filterButton, isPremium ? styles.activeButton : styles.disabledButton]}>
-              
-              {!isPremium && (
-                <View style={styles.lockOverlay}>
-
-                  <View style={styles.lockContainer}>
-                  <Image source={{ uri: 'https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678129-lock-512.png' }} style={styles.lockIcon} />
-                  <Text style={{
-                    fontSize:50
-                  }}>👩‍🦰</Text>
-                  
-                    </View>
+              <Text style={styles.purchaseHeaderText}>Purchase</Text>
 
 
-                  <View style={styles.coinText}>
-                    <Image source={goldCoins} style={styles.tokenIcon} />
-                    <Text style={styles.tokenText}>250</Text>
-                    </View>
-
-
-                  
-                </View>
-              )}
-            </TouchableOpacity>
-
-
-
-
-
-
-
-
-
-
-            <TouchableOpacity style={[styles.filterButton, isPremium ? styles.activeButton : styles.disabledButton]}>
-              
-            {!isPremium && (
-                <View style={styles.lockOverlay}>
-
-                  <View style={styles.lockContainer}>
-                  <Image source={{ uri: 'https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678129-lock-512.png' }} style={styles.lockIcon} />
-                  <Text style={{
-                    fontSize:50
-                  }}>👨</Text>
-                  
-                    </View>
-
-
-                  <View style={styles.coinText}>
-                    <Image source={goldCoins} style={styles.tokenIcon} />
-                    <Text style={styles.tokenText}>250</Text>
-                    </View>
-
-
-                  
-                </View>
-              )}
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.filterButton, styles.activeButton]}>
-              <Text style={styles.filterButtonText}>Both</Text>
-            </TouchableOpacity>
           </View>
 
-          {/* Region Filter */}
-          <Text style={styles.sectionTitle}>Region</Text>
-          <View style={styles.filterOptions}>
-            <TouchableOpacity style={[styles.filterButton, styles.activeButton]}>
-              <Text style={styles.filterButtonText}>Global</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.filterButton, isPremium ? styles.activeButton : styles.disabledButton]}>
-              
-            {!isPremium && (
-                <View style={styles.lockOverlay}>
+          <View style={{
+            borderBottomWidth:2,
+            borderBottomColor:"white"
+          }}>
 
-                  <View style={styles.lockContainer}>
-                  <Image source={{ uri: 'https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678129-lock-512.png' }} style={styles.lockIcon} />
-                  <Image style={{
-                      height:50,
-                      width: 100,
-                      borderRadius:10
-                    }} source={{
-                      uri:'https://upload.wikimedia.org/wikipedia/en/thumb/a/a4/Flag_of_the_United_States.svg/440px-Flag_of_the_United_States.svg.png'
-                    }}/>
-                  
-                    </View>
+              <Text style={{
+                fontSize:20,
+                fontWeight:"bold",
+                color:"white"
+              }}>Upgrade to Premium:</Text>
+          </View>
 
+          <View style={{
+            
+            flexDirection:"row"
+          }}>
 
-                  <View style={styles.coinText}>
-                    <Image source={goldCoins} style={styles.tokenIcon} />
-                    <Text style={styles.tokenText}>250</Text>
-                    </View>
+            <TouchableOpacity onPress={()=>setPurchasing(false)} style={{backgroundColor: 'grey',
+      borderRadius: 8,
+      padding: 10,
+      justifyContent:"center",
+      alignItems: 'center',
+      margin: 25,}}><Text style={{
+        fontSize:25,
+        //fontWeight:'bold'
+      }}>
+        Cancel</Text></TouchableOpacity>
 
+            <TouchableOpacity onPress={handleConfirm} style={{backgroundColor: '#6FFF6F',
+      borderRadius: 8,
+      padding: 10,
+      alignItems: 'center',
+      margin: 20,}}><Text style={{
+        fontSize:25,
+        //fontWeight:'bold'
+      }}>
+        Confirm</Text> <Text style={{
+          fontWeight:'bold'
+        }}>(-250) <Image style={{
+          height:25,
+          width:25,
+          resizeMode:'contain'
+        }}source={goldCoins}/></Text></TouchableOpacity>
 
-                  
-                </View>
-              )}
-            </TouchableOpacity>
+          </View>
+
+          <View style={{
            
+            flexDirection:"row"
+          }}>
+            <Image source={Logo} style={{
+              height:50,
+              width:50,
+              resizeMode:"contain",
+              
+            }}/>
+            <Text style={{
+              color:'gold',
+              fontSize:15
+            }}>+premium</Text>
+
+
           </View>
-        </ScrollView>
-      </View>
-    </View>
-  );
+
+
+
+          </View>
+
+          
+          
+        </View>
+        
+        
+      )
+    }
+
+ 
 };
 
 const { height } = Dimensions.get("screen");
@@ -167,7 +303,18 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: "100%",
     height: height * 0.5, // Increased height for better view
-    backgroundColor: "#fff",
+    backgroundColor: '#1E1E1E',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  modalPurchaseContainer: {
+    //position: "absolute",
+    justifyContent:"center",
+    alignItems:'center',
+    bottom: 0,
+    width: "100%",
+    height: height * 0.3, // Increased height for better view
+    backgroundColor: '#1E1E1E',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
@@ -179,10 +326,28 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#ddd",
   },
-  headerText: {
+  purchaseHeader: {
+    position:'absolute',
+    top:10,
+    width:'100%',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 15,
+    // borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+  },
+  purchaseHeaderText: {
+    top:10,
     fontSize: 18,
     fontWeight: "bold",
-    color: "#333",
+    color: "white",
+  },
+  headerText: {
+    top:10,
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "white",
   },
   premiumStatus: {
     flex: 1,
@@ -219,7 +384,7 @@ const styles = StyleSheet.create({
     
     fontSize: 16,
     fontWeight: "600",
-    color: "#555",
+    color: "white",
     marginBottom: 10,
   },
   filterOptions: {
@@ -240,8 +405,23 @@ const styles = StyleSheet.create({
     backgroundColor: "#f0f0f0",
     minWidth: 100, // Ensure buttons have a minimum width
   },
-  activeButton: {
+  linkingButton: {
+    
+    flexDirection: "row",
+    flex: 1,
+    padding: 15, // Increased padding for larger buttons
+    margin: 5,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: "#4caf50",
+    minWidth: 100, // Ensure buttons have a minimum width
+    
+  },
+  activeButton: {
+    backgroundColor: "#f0f0f0",
+    borderWidth:5,
+    borderColor:"#4caf50"
   },
   disabledButton: {
     backgroundColor: "#ddd",
@@ -249,6 +429,7 @@ const styles = StyleSheet.create({
   filterButtonText: {
     fontSize: 16, // Increased font size for better readability
     color: "#333",
+    fontWeight:'bold'
     
     
   },
@@ -296,3 +477,38 @@ const styles = StyleSheet.create({
 
 export default ModalScreen;
 
+// {confetti &&
+      
+//   <View style={{
+//     flex: 1,
+
+// backgroundColor: 'white',
+//   }}>
+//   {/* Full-screen confetti overlay */}
+//   <View style={{...StyleSheet.absoluteFillObject, // Makes the View full-screen
+// zIndex: 1, }}>
+//     <Confetti
+//       start={1500}
+//       itemSize={50}
+//       images={[goldCoins]}
+//       count={75}
+//       type="tumble"
+//     />
+//   </View>
+
+//   {/* Congratulations message */}
+//   <View style={{flex: 1,
+// justifyContent: 'center',
+// alignItems: 'center',
+// zIndex: 2, }}>
+//     <Text style={{fontSize: 32,
+// fontWeight: 'bold',
+// textAlign: 'center',
+// color: 'gold',}}>🎉 Congratulations! 🎉</Text>
+//     <Text style={{ fontSize: 18,
+// textAlign: 'center',
+// color: 'gray',
+// marginTop: 10,}}> You've achieved a milestone!</Text>
+//   </View>
+// </View>
+//       }

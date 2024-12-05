@@ -42,7 +42,7 @@ export default function FeedbackModal() {
 
         {/* Header */}
         <Text style={styles.title}>Sorry to hear this...</Text>
-        <Text style={styles.subtitle}>we never want negative experiences at Blinder, but they do happen </Text>
+        <Text style={styles.subtitle}>we never want negative experiences, but they do happen :( </Text>
 
         {/* Emoji Rating */}
         
@@ -55,7 +55,7 @@ export default function FeedbackModal() {
         />
 
         {/* Follow-Up Question */}
-        <Text style={styles.question}>May we follow up on your feedback?</Text>
+        <Text style={styles.question}>May we follow up on your report?</Text>
         <View style={styles.radioContainer}>
           {["Yes", "No"].map((option, index) => (
             <TouchableOpacity
