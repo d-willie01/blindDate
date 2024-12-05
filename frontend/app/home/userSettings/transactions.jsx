@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Link } from 'expo-router';
 
 export default function Transactions() {
 
     const [userTransactions, setUserTransactions] = useState([]);
+    const [date, setDate] = useState();
   // Sample transaction data
  
 
@@ -23,60 +25,76 @@ export default function Transactions() {
         getData();
   },[])
 
-  const renderTransaction = ({ item }) => (
+  const renderTransaction = ({ item }) =>{
+    const isoDate = item.date
+    const nonHumanDate = new Date(isoDate);
 
-    <View style={{
-        flex:1,
-        flexDirection:'row'
-    }}>
+    const date = nonHumanDate.toLocaleDateString();
 
-    <View style={styles.transactionInfo}>
-    
-      <Text style={styles.transactionType}>{item.type}</Text>
-      <Text
-        style={[
-          styles.transactionAmount,
-          item.type === 'purchase' ? styles.purchase : styles.spend,
-        ]}
-      >
-        {item.type === 'purchase' ? `+${item.amount}` : `-${item.amount}`} coins
-      </Text>
-      <Text style={styles.transactionDate}>{item.date}</Text>
+    return(
 
-      
-    </View>
-
-    <View style={{
-      
-
-        justifyContent:'center',
-        marginLeft: 10,
-        width:'20%'
-
+      <View style={{
+          flex:1,
+          flexDirection:'row'
       }}>
-
-        <TouchableOpacity style={{
-            backgroundColor:'#6FFF6F',
-            borderRadius:20,
-            padding:10
-        }}>
-
-        <Text style={{
-            textAlign:"center",
-            color: 'white'
+  
+      <View style={styles.transactionInfo}>
+      
+        <Text style={styles.transactionType}>{item.type}</Text>
+        <Text
+          style={[
+            styles.transactionAmount,
+            item.type === 'purchase' ? styles.purchase : styles.spend,
+          ]}
+        >
+          {item.type === 'purchase' ? `+${item.amount}` : `-${item.amount}`} coins
+        </Text>
+        <Text style={styles.transactionDate}>{date}</Text>
+  
         
-        }}>Dispute</Text>
-
-        </TouchableOpacity>
-
       </View>
-
-
-    </View>
-  );
+  
+      <View style={{
+        
+  
+          justifyContent:'center',
+          marginLeft: 10,
+          width:'20%'
+  
+        }}>
+  
+          <TouchableOpacity style={{
+              backgroundColor:'#6FFF6F',
+              borderRadius:20,
+              padding:10
+          }}>
+  
+          <Text style={{
+              textAlign:"center",
+              color: 'white'
+          
+          }}>Dispute</Text>
+  
+          </TouchableOpacity>
+  
+        </View>
+  
+  
+      </View>
+    );
+  }
+    
+   
 
   return (
     <View style={styles.container}>
+      <Link href={'/home/profile'}>
+      <Text style={{
+        color: 'white',
+        fontWeight:"bold",
+        fontSize:20
+      }}>X</Text>
+      </Link>
       <Text style={styles.header}>Transactions</Text>
       <FlatList
         data={userTransactions}
@@ -101,6 +119,7 @@ const styles =
       fontWeight: 'bold',
       color: "#000",
       marginBottom: 20,
+      borderBottomWidth:2
     },
     list: {
       paddingBottom: 20,

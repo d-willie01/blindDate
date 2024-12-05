@@ -25,8 +25,10 @@ export default function CoinShop() {
       const userDataRaw = await AsyncStorage.getItem('user')
 
       const userData = JSON.parse(userDataRaw);
+
+      console.log(userData);
       
-      tokenAmount.current = userData.tokenCount
+      setUserCoins(userData.tokenCount);
 
       console.log(tokenAmount.current)
     }
@@ -39,8 +41,8 @@ export default function CoinShop() {
     { amount: 200, oldPrice: 3.99, price: 2, image: 'https://cdn.vectorstock.com/i/500p/54/84/stack-of-gold-coins-on-transparent-background-vector-18945484.jpg' },
     { amount: 400, oldPrice: 5.99, price: 4, image: 'https://cdn.vectorstock.com/i/1000v/34/13/stack-of-coins-vector-1103413.jpg' },
     { amount: 800, oldPrice: 7.99, price: 6, image: 'https://example.com/coin3.png' },
-    { amount: 2500, oldPrice: 15.99, price: 10, image: 'https://example.com/coin4.png' },
-    { amount: 5000, oldPrice: 30.99, price: 20, image: 'https://example.com/coin5.png' },
+    { amount: 2500, oldPrice: 15.99, price: 15, image: 'https://example.com/coin4.png' },
+    { amount: 5000, oldPrice: 30.99, price: 25, image: 'https://example.com/coin5.png' },
     { amount: 10000, oldPrice: 60.99, price: 40, image: 'https://example.com/coin6.png' },
     { amount: 20000, oldPrice: 100, price: 75, image: 'https://example.com/coin7.png' },
     { amount: 50000, oldPrice: 350, price: 150, image: 'https://example.com/coin8.png' },
@@ -113,7 +115,7 @@ export default function CoinShop() {
   
           <View style={styles.coinBadge}>
           
-            <Text style={styles.coinCount}>{tokenAmount.current}</Text>
+            <Text style={styles.coinCount}>{userCoins}</Text>
             <View style={styles.coinIcon} />
           </View>
           </Link>

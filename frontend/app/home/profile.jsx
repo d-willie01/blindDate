@@ -8,11 +8,13 @@ import {
   ScrollView,
   Animated,
 } from "react-native";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import api from "../../api/apiCalls";
 import AsyncStorage from "@react-native-async-storage/async-storage";
   
 export default function ProfileScreen() {
+
+  const router = useRouter();
   const [darkMode, setDarkMode] = useState(true);
   const [user, setUser] = useState(null);
   const [joinTime, setJoinTime] = useState(""); // Store the time since joining
@@ -101,6 +103,19 @@ export default function ProfileScreen() {
 
   const styles = createStyles(darkMode);
 
+  const handleLogout = async() => {
+
+      await AsyncStorage.clear()
+      router.replace('/');
+
+
+  }
+  const handleDelete = () =>{
+
+    router.replace('/')
+    
+  }
+
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
@@ -174,8 +189,34 @@ export default function ProfileScreen() {
             </Link>
           </TouchableOpacity>
         </View>
+
+            <View style={{
+              flex:1,
+             
+              
+            }}>
+            <TouchableOpacity onPress={handleLogout} style={styles.goButton}>
+          <Text style={{
+            fontWeight:"bold"
+            
+          }}>Logout</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={handleDelete} style={styles.deleteButton}>
+          <Text style={{
+            fontWeight:"bold"
+          }}>Delete Account</Text>
+        </TouchableOpacity>
+
+
+
+            </View>
+        
       </ScrollView>
     </View>
+
+
+
   );
 }
 
@@ -218,6 +259,15 @@ const createStyles = (darkMode) =>
       backgroundColor: "#b9ffb8",
       justifyContent: "center",
       alignItems: "center",
+    },
+    deleteButton: {
+      width: 150,
+      height: 70,
+      borderRadius: 35,
+      backgroundColor: "red",
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop:10
     },
     goButtonText: {
       fontSize: 20,
