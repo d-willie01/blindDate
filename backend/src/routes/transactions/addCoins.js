@@ -25,6 +25,10 @@ const addUserCoins = async(req, res) =>{
 
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY)
 
+    console.log("searching for price string:",req.body.transaction.stripePriceString)
+
+    const priceString = req.body.transaction.stripePriceString
+
     
 
     // if(decodedToken)
@@ -60,13 +64,14 @@ const addUserCoins = async(req, res) =>{
             // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
     
             //get this directly from stripe app
-            price: "price_1QTgm3Dfy3ekqWSiaTk5Id04",
+            //price code is sent from frontend
+            price: priceString,
             quantity: 1,
           },
         ],
         mode: 'payment',
         success_url: `${URL}?success=true`,
-        cancel_url: `${URL}?canceled=true`,
+        cancel_url: `${URL}/home/coins?canceled=true`,
         automatic_tax: {enabled: true},
     });
     

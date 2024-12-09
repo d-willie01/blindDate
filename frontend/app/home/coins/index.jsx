@@ -39,14 +39,31 @@ export default function CoinShop() {
   },[])
 
   const coins = [
-    { amount: 200, oldPrice: 3.99, price: 2, image: 'https://cdn.vectorstock.com/i/500p/54/84/stack-of-gold-coins-on-transparent-background-vector-18945484.jpg' },
-    { amount: 400, oldPrice: 5.99, price: 4, image: 'https://cdn.vectorstock.com/i/1000v/34/13/stack-of-coins-vector-1103413.jpg' },
-    { amount: 800, oldPrice: 7.99, price: 6, image: 'https://example.com/coin3.png' },
-    { amount: 2500, oldPrice: 15.99, price: 15, image: 'https://example.com/coin4.png' },
-    { amount: 5000, oldPrice: 30.99, price: 25, image: 'https://example.com/coin5.png' },
-    { amount: 10000, oldPrice: 60.99, price: 40, image: 'https://example.com/coin6.png' },
-    { amount: 20000, oldPrice: 100, price: 75, image: 'https://example.com/coin7.png' },
-    { amount: 50000, oldPrice: 350, price: 150, image: 'https://example.com/coin8.png' },
+    { amount: 200, oldPrice: 3.99,
+      price: 2.50, stripePriceString: 'price_1QTgi7Dfy3ekqWSiMkuF7aUL', image: 'https://cdn.vectorstock.com/i/500p/54/84/stack-of-gold-coins-on-transparent-background-vector-18945484.jpg' },
+
+
+    { amount: 400, oldPrice: 5.99, 
+      price: 5,stripePriceString: 'price_1QUGLIDfy3ekqWSiiUmNlO4z', image: 'https://cdn.vectorstock.com/i/1000v/34/13/stack-of-coins-vector-1103413.jpg' },
+
+
+    { amount: 800, oldPrice: 7.99, price: 10,
+      stripePriceString: 'price_1QUGOMDfy3ekqWSiVFVa0etw', image: 'https://example.com/coin3.png' },
+
+
+    { amount: 2500, oldPrice: 15.99, price: 15, stripePriceString: 'price_1QUGhxDfy3ekqWSiI4S2UysK', image: 'https://example.com/coin4.png' },
+
+
+    { amount: 5000, oldPrice: 30.99, price: 25, stripePriceString: 'price_1QUGjuDfy3ekqWSiahkKULka', image: 'https://example.com/coin5.png' },
+
+
+    { amount: 10000, oldPrice: 60.99, price: 40, stripePriceString: 'price_1QUGktDfy3ekqWSiv3jLnTtw', image: 'https://example.com/coin6.png' },
+
+
+    { amount: 20000, oldPrice: 100, price: 75, stripePriceString: 'price_1QUGhxDfy3ekqWSiI4S2UysK', image: 'https://example.com/coin7.png' },
+
+
+    { amount: 50000, oldPrice: 350, price: 150, stripePriceString: 'price_1QUGn4Dfy3ekqWSiBp5WKDC6', image: 'https://example.com/coin8.png' },
   ];
 
   const darkMode = true; // Assuming dark mode is always active; adjust as needed.
