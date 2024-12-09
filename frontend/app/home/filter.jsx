@@ -16,15 +16,21 @@ import Logo from '../../assets/images/logo.png';
 import api from "../../api/apiCalls";
 import Confetti from 'react-native-simple-confetti';
 // Mock user premium status
-const isPremium = false;
+//const isPremium = false;
 
 const ModalScreen = () => {
   
+  const [isPremium, setIsPremium] = useState(false)
   const [confetti, setConfetti] = useState(true)
   const [purchasing, setPurchasing] = useState(false)
   const router = useRouter();
 
   const handleClick = () =>{
+
+    if(isPremium)
+      {
+        return;
+      }
 
     setPurchasing(true)
     
@@ -32,13 +38,18 @@ const ModalScreen = () => {
 
   const handleConfirm = async() =>{
 
+   
+
     const response = await api.post('/transactions/spendCoins', {
       coinAmount: 250
     })
 
     if(response.status == 200)
     {
-      setConfetti(true);
+      //setConfetti(true);
+      setIsPremium(true);
+      setPurchasing(false);
+
     }
 
 
@@ -114,7 +125,8 @@ const ModalScreen = () => {
     
     
     
-                <TouchableOpacity style={[styles.filterButton, isPremium ? styles.activeButton : styles.disabledButton]}>
+                <TouchableOpacity 
+                onPress={handleClick} style={[styles.filterButton, isPremium ? styles.activeButton : styles.disabledButton]}>
                   
                 {!isPremium && (
                     <View style={styles.lockOverlay}>
@@ -149,7 +161,8 @@ const ModalScreen = () => {
                 <TouchableOpacity style={[styles.filterButton, styles.activeButton]}>
                   <Text style={styles.filterButtonText}>Global</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.filterButton, isPremium ? styles.activeButton : styles.disabledButton]}>
+                <TouchableOpacity 
+                onPress={handleClick} style={[styles.filterButton, isPremium ? styles.activeButton : styles.disabledButton]}>
                   
                 {!isPremium && (
                     <View style={styles.lockOverlay}>
@@ -196,7 +209,12 @@ const ModalScreen = () => {
 
     else{
       return(
+
         <View style={styles.overlay}>
+          
+       {confetti && <View style={styles.overlay}>
+        <Confetti count={50} type="tumble" />
+      </View>}
             <Link href={'/home/connect'} style={styles.overlayBackground} />
 
           <View style={styles.modalPurchaseContainer}>
@@ -291,6 +309,10 @@ const ModalScreen = () => {
 const { height } = Dimensions.get("screen");
 
 const styles = StyleSheet.create({
+
+  confettiContainer:{
+        flex:1
+  },
   overlay: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.6)", // Dimmed background

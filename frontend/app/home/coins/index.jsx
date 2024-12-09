@@ -6,6 +6,7 @@ import api from '../../../api/apiCalls'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Confetti from 'react-native-simple-confetti';
 import Coins from '../../../assets/images/goldCoins.png'
+import oneCoin from '../../../assets/images/goldCoin.png'
 import Logo from '../../../assets/images/logo.png'
 
 export default function CoinShop() {
@@ -70,8 +71,9 @@ export default function CoinShop() {
       if(response.status == 200)
       {
         console.log("find the coins:", selectedTransaction.amount)
-        setTransaction(true) ;
-        setPurchaseNumber(selectedTransaction.amount);
+        window.location.href = response.data.url;
+        // setTransaction(true) ;
+        // setPurchaseNumber(selectedTransaction.amount);
       }
 
       
@@ -221,7 +223,7 @@ export default function CoinShop() {
           </Text>
           
         </View>
-        <Confetti start={1500} itemSize={50} images={[Coins]} count={75} type="tumble" />
+        <Confetti start={1500} itemSize={50} images={[oneCoin]} count={75} type="tumble" />
       </View>
       
       )
