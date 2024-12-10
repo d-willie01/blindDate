@@ -58,11 +58,11 @@ const addUserCoins = async(req, res) =>{
 
     // }
 
+    console.log("This is the token before its sent:", token)
     const session = await stripe.checkout.sessions.create({
         line_items: [
           {
             // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-    
             //get this directly from stripe app
             //price code is sent from frontend
             price: priceString,
@@ -70,9 +70,13 @@ const addUserCoins = async(req, res) =>{
           },
         ],
         mode: 'payment',
-        success_url: `${URL}?success=true`,
+        success_url: `${URL}/home/coins/${priceString}?success=true`,
         cancel_url: `${URL}/home/coins?canceled=true`,
         automatic_tax: {enabled: true},
+        metadata: {
+          user_jwt: token, // Add the user's JWT to metadata
+          addCoins: coinAmount
+        },
     });
     
         res.status(200).json({ url: session.url });  

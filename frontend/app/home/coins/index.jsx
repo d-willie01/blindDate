@@ -39,31 +39,84 @@ export default function CoinShop() {
   },[])
 
   const coins = [
-    { amount: 200, oldPrice: 3.99,
-      price: 2.50, stripePriceString: 'price_1QTgi7Dfy3ekqWSiMkuF7aUL', image: 'https://cdn.vectorstock.com/i/500p/54/84/stack-of-gold-coins-on-transparent-background-vector-18945484.jpg' },
+
+    { amount: 200, 
+      oldPrice: 3.99,
+      price: 2.50, 
 
 
-    { amount: 400, oldPrice: 5.99, 
-      price: 5,stripePriceString: 'price_1QUGLIDfy3ekqWSiiUmNlO4z', image: 'https://cdn.vectorstock.com/i/1000v/34/13/stack-of-coins-vector-1103413.jpg' },
+      //real value
+      //stripePriceString: 'price_1QTgi7Dfy3ekqWSiMkuF7aUL', 
+
+      //testvalue
+      stripePriceString:'price_1QTgm3Dfy3ekqWSiaTk5Id04',
 
 
-    { amount: 800, oldPrice: 7.99, price: 10,
-      stripePriceString: 'price_1QUGOMDfy3ekqWSiVFVa0etw', image: 'https://example.com/coin3.png' },
+
+      image: 'https://cdn.vectorstock.com/i/500p/54/84/stack-of-gold-coins-on-transparent-background-vector-18945484.jpg' 
+    },
 
 
-    { amount: 2500, oldPrice: 15.99, price: 15, stripePriceString: 'price_1QUGhxDfy3ekqWSiI4S2UysK', image: 'https://example.com/coin4.png' },
+    { 
+      amount: 400, 
+      oldPrice: 5.99,
+      price:5,
+      stripePriceString: 'price_1QUGLIDfy3ekqWSiiUmNlO4z', 
+      image: 'https://cdn.vectorstock.com/i/1000v/34/13/stack-of-coins-vector-1103413.jpg' },
 
 
-    { amount: 5000, oldPrice: 30.99, price: 25, stripePriceString: 'price_1QUGjuDfy3ekqWSiahkKULka', image: 'https://example.com/coin5.png' },
+    { 
+      amount: 800, 
+      odPrice: 7.99, 
+      price: 10,
+      stripePriceString: 'price_1QUGOMDfy3ekqWSiVFVa0etw',
+      image: 'https://example.com/coin3.png' 
+    },
 
 
-    { amount: 10000, oldPrice: 60.99, price: 40, stripePriceString: 'price_1QUGktDfy3ekqWSiv3jLnTtw', image: 'https://example.com/coin6.png' },
+    { 
+      amount: 2500, 
+      ldPrice: 15.99, 
+      price: 15, 
+      stripePriceString: 'price_1QUGhxDfy3ekqWSiI4S2UysK', 
+      image: 'https://example.com/coin4.png' 
+    },
 
 
-    { amount: 20000, oldPrice: 100, price: 75, stripePriceString: 'price_1QUGhxDfy3ekqWSiI4S2UysK', image: 'https://example.com/coin7.png' },
+    { 
+      amount: 5000, 
+      ldPrice: 30.99, 
+      price: 25, 
+      stripePriceString: 'price_1QUGjuDfy3ekqWSiahkKULka', 
+      image: 'https://example.com/coin5.png' 
+    },
 
 
-    { amount: 50000, oldPrice: 350, price: 150, stripePriceString: 'price_1QUGn4Dfy3ekqWSiBp5WKDC6', image: 'https://example.com/coin8.png' },
+    { 
+      amount: 10000,
+      oldPrice: 60.99,
+      price: 40,
+      stripePriceString: 'price_1QUGktDfy3ekqWSiv3jLnTtw',
+      image: 'https://example.com/coin6.png'
+    },
+
+
+    { 
+      amount: 20000,
+      oldPrice: 100, 
+      price: 75, 
+      stripePriceString: 'price_1QUGhxDfy3ekqWSiI4S2UysK', 
+      image: 'https://example.com/coin7.png' 
+    },
+
+
+    { 
+      amount: 50000,
+      oldPrice: 350, 
+      price: 150, 
+      stripePriceString: 'price_1QUGn4Dfy3ekqWSiBp5WKDC6', 
+      image: 'https://example.com/coin8.png' 
+    },
   ];
 
   const darkMode = true; // Assuming dark mode is always active; adjust as needed.
@@ -100,16 +153,7 @@ export default function CoinShop() {
     
   }
 
-  const handleLinkButton = () =>{
-
-    router.replace('/home/connect');
-    setTransaction(false)
-    console.log("transaction value:",transaction)
-  }
-
-  if(!transaction)
-  {
-
+  
     return (
       <View style={styles.container}>
         {/* Header */}
@@ -179,73 +223,6 @@ export default function CoinShop() {
         </View>
       </View>
     );
-
-  }
-
-  else
-  {
-      return(
-        
-        <View style={styles.confettiContainer}>
-         <View
-            style={{
-              backgroundColor: '#4CAF50', // Green button
-              paddingVertical: 15,
-              paddingHorizontal: 30,
-              borderRadius: 8,
-              marginTop: 75
-            }}
-          >
-            <TouchableOpacity onPress={handleLinkButton}>
-            <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>Start Linking</Text>
-            </TouchableOpacity>
-          </View>
-        <View
-          style={{
-            flex: 1,
-            position:'absolute',
-            alignItems: 'center', // Centers horizontally
-            justifyContent: 'center', // Centers vertically
-            paddingHorizontal: 20, // Adds spacing for better responsiveness
-          }}
-        >
-          <Image source={Logo} style={{
-            height:150,
-            width:150,
-            resizeMode:'contain'
-          }}/>
-          <Text
-            style={{
-              fontWeight: 'bold',
-              fontSize: 40, // Adjust for better text size balance
-              textAlign: 'center', // Centers text within the container
-              marginBottom: 20, // Space between the title and subheading
-            }}
-          >
-            Congratulations on Your Purchase!
-          </Text>
-          <Text
-            style={{
-              fontSize: 20,
-              textAlign: 'center', // Centers the subheading
-              marginBottom: 20, // Space between the subheading and button
-            }}
-          >
-            Use your {purchaseNumber} <Image
-            style={{
-              height:25,
-              width:25,
-              resizeMode:'contain'
-            }} source={Coins}/> to start linking and explore more features...
-          </Text>
-          
-        </View>
-        <Confetti start={1500} itemSize={50} images={[oneCoin]} count={75} type="tumble" />
-      </View>
-      
-      )
-  }
-
   
 }
 

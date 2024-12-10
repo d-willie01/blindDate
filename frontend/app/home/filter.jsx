@@ -156,7 +156,7 @@ const ModalScreen = () => {
               </View>
     
               {/* Region Filter */}
-              <Text style={styles.sectionTitle}>Region</Text>
+              {/* <Text style={styles.sectionTitle}>Region</Text>
               <View style={styles.filterOptions}>
                 <TouchableOpacity style={[styles.filterButton, styles.activeButton]}>
                   <Text style={styles.filterButtonText}>Global</Text>
@@ -193,7 +193,7 @@ const ModalScreen = () => {
     
                 
                
-              </View>
+              </View> */}
               <TouchableOpacity onPress={()=>{
                 router.back();
               }} style={styles.linkingButton}>
@@ -324,7 +324,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     width: "100%",
-    height: height * 0.5, // Increased height for better view
+    height: height * 0.3, // Increased height for better view
     backgroundColor: '#1E1E1E',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,

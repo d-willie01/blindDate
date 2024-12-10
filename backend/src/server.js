@@ -30,7 +30,7 @@ app.use(cors());
 //function to decide which routes do not need JWT
 var jwtFilter = function (req) {
   console.log(req.path);
-  if (req.path.includes("/auth")) {
+  if (req.path.includes("/auth") || req.path.includes('/transactions/successfullTransaction')) {
     return true;
   }
   return false;
