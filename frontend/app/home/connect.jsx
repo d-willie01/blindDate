@@ -31,7 +31,8 @@ const VideoChatScreen = () => {
       console.log(response);
 
       setUser(response.data);
-
+      
+      await AsyncStorage.removeItem('user');
       await AsyncStorage.setItem('user', JSON.stringify(response.data));
       } catch (error) {
         if(error)
@@ -302,7 +303,7 @@ const VideoChatScreen = () => {
 
        {/* Filters Overlay */}
        <View style={styles.filtersOverlay}>
-  <Link href={'/home/filter'} style={{ flex: 1 }}>
+  <Link href={'/home/filters/filterFree'} style={{ flex: 1 }}>
     <View style={styles.filterOption}>
       <Text style={styles.filterText}>👫 Gender</Text>
     </View>
@@ -310,7 +311,7 @@ const VideoChatScreen = () => {
 
   <View style={styles.filterDivider} />
 
-  <Link href={'/home/filter'} style={{ flex: 1 }}>
+  <Link href={'/home/filters/filterFree'} style={{ flex: 1 }}>
     <View style={styles.filterOption}>
       <Text style={styles.filterText}>Preferences</Text>
     </View>

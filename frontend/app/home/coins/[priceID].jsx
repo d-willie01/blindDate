@@ -13,54 +13,71 @@ export default function priceID() {
   const handleLinkButton = () =>{
 
     router.replace('/home/connect');
-    setTransaction(false)
-    console.log("transaction value:",transaction)
+    
+   
   }
   return (
-    <View style={styles.confettiContainer}>
-    
-    
-    
-    
-    {/* <View
-       style={{
-         backgroundColor: '#4CAF50', // Green button
-         paddingVertical: 15,
-         paddingHorizontal: 30,
-         borderRadius: 8,
-         marginTop: 75
-       }}
-     >
-       <TouchableOpacity onPress={handleLinkButton}>
-       <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>Start Linking</Text>
+
+
+    <View style={{
+      
+      flex:1,
+      backgroundColor:'#1E1E1E'
+
+    }}>
+
+      <View style={{
+        backgroundColor: '#4CAF50', // Green button
+        paddingVertical: 15,
+        paddingHorizontal: 30,
+        borderRadius: 8,
+        
+        
+      }}>
+               <TouchableOpacity style={{
+                
+               }} onPress={handleLinkButton}>
+       <Text style={{ textAlign:"center", color: 'white', fontSize: 16, fontWeight: 'bold', }}>Start Linking</Text>
        </TouchableOpacity>
-     </View> */}
-   <View
+
+      </View>
+
+      <View
      style={{
-       flex: 1,
-       position:'absolute',
+      
+       
+       //backgroundColor:'red',
+      
        alignItems: 'center', // Centers horizontally
        justifyContent: 'center', // Centers vertically
-       paddingHorizontal: 20, // Adds spacing for better responsiveness
+       //paddingHorizontal: 20, // Adds spacing for better responsiveness
      }}
+     
    >
-     <Image source={Logo} style={{
+
+
+<Image source={Logo} style={{
+  
        height:150,
        width:150,
        resizeMode:'contain'
      }}/>
-     <Text
+
+<Text
        style={{
+        color:'white',
          fontWeight: 'bold',
          fontSize: 40, // Adjust for better text size balance
          textAlign: 'center', // Centers text within the container
-         marginBottom: 20, // Space between the title and subheading
+         // Space between the title and subheading
        }}
      >
        Congratulations on Your Purchase!
      </Text>
+
      <Text
        style={{
+        color:'white',
          fontSize: 20,
          textAlign: 'center', // Centers the subheading
          marginBottom: 20, // Space between the subheading and button
@@ -73,10 +90,20 @@ export default function priceID() {
          resizeMode:'contain'
        }} source={Coins}/> to start linking and explore more features...
      </Text>
+
+
      
    </View>
-   <Confetti start={1500} itemSize={50} images={[oneCoin]} count={75} type="tumble" />
- </View>
+
+<View style={{position:'absolute',
+  width:'100%'
+}}>
+<Confetti start={1500} itemSize={50} images={[oneCoin]} count={75} type="tumble" />
+</View>
+          
+
+    </View>
+
  
  )
   

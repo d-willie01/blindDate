@@ -11,12 +11,11 @@ import {
 
 } from "react-native";
 import { Link, useRouter } from "expo-router";
-import goldCoins from '../../assets/images/goldCoins.png';
-import Logo from '../../assets/images/logo.png';
-import api from "../../api/apiCalls";
+import goldCoins from '../../../assets/images/goldCoins.png';
+import Logo from '../../../assets/images/logo.png';
+import api from "../../../api/apiCalls";
 import Confetti from 'react-native-simple-confetti';
-// Mock user premium status
-//const isPremium = false;
+
 
 const ModalScreen = () => {
   
@@ -40,19 +39,31 @@ const ModalScreen = () => {
 
    
 
-    const response = await api.post('/transactions/spendCoins', {
-      coinAmount: 250
-    })
+    try {
+      const response = await api.post('/transactions/spendCoins', {
+        coinAmount: 250
+      })
+  
+      if(response.status == 200)
+      {
+        
+        //setConfetti(true);
+        setIsPremium(true);
+        setPurchasing(false);
+  
+      }
+    } catch (error) {
+      console.log(error)
 
-    if(response.status == 200)
-    {
-      //setConfetti(true);
-      setIsPremium(true);
-      setPurchasing(false);
+      if(error.response.data.error = "Not Enough Tokens")
+      {
+        alert(error.response.data.error);
+        router.replace('/home/coins')
+      }
+      
 
     }
-
-
+    
 
   }
 
@@ -155,45 +166,7 @@ const ModalScreen = () => {
                 </TouchableOpacity>
               </View>
     
-              {/* Region Filter */}
-              {/* <Text style={styles.sectionTitle}>Region</Text>
-              <View style={styles.filterOptions}>
-                <TouchableOpacity style={[styles.filterButton, styles.activeButton]}>
-                  <Text style={styles.filterButtonText}>Global</Text>
-                </TouchableOpacity>
-                <TouchableOpacity 
-                onPress={handleClick} style={[styles.filterButton, isPremium ? styles.activeButton : styles.disabledButton]}>
-                  
-                {!isPremium && (
-                    <View style={styles.lockOverlay}>
-    
-                      <View style={styles.lockContainer}>
-                      <Image source={{ uri: 'https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678129-lock-512.png' }} style={styles.lockIcon} />
-                      <Image style={{
-                          height:50,
-                          width: 100,
-                          borderRadius:10
-                        }} source={{
-                          uri:'https://upload.wikimedia.org/wikipedia/en/thumb/a/a4/Flag_of_the_United_States.svg/440px-Flag_of_the_United_States.svg.png'
-                        }}/>
-                      
-                        </View>
-    
-    
-                      <View style={styles.coinText}>
-                        <Image source={goldCoins} style={styles.tokenIcon} />
-                        <Text style={styles.tokenText}>250</Text>
-                        </View>
-    
-    
-                      
-                    </View>
-                  )}
-                </TouchableOpacity>
-    
-                
-               
-              </View> */}
+             
               <TouchableOpacity onPress={()=>{
                 router.back();
               }} style={styles.linkingButton}>
@@ -213,7 +186,7 @@ const ModalScreen = () => {
         <View style={styles.overlay}>
           
        {confetti && <View style={styles.overlay}>
-        <Confetti count={50} type="tumble" />
+       
       </View>}
             <Link href={'/home/connect'} style={styles.overlayBackground} />
 
@@ -310,9 +283,6 @@ const { height } = Dimensions.get("screen");
 
 const styles = StyleSheet.create({
 
-  confettiContainer:{
-        flex:1
-  },
   overlay: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.6)", // Dimmed background
@@ -324,7 +294,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     width: "100%",
-    height: height * 0.3, // Increased height for better view
+    height: height * 0.4, // Increased height for better view
     backgroundColor: '#1E1E1E',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -499,38 +469,3 @@ const styles = StyleSheet.create({
 
 export default ModalScreen;
 
-// {confetti &&
-      
-//   <View style={{
-//     flex: 1,
-
-// backgroundColor: 'white',
-//   }}>
-//   {/* Full-screen confetti overlay */}
-//   <View style={{...StyleSheet.absoluteFillObject, // Makes the View full-screen
-// zIndex: 1, }}>
-//     <Confetti
-//       start={1500}
-//       itemSize={50}
-//       images={[goldCoins]}
-//       count={75}
-//       type="tumble"
-//     />
-//   </View>
-
-//   {/* Congratulations message */}
-//   <View style={{flex: 1,
-// justifyContent: 'center',
-// alignItems: 'center',
-// zIndex: 2, }}>
-//     <Text style={{fontSize: 32,
-// fontWeight: 'bold',
-// textAlign: 'center',
-// color: 'gold',}}>🎉 Congratulations! 🎉</Text>
-//     <Text style={{ fontSize: 18,
-// textAlign: 'center',
-// color: 'gray',
-// marginTop: 10,}}> You've achieved a milestone!</Text>
-//   </View>
-// </View>
-//       }

@@ -14,7 +14,7 @@ export default function _layout() {
           presentation: 'transparentModal',
           animation: 'fade',
           headerShown: false,
-        }} name="filter"/>
+        }} name="filters"/>
         <Stack.Screen name = "userSettings"/>
         <Stack.Screen name = "coins"/>
     </Stack>

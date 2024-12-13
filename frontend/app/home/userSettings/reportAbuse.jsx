@@ -9,19 +9,48 @@ import {
 } from "react-native";
 import { Link, useRouter } from "expo-router";
 import Animated, { SlideInUp } from "react-native-reanimated";
+import api from '../../../api/apiCalls';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function FeedbackModal() {
 
   const router = useRouter()
   
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState("");
+  const [reportText, setReportText] = useState("");
 
  
-  const handleSendReport = () => {
+  const handleSendReport = async() => {
 
-          alert("Thank you, your report has been sent!")
+    const userRaw = await AsyncStorage.getItem('user');
+    const user = JSON.parse(userRaw)
 
-          router.replace('/home/profile')
+
+
+    console.log("everyhting im finna send:",reportText, selectedOption, user.email);
+
+    try {
+      const response = await api.post('/communications/feedback', {
+        
+        userEmail: user.email,
+        reportText: reportText,
+        followupState: selectedOption,
+        type: "report"
+      });
+  
+      if (response.status === 200)
+      {
+        console.log(response)
+        alert("Thank you, your feedback has been sent!")
+        //router.replace('/home/profile')
+      }
+      
+    } catch (error) {
+
+
+        alert(error.message);
+
+    }
   }
 
   return (
@@ -52,6 +81,7 @@ export default function FeedbackModal() {
           style={styles.input}
           placeholder="Please share your experience here"
           multiline
+          onChangeText={(text) =>setReportText(text)}
         />
 
         {/* Follow-Up Question */}

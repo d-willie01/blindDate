@@ -9,17 +9,52 @@ import {
 } from "react-native";
 import { Link, useRouter } from "expo-router";
 import Animated, { SlideInUp } from "react-native-reanimated";
+import api from '../../../api/apiCalls';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function FeedbackModal() {
   const router = useRouter();
-  const [selectedEmoji, setSelectedEmoji] = useState(null);
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedEmoji, setSelectedEmoji] = useState(0);
+  const [selectedOption, setSelectedOption] = useState("");
+  const [feedbackText, setFeedbackText] = useState("");
 
-  const handleSendFeedback = () => {
 
-    alert("Thank you, your feedback has been sent!")
 
-    router.replace('/home/profile')
+  const handleSendFeedback = async() => {
+
+
+    const userRaw = await AsyncStorage.getItem('user');
+    const user = JSON.parse(userRaw)
+
+    console.log("everyhting im finna send:",feedbackText, selectedEmoji, selectedOption)
+
+    try {
+      const response = await api.post('/communications/feedback', {
+        userEmail: user.email,
+        feedbacktext: feedbackText,
+        emotion: selectedEmoji,
+        followupState: selectedOption,
+        type:"feedback"
+  
+      });
+  
+      if (response.status === 200)
+      {
+        alert("Thank you, your feedback has been sent!")
+        router.replace('/home/profile')
+      }
+      
+    } catch (error) {
+
+
+        alert(error.message);
+
+    }
+
+    
+    
+
+    
 }
 
   return (
@@ -40,7 +75,7 @@ export default function FeedbackModal() {
 
         {/* Header */}
         <Text style={styles.title}>Give feedback</Text>
-        <Text style={styles.subtitle}>What do you think of Blinder? </Text>
+        <Text style={styles.subtitle}>What do you think of LiveLinkME? </Text>
 
         {/* Emoji Rating */}
         <View style={styles.ratingContainer}>
@@ -70,6 +105,7 @@ export default function FeedbackModal() {
           style={styles.input}
           placeholder="Do you have any thoughts you’d like to share?"
           multiline
+          onChangeText={(text)=>setFeedbackText(text)}
         />
 
         {/* Follow-Up Question */}

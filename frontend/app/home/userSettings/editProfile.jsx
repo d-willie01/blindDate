@@ -40,7 +40,7 @@ export default function ProfileScreen() {
           fontSize:20
         }}> X  </Text>
         </Link>
-      <View style={styles.profileSection}>
+      {/* <View style={styles.profileSection}>
 
 
         <Image
@@ -50,7 +50,7 @@ export default function ProfileScreen() {
         <TouchableOpacity style={styles.editIcon}>
           <Text style={styles.editIconText}>✏️</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
 
       <View style={styles.formSection}>
         {/* Name Input */}

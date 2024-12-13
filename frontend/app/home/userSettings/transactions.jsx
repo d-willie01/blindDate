@@ -10,26 +10,47 @@ export default function Transactions() {
   // Sample transaction data
  
 
-  useEffect(()=>{
-
-        const getData = async() =>{
-            
-            const userDataRaw = await AsyncStorage.getItem('user');
-
-            const userData = JSON.parse(userDataRaw);
-            console.log(userData.transactions);
-            setUserTransactions(userData.transactions)
-
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const userDataRaw = await AsyncStorage.getItem('user');
+  
+        if (userDataRaw) {
+          const userData = JSON.parse(userDataRaw);
+  
+          // Sort transactions by date (most recent first)
+          const sortedTransactions = userData.transactions.sort(
+            (a, b) => new Date(b.date) - new Date(a.date)
+          );
+  
+          console.log(sortedTransactions);
+          setUserTransactions(sortedTransactions);
         }
-
-        getData();
-  },[])
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+  
+    getData();
+  }, []);
+  
 
   const renderTransaction = ({ item }) =>{
     const isoDate = item.date
     const nonHumanDate = new Date(isoDate);
 
-    const date = nonHumanDate.toLocaleDateString();
+    const date = nonHumanDate.toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true, // Use 12-hour format; set to false for 24-hour format
+    });
+    
+    
+    
 
     return(
 

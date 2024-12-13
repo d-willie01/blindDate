@@ -6,7 +6,7 @@ import * as WebBrowser from 'expo-web-browser';
 import comingSoon from '../assets/images/comingSoon.png'
 import { auth } from '../firebaseConfig';
 
-WebBrowser.maybeCompleteAuthSession();
+// WebBrowser.maybeCompleteAuthSession();
 
 export default function index() {
   const bobbingAnimation = useRef(new Animated.Value(0)).current;

@@ -9,6 +9,7 @@ const authRouter = require('./routes/auth/index');
 const userRouter = require('../src/routes/users/index'
 )
 const transactionRouter = require('./routes/transactions/index')
+const communicationRouter = require('./routes/communication/index');
 const cors = require('cors');
 const app = express();
 const server = http.createServer(app);
@@ -54,6 +55,7 @@ app.use(expressJwt({ secret: process.env.JWT_SECRET_KEY, algorithms:["HS256"] })
 app.use('/auth', authRouter);
 app.use('/user', userRouter);
 app.use('/transactions', transactionRouter)
+app.use('/communications', communicationRouter)
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected'))

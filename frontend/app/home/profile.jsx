@@ -108,7 +108,6 @@ export default function ProfileScreen() {
       await AsyncStorage.clear()
       router.replace('/');
 
-
   }
   const handleDelete = () =>{
 
@@ -120,9 +119,9 @@ export default function ProfileScreen() {
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.header}>
-          <View style={styles.profilePicture}>
+          {/* <View style={styles.profilePicture}>
             <Text style={styles.profileText}>Pic</Text>
-          </View>
+          </View> */}
           <View style={styles.textContainer}>
             <Text style={styles.title}>{user?.name || "Name"}</Text>
             <Text style={styles.subtitle}>
@@ -192,8 +191,6 @@ export default function ProfileScreen() {
 
             <View style={{
               flex:1,
-             
-              
             }}>
             <TouchableOpacity onPress={handleLogout} style={styles.goButton}>
           <Text style={{

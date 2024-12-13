@@ -121,7 +121,12 @@ export default function SignInPage() {
     }
   })
   .catch((error) => {
-    console.error("Error during Google Sign-In:", error.message);
+    console.log(error.message);
+    if(error.message === 'Firebase: Error (auth/popup-closed-by-user.)')
+    {
+      console.log("Suck me")
+    }
+    
   });
 
   };
@@ -168,7 +173,7 @@ export default function SignInPage() {
         
         
         // promptAsync({ useProxy: true }),
-        handleGoogle(),
+        handleGoogle()
         setLoading(true)
         
         }} style={[styles.authButton, styles.googleButton]}>
@@ -182,7 +187,7 @@ export default function SignInPage() {
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={handleTwitter} style={[styles.authButton, styles.appleButton]}>
+      {/* <TouchableOpacity onPress={handleTwitter} style={[styles.authButton, styles.appleButton]}>
         <View style={styles.buttonContent}>
           <Text style={styles.authButtonText}>Sign up with</Text>
           <Image
@@ -192,7 +197,7 @@ export default function SignInPage() {
             style={styles.authLogo}
           />
         </View>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       {/* <TouchableOpacity style={[styles.authButton, styles.phoneButton]}>
         <Text style={styles.authButtonText}>Log in with mobile number</Text>
@@ -221,7 +226,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#00000040',
+    backgroundColor: '#171717',
   },
   modalContent: {
     width: '90%',
