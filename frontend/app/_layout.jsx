@@ -12,6 +12,7 @@ export default function _layout() {
           animation: 'fade',
           headerShown: false,
         }} name="/auth/index"/>
+        <Stack.Screen name="about"/>
         
         
     </Stack>
