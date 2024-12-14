@@ -19,14 +19,16 @@ const feedBackSchema = new mongoose.Schema({
     },
     followup: {
         type: String,
-        enum: ['yes', 'no'],
-        required: false,
+        enum: ['Yes', 'No'],
+        required: true,
     },
     emoji: {
         type: Number,
         required: false
-    }
-})
+    },
+    
+},
+{ timestamps: true })
 
 const Feedback = mongoose.model('Feedback', feedBackSchema);
 
