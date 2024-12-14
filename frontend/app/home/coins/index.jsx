@@ -46,10 +46,10 @@ export default function CoinShop() {
 
 
       //real value
-      stripePriceString: 'price_1QTgi7Dfy3ekqWSiMkuF7aUL', 
+      // stripePriceString: 'price_1QTgi7Dfy3ekqWSiMkuF7aUL', 
 
       //testvalue
-      //stripePriceString:'price_1QTgm3Dfy3ekqWSiaTk5Id04',
+      stripePriceString:'price_1QTgm3Dfy3ekqWSiaTk5Id04',
 
 
 

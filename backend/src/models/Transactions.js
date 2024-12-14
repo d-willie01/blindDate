@@ -20,6 +20,11 @@ const transactionSchema = new mongoose.Schema({
     type: String, // Optional field for additional details about the transaction
     default: '',
   },
+  receiptUrl:{
+    type: String,
+    default: '',
+    required: false
+  }
 });
 
 module.exports = transactionSchema;

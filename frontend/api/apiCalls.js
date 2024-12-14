@@ -2,8 +2,8 @@ import axios from 'axios'
 import AsycStorage from '@react-native-async-storage/async-storage'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-//const BASE_URL ='https://stream-ses0.onrender.com/'
-const BASE_URL = 'http://localhost:3000' 
+const BASE_URL ='https://stream-ses0.onrender.com/'
+//const BASE_URL = 'http://localhost:3000' 
 
 
 const api = axios.create({
