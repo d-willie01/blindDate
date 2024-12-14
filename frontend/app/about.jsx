@@ -11,7 +11,7 @@ export default function Page() {
         {/* Open Graph Meta Tags for Rich Previews */}
         <meta property="og:title" content="LiveLinkME" />
         <meta property="og:description" content="Chat and make real and lasting 1V1 connections!" />
-        <meta property="og:image" content="https://raw.githubusercontent.com/d-willie01/blindDate/refs/heads/main/frontend/assets/images/logo.png" />
+        <meta property="og:image" content="https://github.com/d-willie01/blindDate/blob/main/frontend/assets/images/flirting.png?raw=true" />
         <meta property="og:url" content="https://livelinkme.com" />
         <meta property="og:type" content="website" />
         
