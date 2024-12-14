@@ -15,6 +15,12 @@ export default function Page() {
         <meta property="og:url" content="https://livelinkme.com" />
         <meta property="og:type" content="website" />
         
+        {/* Twitter Card Meta Tags */}
+        <meta name="twitter:title" content="LiveLinkME" />
+        <meta name="twitter:description" content="Chat and make real and lasting 1V1 connections!" />
+        <meta name="twitter:image" content="https://github.com/d-willie01/blindDate/blob/main/frontend/assets/images/flirting.png?raw=true" />
+        <meta name="twitter:card" content="summary_large_image" />
+        
         {/* Favicon */}
         <link rel="icon" href="https://raw.githubusercontent.com/d-willie01/blindDate/refs/heads/main/frontend/assets/images/logo.png" />
       </Head>
@@ -23,4 +29,5 @@ export default function Page() {
     </>
   );
 }
+
 

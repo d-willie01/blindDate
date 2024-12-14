@@ -67,7 +67,7 @@ export default function CoinShop() {
 
     { 
       amount: 800, 
-      odPrice: 7.99, 
+      oldPrice: 7.99, 
       price: 10,
       stripePriceString: 'price_1QUGOMDfy3ekqWSiVFVa0etw',
       image: 'https://example.com/coin3.png' 
@@ -76,7 +76,7 @@ export default function CoinShop() {
 
     { 
       amount: 2500, 
-      ldPrice: 15.99, 
+      oldPrice: 15.99, 
       price: 15, 
       stripePriceString: 'price_1QUGhxDfy3ekqWSiI4S2UysK', 
       image: 'https://example.com/coin4.png' 
@@ -85,7 +85,7 @@ export default function CoinShop() {
 
     { 
       amount: 5000, 
-      ldPrice: 30.99, 
+      oldPrice: 30.99, 
       price: 25, 
       stripePriceString: 'price_1QUGjuDfy3ekqWSiahkKULka', 
       image: 'https://example.com/coin5.png' 
