@@ -71,7 +71,7 @@ const VideoChatScreen = () => {
       const userPreferences = {
         _id: userInfo.email,
         gender: userInfo.gender,
-        lookingFor: 'male',
+        lookingFor: `${setGenderPreference}`,
         name: userInfo.name
       }
 

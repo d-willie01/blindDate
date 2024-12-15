@@ -8,6 +8,7 @@ import {
   Dimensions,
   Pressable,
   Image,
+  Alert
 
 } from "react-native";
 import { Link, useRouter } from "expo-router";
@@ -24,52 +25,59 @@ const ModalScreen = () => {
   const [purchasing, setPurchasing] = useState(false)
   const router = useRouter();
 
-  const handleClick = () =>{
+  const handleClick = async() =>{
+    console.log('Hoe boi')
+    const result = window.confirm("Gender preference for 24 hours? (-250 coins)");
+    if (result) {
 
-    if(isPremium)
-      {
-        return;
-      }
 
-    setPurchasing(true)
+
+
+      console.log("User pressed Yes");
+      try {
+        const response = await api.post('/transactions/spendCoins', {
+          coinAmount: 250
+        })
     
-  }
+        if(response.status == 200)
+        {
+          
+         const response = await api.post('/user/setPremium')
 
-  const handleConfirm = async() =>{
+         if(response.status === 200)
+         {
 
-   
+          console.log(response);
+          alert("Success! Premium for 24 hours starting NOW!")
+          router.replace('/home/connect')
 
-    try {
-      const response = await api.post('/transactions/spendCoins', {
-        coinAmount: 250
-      })
+         }
+         
+
+          
+        }
+      } catch (error) {
+        console.log(error)
   
-      if(response.status == 200)
-      {
+        if(error.response.data.error = "Not Enough Tokens")
+        {
+          alert(error.response.data.error);
+          router.replace('/home/coins')
+        }
         
-        //setConfetti(true);
-        setIsPremium(true);
-        setPurchasing(false);
   
       }
-    } catch (error) {
-      console.log(error)
 
-      if(error.response.data.error = "Not Enough Tokens")
-      {
-        alert(error.response.data.error);
-        router.replace('/home/coins')
-      }
-      
 
+    } else {
+
+
+
+
+      console.log("User pressed No");
     }
     
-
   }
-
-  if(!purchasing)
-
-    {
       return (
         <View style={styles.overlay}>
 
@@ -128,14 +136,6 @@ const ModalScreen = () => {
                 </TouchableOpacity>
     
     
-    
-    
-    
-    
-    
-    
-    
-    
                 <TouchableOpacity 
                 onPress={handleClick} style={[styles.filterButton, isPremium ? styles.activeButton : styles.disabledButton]}>
                   
@@ -177,104 +177,8 @@ const ModalScreen = () => {
             </ScrollView>
           </View>
         </View>
-      );
-    }
+      );    
 
-    else{
-      return(
-
-        <View style={styles.overlay}>
-          
-       {confetti && <View style={styles.overlay}>
-       
-      </View>}
-            <Link href={'/home/connect'} style={styles.overlayBackground} />
-
-          <View style={styles.modalPurchaseContainer}>
-          
-
-          <View style={styles.purchaseHeader}>
-
-              <Text style={styles.purchaseHeaderText}>Purchase</Text>
-
-
-          </View>
-
-          <View style={{
-            borderBottomWidth:2,
-            borderBottomColor:"white"
-          }}>
-
-              <Text style={{
-                fontSize:20,
-                fontWeight:"bold",
-                color:"white"
-              }}>Upgrade to Premium:</Text>
-          </View>
-
-          <View style={{
-            
-            flexDirection:"row"
-          }}>
-
-            <TouchableOpacity onPress={()=>setPurchasing(false)} style={{backgroundColor: 'grey',
-      borderRadius: 8,
-      padding: 10,
-      justifyContent:"center",
-      alignItems: 'center',
-      margin: 25,}}><Text style={{
-        fontSize:25,
-        //fontWeight:'bold'
-      }}>
-        Cancel</Text></TouchableOpacity>
-
-            <TouchableOpacity onPress={handleConfirm} style={{backgroundColor: '#6FFF6F',
-      borderRadius: 8,
-      padding: 10,
-      alignItems: 'center',
-      margin: 20,}}><Text style={{
-        fontSize:25,
-        //fontWeight:'bold'
-      }}>
-        Confirm</Text> <Text style={{
-          fontWeight:'bold'
-        }}>(-250) <Image style={{
-          height:25,
-          width:25,
-          resizeMode:'contain'
-        }}source={goldCoins}/></Text></TouchableOpacity>
-
-          </View>
-
-          <View style={{
-           
-            flexDirection:"row"
-          }}>
-            <Image source={Logo} style={{
-              height:50,
-              width:50,
-              resizeMode:"contain",
-              
-            }}/>
-            <Text style={{
-              color:'gold',
-              fontSize:15
-            }}>+premium</Text>
-
-
-          </View>
-
-
-
-          </View>
-
-          
-          
-        </View>
-        
-        
-      )
-    }
 
  
 };
@@ -294,7 +198,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     width: "100%",
-    height: height * 0.4, // Increased height for better view
+    height: height * 0.3, // Increased height for better view
     backgroundColor: '#1E1E1E',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
