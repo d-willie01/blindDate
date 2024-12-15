@@ -40,7 +40,7 @@ api.interceptors.request.use(
     {
         
         const {accessToken} = await getStoredTokens();
-        console.log("This is users token:", accessToken)
+        
 
         if(accessToken)
         {

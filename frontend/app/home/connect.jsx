@@ -12,6 +12,7 @@ const VideoChatScreen = () => {
   const [loading, setLoading] = useState(true);
   const [partnerLeft, setPartnerLeft] = useState(false)
   const [user, setUser] = useState();
+  const [token, setToken] = useState();
   const socket = useRef(null);
   const peerConnection = useRef(null);
   const pendingCandidates = useRef([]); // Buffer for ICE candidates
@@ -42,6 +43,10 @@ const VideoChatScreen = () => {
         }
       }
 
+      const getToken = await AsyncStorage.getItem('accessToken');
+      setToken(getToken);
+
+
       
 
     }
@@ -56,6 +61,32 @@ const VideoChatScreen = () => {
     // Set up WebSocket event listeners
     socket.current.onmessage = handleSocketMessage;
 
+    socket.current.onopen = async() =>{
+
+      const getUserInfoRaw = await AsyncStorage.getItem('user');
+
+      const userInfo = JSON.parse(getUserInfoRaw)
+      
+
+      const userPreferences = {
+        _id: userInfo.email,
+        gender: userInfo.gender,
+        lookingFor: 'male',
+        name: userInfo.name
+      }
+
+    
+      socket.current.send(JSON.stringify({
+        type: 'auth',
+        userPreferences
+      }))
+      
+    }
+
+
+    
+
+
     // Clean up on unmount
     return () => {
       if (peerConnection.current) peerConnection.current.close();
@@ -64,6 +95,9 @@ const VideoChatScreen = () => {
 
     
   }, []);
+
+
+
 
   const initializePeerConnection = () => {
     peerConnection.current = new RTCPeerConnection();
