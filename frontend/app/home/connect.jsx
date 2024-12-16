@@ -11,6 +11,7 @@ const VideoChatScreen = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [partnerLeft, setPartnerLeft] = useState(false)
+  const [premiumStatus, setPremiumStatus] = useState(false);
   const [user, setUser] = useState();
   const [token, setToken] = useState();
   const socket = useRef(null);
@@ -20,8 +21,7 @@ const VideoChatScreen = () => {
     peerConnectionState: "new",
     remoteDescriptionSet: false,
   });
-
-
+  
   useEffect(() => {
 
     const fetchUserData = async() =>{
@@ -29,9 +29,12 @@ const VideoChatScreen = () => {
       try {
         const response = await api.get("/user/self");
 
-      console.log(response);
+      
+     console.log("This is the status of the user from server:",response.data.premiumStatus)
+      setUser(response.data.user);
+      setPremiumStatus(response.data.premiumStatus);
 
-      setUser(response.data);
+     
       
       await AsyncStorage.removeItem('user');
       await AsyncStorage.setItem('user', JSON.stringify(response.data));
@@ -55,8 +58,8 @@ const VideoChatScreen = () => {
     
 
     // Initialize WebSocket connection
-    //socket.current = new WebSocket('ws://localhost:3000');
-     socket.current = new WebSocket('wss://stream-ses0.onrender.com/');
+    socket.current = new WebSocket('ws://localhost:3000');
+     //socket.current = new WebSocket('wss://stream-ses0.onrender.com/');
 
     // Set up WebSocket event listeners
     socket.current.onmessage = handleSocketMessage;
@@ -64,23 +67,49 @@ const VideoChatScreen = () => {
     socket.current.onopen = async() =>{
 
       const getUserInfoRaw = await AsyncStorage.getItem('user');
+      const getUserPreferencesRaw = await AsyncStorage.getItem('preferences');
+
+
+      
+
 
       const userInfo = JSON.parse(getUserInfoRaw)
-      
+      const userGenderPreferences = JSON.parse(getUserPreferencesRaw)
 
-      const userPreferences = {
-        _id: userInfo.email,
-        gender: userInfo.gender,
-        lookingFor: `${setGenderPreference}`,
-        name: userInfo.name
+      console.log("This is user info:", userInfo);
+      
+      if(premiumStatus)
+      {
+        const userPreferences = {
+          _id: userInfo.user.email,
+          gender: userInfo.user.gender,
+          lookingFor: `${userGenderPreferences}`,
+          name: userInfo.user.name
+        }
+
+        console.log("This is the user preferences before sending:", userPreferences)
+      
+        socket.current.send(JSON.stringify({
+          type: 'auth',
+          userPreferences
+        }))
       }
+else{
+  const userPreferences = {
+    _id: userInfo.user.email,
+    gender: userInfo.user.gender,
+    lookingFor: `any`,
+    name: userInfo.user.name
+  }
+  console.log("This is the user preferences before sending:", userPreferences)
 
+  socket.current.send(JSON.stringify({
+    type: 'auth',
+    userPreferences
+  }))
+}
     
-      socket.current.send(JSON.stringify({
-        type: 'auth',
-        userPreferences
-      }))
-      
+     
     }
 
 
@@ -97,7 +126,7 @@ const VideoChatScreen = () => {
   }, []);
 
 
-
+  console.log("This is the status of the user:", premiumStatus);
 
   const initializePeerConnection = () => {
     peerConnection.current = new RTCPeerConnection();
@@ -263,6 +292,22 @@ const VideoChatScreen = () => {
      // Reset candidate queue when moving to the next match
   pendingCandidates.current = [];
   };
+
+  const handleFilterType = () =>{
+
+    socket.current.close();
+    if(premiumStatus)
+      {
+        router.push('/home/filters/filterPremium')
+      }
+      else
+      {
+        router.push('/home/filters/filterFree')
+      }
+    
+
+
+  }
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.videosContainer}>
@@ -337,19 +382,19 @@ const VideoChatScreen = () => {
 
        {/* Filters Overlay */}
        <View style={styles.filtersOverlay}>
-  <Link href={'/home/filters/filterFree'} style={{ flex: 1 }}>
+  <TouchableOpacity onPress={handleFilterType} style={{ flex: 1 }}>
     <View style={styles.filterOption}>
       <Text style={styles.filterText}>👫 Gender</Text>
     </View>
-  </Link>
+  </TouchableOpacity>
 
   <View style={styles.filterDivider} />
 
-  <Link href={'/home/filters/filterFree'} style={{ flex: 1 }}>
+  <TouchableOpacity onPress={handleFilterType} style={{ flex: 1 }}>
     <View style={styles.filterOption}>
       <Text style={styles.filterText}>Preferences</Text>
     </View>
-  </Link>
+  </TouchableOpacity>
 </View>
 
   

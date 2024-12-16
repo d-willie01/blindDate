@@ -10,13 +10,15 @@ function setupWebSocket(server) {
     ws.on('message', (message) => {
       try {
         const parsedMessage = JSON.parse(message);
-        console.log('Received message:', parsedMessage);
-
+        
+          
         if (parsedMessage.type === 'auth') {
           // Attach user info to the WebSocket connection
+
+          console.log("auth message coming thru:",parsedMessage);
           ws.user = parsedMessage.userPreferences;
 
-          console.log('User authenticated:', ws.user);
+          
 
           // Try to match with a suitable partner
           matchClient(ws);
@@ -41,6 +43,8 @@ function setupWebSocket(server) {
 
   function matchClient(ws) {
     const { gender, lookingFor } = ws.user;
+
+    console.log("User Gender =", gender, "User is LOOKING for:", lookingFor);
 
     // Find a suitable partner based on gender preferences
     const index = waitingClients.findIndex((client) => {

@@ -13,7 +13,7 @@ export default function Page() {
   <meta http-equiv="Content-Language" content="en" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Chat and make real and lasting 1V1 connections on LiveLinkME! Meet new people instantly." />
-  <meta name="keywords" content="video chat, 1v1 chat, online connections, live chat, meet new people" />
+  <meta name="keywords" content="video chat, 1v1 chat, online connections, live chat, meet new people, live, link,me" />
   <meta name="author" content="LiveLinkME" />
 
   {/* Open Graph Meta Tags for Rich Previews */}

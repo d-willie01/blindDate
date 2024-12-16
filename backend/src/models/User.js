@@ -46,10 +46,6 @@ const userSchema = new mongoose.Schema({
   },
   transactions: [transactionSchema], // Use the imported Transaction schema
   premiumStatus: {
-    isActive: {
-      type: Boolean,
-      default: false,
-    },
     activatedAt: {
       type: Date,
       required: false,
@@ -87,33 +83,30 @@ userSchema.pre('save', function (next) {
   next();
 });
 
-// Add a method to activate the premium status for 24 hours
+// Virtual to dynamically determine if premium is active
+userSchema.virtual('premiumStatus.isActive').get(function () {
+  const now = Date.now();
+  return this.premiumStatus.expiresAt && now < this.premiumStatus.expiresAt;
+});
+
+// Add a method to activate the premium status for 24 hours (or 2 minutes for testing)
 userSchema.methods.activatePremium = function () {
   const now = Date.now();
-  
-  // Check if the previous premium status has expired
-  if (this.premiumStatus.expiresAt && now > this.premiumStatus.expiresAt) {
-    this.premiumStatus.isActive = false; // Deactivate if expired
-  }
 
-  // Activate the premium status for 2 minutes (for testing)
-  this.premiumStatus.isActive = true;
   this.premiumStatus.activatedAt = now;
+  this.premiumStatus.expiresAt = new Date(now + 2 * 60 * 1000); // 2 minutes from now for testing
 
-  
-  this.premiumStatus.expiresAt = new Date(now + 2 * 60 * 1000); // 2 minutes from now
-
-  //Real 24 hour time
-  //this.premiumStatus.expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours from now
+  // Real 24-hour activation:
+  // this.premiumStatus.expiresAt = new Date(now + 24 * 60 * 60 * 1000); // 24 hours from now
 
   return this.save();
 };
-
 
 // Create a User model using the schema
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
+
 
 
 

@@ -16,7 +16,23 @@ const getSelf = async(req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    res.json(user)
+    console.log("This is status of user, Premium or not Premium",user.premiumStatus.isActive);
+
+
+
+    premiumStatus = user.premiumStatus.isActive
+
+    console.log("varibale check:",premiumStatus)
+    premiumStatus = user.premiumStatus.isActive;
+
+console.log("variable check:", premiumStatus);
+
+res.status(200).json({
+  user,          // Include the full user object
+  premiumStatus  // Include the premium status separately
+});
+
+
 
    } catch (error) {
 
