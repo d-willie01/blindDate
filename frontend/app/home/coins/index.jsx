@@ -29,7 +29,7 @@ export default function CoinShop() {
 
       console.log(userData);
       
-      setUserCoins(userData.tokenCount);
+      setUserCoins(userData.user.tokenCount);
 
       console.log(tokenAmount.current)
     }
