@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Link, useRouter } from "expo-router";
 import Animated, { SlideInUp } from "react-native-reanimated";
-import api from '../../../api/apiCalls';
+import api from '../../../../api/apiCalls';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function FeedbackModal() {

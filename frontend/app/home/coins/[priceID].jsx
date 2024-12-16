@@ -56,11 +56,11 @@ export default function priceID() {
    >
 
 
-<Image source={Logo} style={{
+<Image resizeMode='contain' source={Logo} style={{
   
        height:150,
        width:150,
-       resizeMode:'contain'
+       
      }}/>
 
 <Text
@@ -83,11 +83,11 @@ export default function priceID() {
          marginBottom: 20, // Space between the subheading and button
        }}
      >
-       Use your {""} <Image
+       Use your {""} <Image resizeMode='contain'
        style={{
          height:25,
          width:25,
-         resizeMode:'contain'
+         
        }} source={Coins}/> to start linking and explore more features...
      </Text>
 

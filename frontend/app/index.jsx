@@ -18,12 +18,12 @@ export default function index() {
         Animated.timing(bobbingAnimation, {
           toValue: -10, // Move the button 10 units up
           duration: 500,
-          useNativeDriver: true,
+          useNativeDriver: false,
         }),
         Animated.timing(bobbingAnimation, {
           toValue: 0, // Move the button back to its original position
           duration: 500,
-          useNativeDriver: true,
+          useNativeDriver: false,
         }),
       ])
     );
@@ -45,7 +45,7 @@ console.log(auth);
       <ScrollView contentContainerStyle={styles.container}>
         {/* Header */}
         <View style={styles.header}>
-          <Image style={styles.logo} source={Logo} />
+          <Image resizeMode='contain' style={styles.logo} source={Logo} />
           <Link href={'/auth'}>
             <TouchableOpacity style={styles.loginButton}>
               <Text style={styles.loginText}>Login</Text>
@@ -80,7 +80,7 @@ console.log(auth);
             />
           </View>
           <View style={styles.imageWrapper}>
-            <Image
+            <Image resizeMode= 'cover'
               source={{
                 uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwuwRiZVscOhwKhyHTXcqd_Q0_U90Npu5WTg&s',
               }}
@@ -107,10 +107,10 @@ console.log(auth);
         <View style={{
           //borderWidth:3
         }}>
-        <Image style={{
+        <Image resizeMode='contain' style={{
           height:100,
           width:100,
-          resizeMode: 'contain',
+          
         }}source={comingSoon}/>
         </View>
         
@@ -122,10 +122,11 @@ console.log(auth);
             style={styles.socialLogo}
           />
           <Image
+          resizeMode= 'contain'
             source={{ uri: 'https://i.pinimg.com/originals/b6/c9/dd/b6c9dda4b3983c5ecba8cf867a01bc6f.png' }} // TikTok logo
             style={styles.socialLogo}
           />
-          <Image
+          <Image resizeMode= 'contain'
             source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png' }} // Instagram logo
             style={styles.socialLogo}
           />
@@ -161,7 +162,6 @@ const styles = StyleSheet.create({
     flex: 2,
     width: 150,
     height: 80,
-    resizeMode: 'contain',
     alignSelf: 'center',
   },
   loginButton: {
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
-    resizeMode: 'cover',
+    
   },
   mainText: {
     fontSize: 24,
@@ -248,7 +248,6 @@ const styles = StyleSheet.create({
   socialLogo: {
     width: 40,
     height: 40,
-    resizeMode: 'contain',
     borderRadius: 5,
   },
 });

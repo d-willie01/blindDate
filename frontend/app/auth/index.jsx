@@ -180,6 +180,7 @@ export default function SignInPage() {
         <View style={styles.buttonContent}>
           <Text style={styles.authButtonText}>Sign up with</Text>
           <Image
+          resizeMode='contain'
             source={
               GoogleLogo}
             style={styles.authLogo}
@@ -278,7 +279,7 @@ const styles = StyleSheet.create({
   authLogo: {
     width: 40,
     height: 40,
-    resizeMode: 'contain',
+    
   },
   footerText: {
     fontSize: 12,

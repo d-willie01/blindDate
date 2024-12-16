@@ -119,7 +119,8 @@ export default function Transactions() {
       <Text style={styles.header}>Transactions</Text>
       <FlatList
         data={userTransactions}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => 
+          item.date}
         renderItem={renderTransaction}
         contentContainerStyle={styles.list}
         ListEmptyComponent={<Text style={styles.emptyMessage}>No transactions yet.</Text>}
@@ -152,10 +153,7 @@ const styles =
       padding: 15,
       borderRadius: 8,
       marginBottom: 10,
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
+      boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
       elevation: 3,
       width:'70%'
     },

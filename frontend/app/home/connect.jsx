@@ -35,9 +35,7 @@ const VideoChatScreen = () => {
       try {
         const response = await api.get("/user/self");
 
-      
-        
-      console.log("This is the premium status from the server:", response.data.premiumStatus)
+    
       setPremiumStatus(response.data.premiumStatus);
       setUser(response.data.user)
      
@@ -68,7 +66,7 @@ const VideoChatScreen = () => {
 
     // Initialize WebSocket connection
     //socket.current = new WebSocket('ws://localhost:3000');
-     socket.current = new WebSocket('wss://stream-ses0.onrender.com/');
+    socket.current = new WebSocket('wss://stream-ses0.onrender.com/');
 
     // Set up WebSocket event listeners
     socket.current.onmessage = handleSocketMessage;
@@ -87,8 +85,8 @@ const VideoChatScreen = () => {
       const userGenderPreferences = JSON.parse(getUserPreferencesRaw)
       const userPremium = JSON.parse(getUserPremiumRaw)
 
-      //console.log("This is the user preferences before sending:", userGenderPreferences)
-      console.log("This is premium status right before settings preferences:", userPremium);
+   
+     
 
 
 
@@ -96,7 +94,6 @@ const VideoChatScreen = () => {
       {
         
 
-        console.log("Whyyyyy", userGenderPreferences)
         if(userGenderPreferences === 'female')
           {
             setPreference('female');
@@ -151,7 +148,8 @@ const VideoChatScreen = () => {
       
       }
 else{
-  console.log("we in here 2")
+  
+  setPreference('both');
   const userPreferences = {
     _id: userInfo.user.email,
     gender: userInfo.user.gender,
@@ -399,10 +397,10 @@ else{
 
 
         <View style={styles.logoBadge}>
-          <Image source={Logo} style={{
+          <Image resizeMode='contain' source={Logo} style={{
             height:40,
             width:40,
-            resizeMode:'contain'
+            
           }}/>
 
         </View>
@@ -607,11 +605,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: 5,
     paddingHorizontal: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5, // Adds shadow for Android
+    boxShadow: '0px 2px 3.84px rgba(0, 0, 0, 0.25)' // Adds shadow for Android
   },
   logoBadge: {
     position: 'absolute',
@@ -623,11 +617,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: 5,
     paddingHorizontal: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5, // Adds shadow for Android
+    boxShadow: '0px 2px 3.84px rgba(0, 0, 0, 0.25)' // Adds shadow for Android
   },
   coinCount: {
     fontSize: 16,
@@ -640,9 +630,7 @@ const styles = StyleSheet.create({
     height: 20,
     backgroundColor: '#FFD700', // Gold color for the coin
     borderRadius: 10,
-    shadowColor: '#FFD700',
-    shadowOpacity: 0.9,
-    shadowRadius: 5,
+    boxShadow: '0px 0px 5px rgba(255, 215, 0, 0.9)',
   },
   remoteVideoPreferences: {
     position: 'absolute',

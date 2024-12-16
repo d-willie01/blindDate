@@ -27,12 +27,12 @@ export default function ProfileScreen() {
         Animated.timing(bobbingAnimation, {
           toValue: -10, // Move the element up
           duration: 500,
-          useNativeDriver: true,
+          useNativeDriver: false,
         }),
         Animated.timing(bobbingAnimation, {
           toValue: 0, // Move back to the original position
           duration: 500,
-          useNativeDriver: true,
+          useNativeDriver: false,
         }),
       ])
     );
@@ -48,11 +48,10 @@ export default function ProfileScreen() {
 
         const userData = JSON.parse(userDataRaw);
 
-        console.log("This is the users data:", userData)
         setUser(userData.user);
-        console.log("this is the user before sending it to storage:", userData)
+        
         await AsyncStorage.setItem('user', JSON.stringify(userData));
-        const timeSinceJoined = timeSince(userData.createdAt);
+        const timeSinceJoined = timeSince(userData.user.createdAt);
         setJoinTime(timeSinceJoined);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -156,7 +155,7 @@ export default function ProfileScreen() {
             </Link>
           </TouchableOpacity>
           <TouchableOpacity style={styles.option}>
-            <Link href={"/home/userSettings/reportAbuse"}>
+            <Link href={"/home/userSettings/communication/reportAbuse"}>
               <Text style={styles.optionText}>Report Abuse</Text>
               <Text style={styles.optionText}>›</Text>
             </Link>
@@ -166,7 +165,7 @@ export default function ProfileScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionHeader}>Settings</Text>
           <TouchableOpacity style={styles.option}>
-            <Link href={"/home/userSettings/supportFeedback"}>
+            <Link href={"/home/userSettings/communication/supportFeedback"}>
               <Text style={styles.optionText}>Support & Feedback</Text>
               <Text style={styles.optionText}>›</Text>
             </Link>

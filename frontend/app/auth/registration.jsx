@@ -90,10 +90,10 @@ export default function SignupScreen() {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.logoContainer}>
-          <Image style={{
+          <Image resizeMode="contain" style={{
             height:150,
             width:150,
-            resizeMode:"contain"
+            
           }}source={Logo}/>
         </View>
 

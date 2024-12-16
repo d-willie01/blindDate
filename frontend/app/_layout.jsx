@@ -11,7 +11,7 @@ export default function _layout() {
           presentation: 'transparentModal',
           animation: 'fade',
           headerShown: false,
-        }} name="/auth/index"/>
+        }} name="auth/index"/>
         <Stack.Screen name="about"/>
         
         

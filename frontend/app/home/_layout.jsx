@@ -7,16 +7,24 @@ export default function _layout() {
         headerShown: false
     }}>
         <Stack.Screen name='connect'/>
-        <Stack.Screen name = "registration"/>
-        <Stack.Screen name = "preferances"/>
+        
+       
         <Stack.Screen  name = "profile"/>
         <Stack.Screen options={{
           presentation: 'transparentModal',
           animation: 'fade',
           headerShown: false,
-        }} name="filters"/>
-        <Stack.Screen name = "userSettings"/>
-        <Stack.Screen name = "coins"/>
+        }} name="filters/filterFree"/>
+        <Stack.Screen options={{
+          presentation: 'transparentModal',
+          animation: 'fade',
+          headerShown: false,
+        }} name="filters/filterPremium"/>
+
+        <Stack.Screen name = "userSettings/editProfile"/>
+        
+
+        <Stack.Screen name = "coins/index"/>
     </Stack>
   )
 }

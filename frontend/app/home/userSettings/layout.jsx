@@ -11,12 +11,12 @@ export default function _layout() {
           presentation: 'transparentModal',
           animation: 'fade',
           headerShown: false,
-        }} name= "reportAbuse"/>
+        }} name= "communication/supportFeedback"/>
         <Stack.Screen options={{
           presentation: 'transparentModal',
           animation: 'fade',
           headerShown: false,
-        }} name="supportFeedback"/>
+        }} name="communication/reportAbuse"/>
         <Stack.Screen name="transactions"/>
 
        
