@@ -49,7 +49,7 @@ export default function ProfileScreen() {
         const userData = JSON.parse(userDataRaw);
 
         console.log("This is the users data:", userData)
-        setUser(userData);
+        setUser(userData.user);
         console.log("this is the user before sending it to storage:", userData)
         await AsyncStorage.setItem('user', JSON.stringify(userData));
         const timeSinceJoined = timeSince(userData.createdAt);

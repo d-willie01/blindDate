@@ -14,7 +14,7 @@ export default function ProfileScreen() {
   const userInfo = async () => {
     const userData = await AsyncStorage.getItem("user");
     const userParsed = JSON.parse(userData);
-    setUser(userParsed);
+    setUser(userParsed.user);
   };
 
   // Function to convert ISO date to dd/mm/yyyy

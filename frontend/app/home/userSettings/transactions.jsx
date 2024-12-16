@@ -19,7 +19,7 @@ export default function Transactions() {
           const userData = JSON.parse(userDataRaw);
   
           // Sort transactions by date (most recent first)
-          const sortedTransactions = userData.transactions.sort(
+          const sortedTransactions = userData.user.transactions.sort(
             (a, b) => new Date(b.date) - new Date(a.date)
           );
   

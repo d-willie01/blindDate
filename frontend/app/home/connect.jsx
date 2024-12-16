@@ -1,4 +1,4 @@
-import React, {useRef, useEffect, useState, } from 'react';
+import React, {useRef, useEffect, useState,  } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ActivityIndicator, Image } from 'react-native';
 import { Ionicons, FontAwesome, Entypo } from '@expo/vector-icons';
 import { Link, useRouter } from 'expo-router';
@@ -14,6 +14,12 @@ const VideoChatScreen = () => {
   const [premiumStatus, setPremiumStatus] = useState(false);
   const [user, setUser] = useState();
   const [token, setToken] = useState();
+  const [preference, setPreference] = useState('both');
+
+
+
+
+
   const socket = useRef(null);
   const peerConnection = useRef(null);
   const pendingCandidates = useRef([]); // Buffer for ICE candidates
@@ -30,14 +36,17 @@ const VideoChatScreen = () => {
         const response = await api.get("/user/self");
 
       
-     console.log("This is the status of the user from server:",response.data.premiumStatus)
-      setUser(response.data.user);
+        
+      console.log("This is the premium status from the server:", response.data.premiumStatus)
       setPremiumStatus(response.data.premiumStatus);
-
+      setUser(response.data.user)
      
       
       await AsyncStorage.removeItem('user');
       await AsyncStorage.setItem('user', JSON.stringify(response.data));
+
+      await AsyncStorage.removeItem('premium');
+      await AsyncStorage.setItem('premium', JSON.stringify(response.data.premiumStatus));
       } catch (error) {
         if(error)
         {
@@ -58,8 +67,8 @@ const VideoChatScreen = () => {
     
 
     // Initialize WebSocket connection
-    socket.current = new WebSocket('ws://localhost:3000');
-     //socket.current = new WebSocket('wss://stream-ses0.onrender.com/');
+    //socket.current = new WebSocket('ws://localhost:3000');
+     socket.current = new WebSocket('wss://stream-ses0.onrender.com/');
 
     // Set up WebSocket event listeners
     socket.current.onmessage = handleSocketMessage;
@@ -68,6 +77,7 @@ const VideoChatScreen = () => {
 
       const getUserInfoRaw = await AsyncStorage.getItem('user');
       const getUserPreferencesRaw = await AsyncStorage.getItem('preferences');
+      const getUserPremiumRaw = await AsyncStorage.getItem('premium');
 
 
       
@@ -75,34 +85,81 @@ const VideoChatScreen = () => {
 
       const userInfo = JSON.parse(getUserInfoRaw)
       const userGenderPreferences = JSON.parse(getUserPreferencesRaw)
+      const userPremium = JSON.parse(getUserPremiumRaw)
 
-      console.log("This is user info:", userInfo);
-      
-      if(premiumStatus)
+      //console.log("This is the user preferences before sending:", userGenderPreferences)
+      console.log("This is premium status right before settings preferences:", userPremium);
+
+
+
+      if(userPremium)
       {
-        const userPreferences = {
-          _id: userInfo.user.email,
-          gender: userInfo.user.gender,
-          lookingFor: `${userGenderPreferences}`,
-          name: userInfo.user.name
-        }
+        
 
-        console.log("This is the user preferences before sending:", userPreferences)
+        console.log("Whyyyyy", userGenderPreferences)
+        if(userGenderPreferences === 'female')
+          {
+            setPreference('female');
+            const userPreferences = {
+              _id: userInfo.user.email,
+              gender: userInfo.user.gender,
+              lookingFor: `female`,
+              name: userInfo.user.name
+            }
+    
+            
+            socket.current.send(JSON.stringify({
+              type: 'auth',
+              userPreferences
+            }))
+          }
+        
+        else if(userGenderPreferences === 'male')
+        {
+          setPreference('male');
+          const userPreferences = {
+            _id: userInfo.user.email,
+            gender: userInfo.user.gender,
+            lookingFor: `male`,
+            name: userInfo.user.name
+          }
+  
+          
+          socket.current.send(JSON.stringify({
+            type: 'auth',
+            userPreferences
+          }))
+        }
+        else if(userGenderPreferences === 'both')
+          {
+            setPreference('both');
+            const userPreferences = {
+              _id: userInfo.user.email,
+              gender: userInfo.user.gender,
+              lookingFor: `any`,
+              name: userInfo.user.name
+            }
+    
+            
+            socket.current.send(JSON.stringify({
+              type: 'auth',
+              userPreferences
+            }))
+          }
+
+       //Sending preferences for who they want to meet,
       
-        socket.current.send(JSON.stringify({
-          type: 'auth',
-          userPreferences
-        }))
       }
 else{
+  console.log("we in here 2")
   const userPreferences = {
     _id: userInfo.user.email,
     gender: userInfo.user.gender,
     lookingFor: `any`,
     name: userInfo.user.name
-  }
-  console.log("This is the user preferences before sending:", userPreferences)
 
+  }
+ 
   socket.current.send(JSON.stringify({
     type: 'auth',
     userPreferences
@@ -126,7 +183,7 @@ else{
   }, []);
 
 
-  console.log("This is the status of the user:", premiumStatus);
+ 
 
   const initializePeerConnection = () => {
     peerConnection.current = new RTCPeerConnection();
@@ -352,6 +409,32 @@ else{
   
         {/* Remote Video */}
         <View style={styles.videoWrapper}>
+
+        <View style={styles.remoteVideoPreferences}>
+  {/* Girl Option */}
+  <TouchableOpacity >
+    <View style={[styles.preferenceOption, preference === 'female' && styles.selectedPreference]}>
+      <Text style={styles.emojiText}>👩‍🦰</Text>
+      <Text style={styles.preferenceLabel}>Female</Text>
+    </View>
+  </TouchableOpacity>
+
+  {/* Boy Option */}
+  <TouchableOpacity >
+    <View style={[styles.preferenceOption, preference === 'male' && styles.selectedPreference]}>
+      <Text style={styles.emojiText}>👨</Text>
+      <Text style={styles.preferenceLabel}>Male</Text>
+    </View>
+  </TouchableOpacity>
+
+  {/* Both Option */}
+  <TouchableOpacity >
+    <View style={[styles.preferenceOption, preference === 'both' && styles.selectedPreference]}>
+      <Text style={styles.preferenceLabel}>Both</Text>
+    </View>
+  </TouchableOpacity>
+</View>
+
           <video
             id="remoteVideo"
             style={{
@@ -561,6 +644,42 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.9,
     shadowRadius: 5,
   },
+  remoteVideoPreferences: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    flexDirection: 'row',
+    zIndex: 2, // Ensure they appear above the video
+  },
+  
+  preferenceOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#444',
+    borderRadius: 15,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    marginRight: 8,
+    minWidth: 60, // Ensure a consistent width for all buttons
+  },
+  
+  selectedPreference: {
+    backgroundColor: '#6FFF6F', // Highlight color when selected
+  },
+  
+  emojiText: {
+    fontSize: 18, // Smaller size for emojis
+    marginRight: 5,
+    color: '#fff',
+  },
+  
+  preferenceLabel: {
+    fontSize: 14, // Smaller text for labels
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  
   
   
   
