@@ -32,7 +32,7 @@ export default function FeedbackModal() {
     try {
       const response = await api.post('/communications/feedback', {
         
-        userEmail: user.email,
+        userEmail: user.user.email,
         reportText: reportText,
         followupState: selectedOption,
         type: "report"
