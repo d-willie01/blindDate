@@ -114,6 +114,11 @@ export default function ProfileScreen() {
     
   }
 
+  const handleroute = () =>
+  {
+    router.replace('/home/connect')
+  }
+
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
@@ -131,7 +136,7 @@ export default function ProfileScreen() {
             <Text style={styles.subtitle}>{user?.gender || "Gender"}</Text>
             <Text style={styles.subtitle}>{joinTime}</Text>
           </View>
-          <Link href={"/home/connect"}>
+          <TouchableOpacity onPress={handleroute}>
             <Animated.View
               style={[
                 styles.goButton,
@@ -140,7 +145,7 @@ export default function ProfileScreen() {
             >
               <Text style={styles.goButtonText}>GO!</Text>
             </Animated.View>
-          </Link>
+          </TouchableOpacity>
         </View>
 
         {/* Other sections */}

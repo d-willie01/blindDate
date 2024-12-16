@@ -56,11 +56,7 @@ const VideoChatScreen = () => {
       const getToken = await AsyncStorage.getItem('accessToken');
       setToken(getToken);
 
-
-      
-
     }
-
     fetchUserData();
     
 
@@ -84,11 +80,6 @@ const VideoChatScreen = () => {
       const userInfo = JSON.parse(getUserInfoRaw)
       const userGenderPreferences = JSON.parse(getUserPreferencesRaw)
       const userPremium = JSON.parse(getUserPremiumRaw)
-
-   
-     
-
-
 
       if(userPremium)
       {
@@ -353,10 +344,12 @@ else{
     socket.current.close();
     if(premiumStatus)
       {
+        socket.current.close()
         router.push('/home/filters/filterPremium')
       }
       else
       {
+        socket.current.close()
         router.push('/home/filters/filterFree')
       }
     
@@ -473,7 +466,7 @@ else{
 
   <TouchableOpacity onPress={handleFilterType} style={{ flex: 1 }}>
     <View style={styles.filterOption}>
-      <Text style={styles.filterText}>Preferences</Text>
+      <Text style={styles.filterText}>Filter</Text>
     </View>
   </TouchableOpacity>
 </View>
@@ -481,7 +474,7 @@ else{
   
       {/* Buttons */}
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity style={styles.stopButton}>
+        <TouchableOpacity onPress={() => socket.current.close()} style={styles.stopButton}>
           <Link href={'/home/profile'}>
           <Text style={styles.stopButtonText}>STOP</Text>
           </Link>
@@ -533,7 +526,7 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 10,
+    padding: 5,
   },
   stopButton: {
     flex: 1,
@@ -572,7 +565,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     borderRadius: 10, // Rounded edges for a softer appearance
     marginHorizontal: 10,
-    marginBottom: 10, // Spacing from the bottom buttons
+    marginBottom: 5, // Spacing from the bottom buttons
     flexWrap: 'wrap', // Allow items to wrap if space is limited
   },
   filterOption: {
@@ -667,11 +660,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
-  
-  
-  
-  
+ 
 });
-
-
 export default VideoChatScreen;
