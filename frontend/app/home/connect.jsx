@@ -33,8 +33,9 @@ const VideoChatScreen = () => {
     const fetchUserData = async() =>{
 
       try {
-        const response = await api.get("/user/self");
+      const response = await api.get("/user/self");
 
+      console.log(response.data);
     
       setPremiumStatus(response.data.premiumStatus);
       setUser(response.data.user)
@@ -44,7 +45,9 @@ const VideoChatScreen = () => {
       await AsyncStorage.setItem('user', JSON.stringify(response.data));
 
       await AsyncStorage.removeItem('premium');
-      await AsyncStorage.setItem('premium', JSON.stringify(response.data.premiumStatus));
+
+      const premium = response?.data?.premiumStatus ?? false;
+      await AsyncStorage.setItem('premium', JSON.stringify(premium));
       } catch (error) {
         if(error)
         {
@@ -74,12 +77,14 @@ const VideoChatScreen = () => {
       const getUserPremiumRaw = await AsyncStorage.getItem('premium');
 
 
-      
+      console.log("user:", getUserInfoRaw, "user gender pref:",  getUserPreferencesRaw, "premium status:", getUserPremiumRaw)
 
 
       const userInfo = JSON.parse(getUserInfoRaw)
       const userGenderPreferences = JSON.parse(getUserPreferencesRaw)
       const userPremium = JSON.parse(getUserPremiumRaw)
+
+      // console.log("user:", userInfo, "user gender pref:",  userGenderPreferences, "premium status:", userPremium)
 
       if(userPremium)
       {
@@ -155,12 +160,8 @@ else{
   }))
 }
     
-     
-    }
-
-
     
-
+    }
 
     // Clean up on unmount
     return () => {

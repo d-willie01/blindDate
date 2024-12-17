@@ -1,159 +1,114 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
-import { Link } from 'expo-router';
+import { View, Text, ScrollView, Button, StyleSheet, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
 
-const interests = [
-  { id: 1, label: 'Animals', emoji: '🐱' },
-  { id: 2, label: 'Comedy', emoji: '😂' },
-  { id: 3, label: 'Travel', emoji: '🏖️' },
-  { id: 4, label: 'Food', emoji: '🍔' },
-  { id: 5, label: 'Sports', emoji: '🏀' },
-  { id: 6, label: 'Beauty & Style', emoji: '💄' },
-  { id: 7, label: 'Art', emoji: '🎨' },
-  { id: 8, label: 'Gaming', emoji: '🎮' },
-  { id: 9, label: 'Science & Education', emoji: '🧐' },
-  { id: 10, label: 'Dance', emoji: '💃' },
-  { id: 11, label: 'DIY', emoji: '✂️' },
-  { id: 12, label: 'Auto', emoji: '🚗' },
-  { id: 13, label: 'Music', emoji: '🎵' },
-  { id: 14, label: 'Life Hacks', emoji: '💡' },
-  { id: 15, label: 'Oddly Satisfying', emoji: '🤯' },
-];
+const PrivacyPolicyScreen = () => {
+  const [accepted, setAccepted] = useState(false);
+  const router = useRouter();
 
-const ChooseInterestsScreen = () => {
-  const [selectedInterests, setSelectedInterests] = useState([]);
-
-  const toggleInterest = (id) => {
-    setSelectedInterests((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
+  const handleAccept = () => {
+    setAccepted(true);
+    router.replace('/home/connect'); // Replace '/home' with the route to your main screen.
   };
 
-  const isSelected = (id) => selectedInterests.includes(id);
-
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Choose your interests</Text>
-      <Text style={styles.subtitle}>Get better video recommendations</Text>
-      <ScrollView contentContainerStyle={styles.interestsContainer}>
-        {interests.map((interest) => (
-          <TouchableOpacity
-            key={interest.id}
-            style={[
-              styles.interestButton,
-              isSelected(interest.id) && styles.selectedButton,
-            ]}
-            onPress={() => toggleInterest(interest.id)}
-          >
-            <Text
-              style={[
-                styles.interestText,
-                isSelected(interest.id) && styles.selectedText,
-              ]}
-            >
-              {interest.emoji} {interest.label}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-      <View style={styles.footer}>
-        <TouchableOpacity style={styles.skipButton}>
-          <Text style={styles.skipButtonText}>Skip</Text>
-        </TouchableOpacity>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.header}>Privacy Policy</Text>
 
-        <TouchableOpacity style={styles.nextButton}>
-        <Link href="/home/connect" >
-          <Text style={styles.nextButtonText}>Next</Text>
-        </Link>
-        </TouchableOpacity>
+      <Text style={styles.paragraph}>
+        Welcome to our app. Your privacy is important to us. Please read the following carefully.
+      </Text>
+
+      <Text style={styles.subHeader}>1. Information Collection and Usage</Text>
+      <Text style={styles.paragraph}>
+        We collect user information to provide and improve our services, including:
+      </Text>
+      <Text style={styles.listItem}>- Video and audio data for real-time communication.</Text>
+      <Text style={styles.listItem}>- Device information and IP addresses for security purposes.</Text>
+      <Text style={styles.listItem}>- Usage data to enhance the user experience.</Text>
+
+      <Text style={styles.subHeader}>2. Data Deletion</Text>
+      <Text style={styles.paragraph}>
+        You have the right to request the deletion of your personal data at any time. Contact us at{' '}
+        <Text style={styles.bold}>support@example.com</Text> to initiate the process.
+      </Text>
+
+      <Text style={styles.subHeader}>3. Age Requirement</Text>
+      <Text style={{fontSize: 16,
+    lineHeight: 24,
+    marginBottom: 10,
+    textAlign: 'justify',
+    color:"red"}}>
+        Users must be at least <Text style={styles.bold}>18 years old</Text> to use this app. By accepting this policy,
+        you confirm that you meet this requirement.
+      </Text>
+
+      <Text style={styles.subHeader}>4. Compliance with Laws</Text>
+      <Text style={styles.paragraph}>
+        We are committed to complying with applicable laws. Any unlawful activity or misuse of the platform will be
+        reported to the proper authorities.
+      </Text>
+
+      <Text style={styles.subHeader}>5. Video Chat-Specific Policies</Text>
+      <Text style={styles.paragraph}>
+        - Your video and audio communications are not recorded unless explicitly stated.
+        {'\n'}- Do not share sensitive personal information during chats.
+        {'\n'}- We take reasonable measures to ensure secure and private communication, but complete security cannot be guaranteed.
+      </Text>
+
+      <View style={styles.buttonContainer}>
+        <Button
+          title="Accept and Continue"
+          onPress={handleAccept}
+          color="#28a745"
+        />
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#1E1E1E",
     padding: 20,
+    backgroundColor: "#1E1E1E",
+    flexGrow: 1,
+    justifyContent: 'center',
   },
-  title: {
-    fontSize: 24,
+  header: {
+    fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 8,
+    marginBottom: 20,
+    textAlign: 'center',
     color:"white"
   },
-  subtitle: {
-    fontSize: 16,
-    color: '#888',
-    marginBottom: 20,
-  },
-  interestsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    paddingBottom: 20,
-  },
-  interestButton: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    margin: 5,
-    backgroundColor: '#fff',
-  },
-  selectedButton: {
-    backgroundColor: '#b9ffb8',
-    borderColor: 'black',
-  },
-  interestText: {
-    fontSize: 16,
-    color: '#000',
-  },
-  selectedText: {
-    color: 'black',
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  subHeader: {
+    fontSize: 20,
+    fontWeight: 'bold',
     marginTop: 20,
+    marginBottom: 10,
+    color:"white"
   },
-  skipButton: {
-    flex: 1,
-    alignItems: 'center',
-    paddingVertical: 15,
-    borderRadius: 30,
-    backgroundColor: 'black',
-    marginRight: 10,
-  },
-  skipButtonText: {
+  paragraph: {
     fontSize: 16,
-    color: 'white',
+    lineHeight: 24,
+    marginBottom: 10,
+    textAlign: 'justify',
+    color:"white"
+  },
+  listItem: {
+    fontSize: 16,
+    marginLeft: 20,
+    marginBottom: 5,
+    color:"white"
+  },
+  bold: {
     fontWeight: 'bold',
   },
-  nextButton: {
-    flex: 1,
-    alignItems: 'center',
-    paddingVertical: 15,
-    borderRadius: 30,
-    backgroundColor: '#71FD71',
-    marginRight: 10,
-  },
-  nextButtonText: {
-
-    
-    fontSize: 16,
-    color: 'white',
-    fontWeight: 'bold',
+  buttonContainer: {
+    marginTop: 30,
   },
 });
 
-export default ChooseInterestsScreen;
+export default PrivacyPolicyScreen;
+
 
