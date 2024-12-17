@@ -5,7 +5,7 @@ function setupWebSocket(server) {
   const wss = new WebSocket.Server({ server });
 
   wss.on('connection', (ws) => {
-    console.log('New client connected.');
+    //console.log('New client connected.');
 
     ws.on('message', (message) => {
       try {
@@ -15,7 +15,7 @@ function setupWebSocket(server) {
         if (parsedMessage.type === 'auth') {
           // Attach user info to the WebSocket connection
 
-          console.log("auth message coming thru:",parsedMessage);
+          //console.log("auth message coming thru:",parsedMessage);
           ws.user = parsedMessage.userPreferences;
 
           
@@ -35,7 +35,7 @@ function setupWebSocket(server) {
     });
 
     ws.on('close', () => {
-      console.log('Client disconnected.');
+      //console.log('Client disconnected.');
       removeFromQueue(ws);
       notifyPartnerOnDisconnect(ws);
     });
@@ -44,7 +44,7 @@ function setupWebSocket(server) {
   function matchClient(ws) {
     const { gender, lookingFor } = ws.user;
 
-    console.log("User Gender =", gender, "User is LOOKING for:", lookingFor);
+    //console.log("User Gender =", gender, "User is LOOKING for:", lookingFor);
 
     // Find a suitable partner based on gender preferences
     const index = waitingClients.findIndex((client) => {
@@ -69,12 +69,12 @@ function setupWebSocket(server) {
     } else {
       // No suitable partner found; add to the waiting queue
       waitingClients.push(ws);
-      console.log('User added to the waiting queue:', ws.user.name);
+      //console.log('User added to the waiting queue:', ws.user.name);
     }
   }
 
   function handleNextRequest(ws) {
-    console.log('Client requested to find a new match.');
+    //console.log('Client requested to find a new match.');
 
     // Disconnect from current partner if exists
     if (ws.partner && ws.partner.readyState === WebSocket.OPEN) {
@@ -116,7 +116,7 @@ module.exports = setupWebSocket;
 //   const wss = new WebSocket.Server({ server });
 
 //   wss.on('connection', (ws) => {
-//     console.log('New client connected.');
+//     //console.log('New client connected.');
 
 //     if (waitingClients.length > 0) {
 //       // If there's a waiting client, pair them
@@ -137,11 +137,11 @@ module.exports = setupWebSocket;
       
 //       try {
 //         const parsedMessage = JSON.parse(message);
-//         console.log("This is the message?",parsedMessage);
+//         //console.log("This is the message?",parsedMessage);
 //         const partner = ws.partner;
 
 //         if (parsedMessage.type === 'next') {
-//           console.log('Client requested to find a new match.');
+//           //console.log('Client requested to find a new match.');
 
 //           // Disconnect from current partner if exists
 //           if (partner && partner.readyState === WebSocket.OPEN) {
@@ -178,7 +178,7 @@ module.exports = setupWebSocket;
 //     });
 
 //     ws.on('close', () => {
-//       console.log('Client disconnected.');
+//       //console.log('Client disconnected.');
 //       // Remove from waiting clients if in the queue
 //       const index = waitingClients.indexOf(ws);
 //       if (index !== -1) waitingClients.splice(index, 1);

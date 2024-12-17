@@ -31,7 +31,7 @@ app.use(cors());
 
 //function to decide which routes do not need JWT
 var jwtFilter = function (req) {
-  console.log(req.path);
+  //console.log(req.path);
   if (req.path.includes("/auth") || req.path.includes('/transactions/successfullTransaction') || req.path.includes("/analytics")) {
     return true;
   }
@@ -60,11 +60,11 @@ app.use('/communications', communicationRouter);
 app.use('/analytics', analyticsRouter);
 
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('MongoDB connected'))
+  .then(() => //console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
 server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  //console.log(`Server running on port ${PORT}`);
 });
 
 

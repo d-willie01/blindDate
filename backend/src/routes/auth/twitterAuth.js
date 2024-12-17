@@ -27,7 +27,7 @@ const verifyTwitterToken = async (req, res) => {
 
         if (!user) {
             user = await User.create({ twitterId, email, name });
-            console.log("New User Created", user);
+            //console.log("New User Created", user);
             isNewUser = true;
         }
 
@@ -65,7 +65,7 @@ const verifyTwitterToken = async (req, res) => {
                 }
 
                 const twitterUser = JSON.parse(data);
-                console.log("Twitter user data:", twitterUser);
+                //console.log("Twitter user data:", twitterUser);
 
                 // Create or find user in MongoDB
                 const { user, isNewUser } = await findOrCreateUser(twitterUser);

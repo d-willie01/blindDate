@@ -23,7 +23,7 @@ export default function Transactions() {
             (a, b) => new Date(b.date) - new Date(a.date)
           );
   
-          console.log(sortedTransactions);
+          //console.log(sortedTransactions);
           setUserTransactions(sortedTransactions);
         }
       } catch (error) {

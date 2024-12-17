@@ -36,7 +36,7 @@ export default function index() {
   const authO = () =>{
 
 
-console.log(auth);
+//console.log(auth);
 
   }
 

@@ -9,7 +9,7 @@ dotenv.config();
 
 const takeFeedback = async(req, res) =>{
 
-console.log(req.body);
+//console.log(req.body);
 const {userEmail, feedbacktext, emotion, followupState, type, reportText} = req.body
 
 
@@ -18,7 +18,7 @@ switch(req.body.type) {
 
         
 
-            console.log(userEmail, feedbacktext, emotion, followupState)
+            //console.log(userEmail, feedbacktext, emotion, followupState)
 
         const newFeedBack = new Feedback({
 

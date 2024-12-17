@@ -32,7 +32,7 @@ const getGoogleAuth = async(req, res) => {
     
       if (!user) {
         user = await User.create({ googleId, email, name });
-        console.log("New User Create", user);
+        //console.log("New User Create", user);
         isNewUser = true
       }
     

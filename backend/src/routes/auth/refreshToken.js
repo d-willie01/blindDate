@@ -43,7 +43,7 @@ const refreshAccessToken = async(req, res) =>{
         res.json({token: accessToken})
 
     } catch (error) {
-        console.log("error veryfying refresh token")
+        //console.log("error veryfying refresh token")
         res.status(403).json({
             error: "Invalid Refresh Token"
         }) 

@@ -17,7 +17,7 @@ const spendUserCoins = async(req, res) =>{
     const token = authHeader.split(' ')[1];
 
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY)
-    console.log("amount to subtract:", coinSubtractAmount, "user to sub from:", decodedToken);
+    //console.log("amount to subtract:", coinSubtractAmount, "user to sub from:", decodedToken);
 
     if(decodedToken)
     {
@@ -31,7 +31,7 @@ const spendUserCoins = async(req, res) =>{
                 {
                     return res.status(400).json({error: 'Not Enough Tokens'})
                 }
-                console.log("this is the user:", user)
+                //console.log("this is the user:", user)
 
                 user.tokenCount -= coinSubtractAmount;
                 user.transactions.push({

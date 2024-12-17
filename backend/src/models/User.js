@@ -41,7 +41,7 @@ const userSchema = new mongoose.Schema({
   },
   tokenCount: {
     type: Number,
-    default: 0, // Default to 0 tokens for new users
+    default: 50, // Default to 0 tokens for new users
     min: 0, // Ensure token count cannot go below 0
   },
   transactions: [transactionSchema], // Use the imported Transaction schema

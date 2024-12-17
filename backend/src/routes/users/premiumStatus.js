@@ -7,7 +7,7 @@ const setPremiumStatus = async(req, res) => {
 
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
-    console.log(decodedToken);
+    //console.log(decodedToken);
 
     const user = await User.findOne({ email: decodedToken.email });
     try {

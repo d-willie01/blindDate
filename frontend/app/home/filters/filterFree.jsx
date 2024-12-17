@@ -26,7 +26,7 @@ const ModalScreen = () => {
       // Displaying a prompt for gender preference with a 250 coin charge
       const result = window.confirm("Gender preference for 24 hours? (-250 coins)");
       if (result) {
-        console.log("User pressed Yes");
+        //console.log("User pressed Yes");
 
         // Deduct coins from the user's account
         const response = await api.post('/transactions/spendCoins', {
@@ -38,14 +38,14 @@ const ModalScreen = () => {
           const premiumResponse = await api.post('/user/setPremium');
 
           if (premiumResponse.status === 200) {
-            console.log(premiumResponse);
+            //console.log(premiumResponse);
             alert("Success! Premium for 24 hours starting NOW!");
             setIsPremium(true); // Update state to reflect the premium status
             router.replace('/home/connect');
           }
         }
       } else {
-        console.log("User pressed No");
+        //console.log("User pressed No");
       }
     } catch (error) {
       console.error(error);
@@ -313,14 +313,14 @@ export default ModalScreen;
 //   const router = useRouter();
 
 //   const handleClick = async() =>{
-//     console.log('Hoe boi')
+//     //console.log('Hoe boi')
 //     const result = window.confirm("Gender preference for 24 hours? (-250 coins)");
 //     if (result) {
 
 
 
 
-//       console.log("User pressed Yes");
+//       //console.log("User pressed Yes");
 //       try {
 //         const response = await api.post('/transactions/spendCoins', {
 //           coinAmount: 250
@@ -334,7 +334,7 @@ export default ModalScreen;
 //          if(response.status === 200)
 //          {
 
-//           console.log(response);
+//           //console.log(response);
 //           alert("Success! Premium for 24 hours starting NOW!")
 //           router.replace('/home/connect')
 
@@ -344,7 +344,7 @@ export default ModalScreen;
           
 //         }
 //       } catch (error) {
-//         console.log(error)
+//         //console.log(error)
   
 //         if(error.response.data.error = "Not Enough Tokens")
 //         {
@@ -361,7 +361,7 @@ export default ModalScreen;
 
 
 
-//       console.log("User pressed No");
+//       //console.log("User pressed No");
 //     }
     
 //   }

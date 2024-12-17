@@ -66,9 +66,9 @@ export default function SignupScreen() {
     if (!validateForm()) return; // Only proceed if form is valid
 
     try {
-      console.log(name);
-      console.log(selectedGender);
-      console.log(dateOfBirth);
+      //console.log(name);
+      //console.log(selectedGender);
+      //console.log(dateOfBirth);
 
       const response = await api.post('/user/registration/', {
         name,
@@ -80,9 +80,9 @@ export default function SignupScreen() {
         router.replace('/auth/preferences');
       }
 
-      console.log(response.data);
+      //console.log(response.data);
     } catch (error) {
-      console.log("this is the error:", error);
+      //console.log("this is the error:", error);
     }
   };
 

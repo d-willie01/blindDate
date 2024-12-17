@@ -18,14 +18,14 @@ const URL = process.env.DOMAIN_URL
 const addUserCoins = async(req, res) =>{
 
 
-    console.log("should contain the transaction coin amount:", req.body.transaction.amount)
+    //console.log("should contain the transaction coin amount:", req.body.transaction.amount)
     const coinAmount = req.body.transaction.amount
     const authHeader = req.headers.authorization;
     const token = authHeader.split(' ')[1];
 
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY)
 
-    console.log("searching for price string:",req.body.transaction.stripePriceString)
+    //console.log("searching for price string:",req.body.transaction.stripePriceString)
 
     const priceString = req.body.transaction.stripePriceString
 
@@ -39,7 +39,7 @@ const addUserCoins = async(req, res) =>{
 
     //         if(user)
     //         {
-    //                 console.log("This is the user:", user, "requesting this amount:", coinAmount)
+    //                 //console.log("This is the user:", user, "requesting this amount:", coinAmount)
 
     //                 user.tokenCount += coinAmount;
     //                 user.transactions.push({
@@ -53,12 +53,12 @@ const addUserCoins = async(req, res) =>{
 
 
     //     } catch (error) {
-    //         console.log("error finding user:", error)
+    //         //console.log("error finding user:", error)
     //     }
 
     // }
 
-    console.log("This is the token before its sent:", token)
+    //console.log("This is the token before its sent:", token)
     const session = await stripe.checkout.sessions.create({
         line_items: [
           {

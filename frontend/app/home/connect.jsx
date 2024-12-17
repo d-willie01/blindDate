@@ -35,7 +35,7 @@ const VideoChatScreen = () => {
       try {
       const response = await api.get("/user/self");
 
-      console.log(response.data);
+     
     
       setPremiumStatus(response.data.premiumStatus);
       setUser(response.data.user)
@@ -77,14 +77,14 @@ const VideoChatScreen = () => {
       const getUserPremiumRaw = await AsyncStorage.getItem('premium');
 
 
-      console.log("user:", getUserInfoRaw, "user gender pref:",  getUserPreferencesRaw, "premium status:", getUserPremiumRaw)
+    
 
 
       const userInfo = JSON.parse(getUserInfoRaw)
       const userGenderPreferences = JSON.parse(getUserPreferencesRaw)
       const userPremium = JSON.parse(getUserPremiumRaw)
 
-      // console.log("user:", userInfo, "user gender pref:",  userGenderPreferences, "premium status:", userPremium)
+      // //console.log("user:", userInfo, "user gender pref:",  userGenderPreferences, "premium status:", userPremium)
 
       if(userPremium)
       {
@@ -191,7 +191,7 @@ else{
     peerConnection.current.ontrack = (event) => {
       if (event.streams[0]) {
 
-        console.log("track drop boi: ", event.streams[0].getTracks())
+        //console.log("track drop boi: ", event.streams[0].getTracks())
       
          const remoteVideoElement = document.getElementById('remoteVideo');
          remoteVideoElement.srcObject = event.streams[0];
@@ -200,11 +200,11 @@ else{
 
     // Connection state change handlers
     peerConnection.current.oniceconnectionstatechange = () => {
-      console.log("ICE Connection State:", peerConnection.current.iceConnectionState);
+      //console.log("ICE Connection State:", peerConnection.current.iceConnectionState);
     };
 
     peerConnection.current.onconnectionstatechange = () => {
-      console.log("Connection State:", peerConnection.current.connectionState);
+      //console.log("Connection State:", peerConnection.current.connectionState);
     };
 
     peerConnection.onicecandidateerror = (event) => {
@@ -282,7 +282,7 @@ else{
 
     // Process buffered candidates
     while (pendingCandidates.current.length > 0) {
-      console.log("prcessing in OFFER", pendingCandidates.current )
+      //console.log("prcessing in OFFER", pendingCandidates.current )
       const candidate = pendingCandidates.current.shift();
       await peerConnection.current.addIceCandidate(new RTCIceCandidate(candidate));
     }
@@ -303,11 +303,11 @@ else{
 
     // Process buffered candidates
     while (pendingCandidates.current.length > 0 && stateStore.current.remoteDescriptionSet) {
-      console.log("prcessing in ANSWER", pendingCandidates.current )
+      //console.log("prcessing in ANSWER", pendingCandidates.current )
       try {
         const candidate = pendingCandidates.current.shift();
         await peerConnection.current.addIceCandidate(new RTCIceCandidate(candidate));
-        console.log('Added ICE candidate:', candidate);
+        //console.log('Added ICE candidate:', candidate);
       } catch (error) {
         console.error('Error adding ICE candidate:', error);
       }
@@ -378,7 +378,7 @@ else{
               <Link href={'/home/coins'}style={styles.coinBadge} onPress={() => 
                 {
                   
-                  console.log('Coin badge clicked')
+                  //console.log('Coin badge clicked')
                   socket.current.close()
 
 

@@ -27,7 +27,7 @@ export default function FeedbackModal() {
 
 
 
-    console.log("everyhting im finna send:",reportText, selectedOption, user.email);
+    //console.log("everyhting im finna send:",reportText, selectedOption, user.email);
 
     try {
       const response = await api.post('/communications/feedback', {
@@ -40,7 +40,7 @@ export default function FeedbackModal() {
   
       if (response.status === 200)
       {
-        console.log(response)
+        //console.log(response)
         alert("Thank you, your feedback has been sent!")
         //router.replace('/home/profile')
       }

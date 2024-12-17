@@ -74,14 +74,14 @@ export default function SignInPage() {
   const sendTwitterToken = async (authentication) => {
     try {
 
-      console.log("these are the two things twitter needs before they are sent:",authentication.token, authentication.secret   )
+      //console.log("these are the two things twitter needs before they are sent:",authentication.token, authentication.secret   )
 
       const token = authentication.token
       const secret = authentication.secret
 
       const response = await api.post('/auth/twitter', { token, secret  });
 
-      console.log(response);
+      //console.log(response);
 
 
 
@@ -115,16 +115,15 @@ export default function SignInPage() {
     const user = result.user;
 
     if (idToken) {
-      console.log(idToken);
-      console.log(user);
+      
       sendGoogleToken(idToken); // Send the ID token, not the access token
     }
   })
   .catch((error) => {
-    console.log(error.message);
+    //console.log(error.message);
     if(error.message === 'Firebase: Error (auth/popup-closed-by-user.)')
     {
-      console.log("Suck me")
+      //console.log("Suck me")
     }
     
   });
@@ -133,7 +132,7 @@ export default function SignInPage() {
 
   const handleTwitter = () => {
 
-    console.log("wtf")
+    //console.log("wtf")
     
     signInWithPopup(auth, twitterProvider)
     .then((result) => {
@@ -143,7 +142,7 @@ export default function SignInPage() {
 
       const user = result.user;
 
-      console.log("This is the twitter user and the token:", user, token);
+      //console.log("This is the twitter user and the token:", user, token);
 
       // Send both token and secret to the backend
       sendTwitterToken({ token, secret });

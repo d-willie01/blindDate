@@ -27,11 +27,11 @@ export default function CoinShop() {
 
       const userData = JSON.parse(userDataRaw);
 
-      console.log(userData);
+      //console.log(userData);
       
       setUserCoins(userData.user.tokenCount);
 
-      console.log(tokenAmount.current)
+      //console.log(tokenAmount.current)
     }
 
     fetchUserData()
@@ -127,7 +127,7 @@ export default function CoinShop() {
 
   const handlePurchase = async() =>{
 
-    console.log(selectedTransaction);
+    //console.log(selectedTransaction);
 
 
     try {
@@ -136,11 +136,11 @@ export default function CoinShop() {
         transaction: selectedTransaction
       })
 
-      console.log(response);
+      //console.log(response);
 
       if(response.status == 200)
       {
-        console.log("find the coins:", selectedTransaction.amount)
+        //console.log("find the coins:", selectedTransaction.amount)
         window.location.href = response.data.url;
         // setTransaction(true) ;
         // setPurchaseNumber(selectedTransaction.amount);

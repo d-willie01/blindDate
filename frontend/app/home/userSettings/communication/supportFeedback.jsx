@@ -26,7 +26,7 @@ export default function FeedbackModal() {
     const userRaw = await AsyncStorage.getItem('user');
     const user = JSON.parse(userRaw)
 
-    console.log("everyhting im finna send:",feedbackText, selectedEmoji, selectedOption)
+    //console.log("everyhting im finna send:",feedbackText, selectedEmoji, selectedOption)
 
     try {
       const response = await api.post('/communications/feedback', {
