@@ -13,6 +13,7 @@ export default function _layout() {
           headerShown: false,
         }} name="auth/index"/>
         <Stack.Screen name="about"/>
+        <Stack.Screen name="admin"/>
         
         
     </Stack>

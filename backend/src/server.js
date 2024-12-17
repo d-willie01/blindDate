@@ -10,6 +10,7 @@ const userRouter = require('../src/routes/users/index'
 )
 const transactionRouter = require('./routes/transactions/index')
 const communicationRouter = require('./routes/communication/index');
+const analyticsRouter = require('./routes/analytics/index')
 const cors = require('cors');
 const app = express();
 const server = http.createServer(app);
@@ -31,7 +32,7 @@ app.use(cors());
 //function to decide which routes do not need JWT
 var jwtFilter = function (req) {
   console.log(req.path);
-  if (req.path.includes("/auth") || req.path.includes('/transactions/successfullTransaction')) {
+  if (req.path.includes("/auth") || req.path.includes('/transactions/successfullTransaction') || req.path.includes("/analytics")) {
     return true;
   }
   return false;
@@ -54,8 +55,9 @@ app.use(expressJwt({ secret: process.env.JWT_SECRET_KEY, algorithms:["HS256"] })
 
 app.use('/auth', authRouter);
 app.use('/user', userRouter);
-app.use('/transactions', transactionRouter)
-app.use('/communications', communicationRouter)
+app.use('/transactions', transactionRouter);
+app.use('/communications', communicationRouter);
+app.use('/analytics', analyticsRouter);
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected'))
