@@ -172,8 +172,10 @@ export default function SignInPage() {
         
         
         // promptAsync({ useProxy: true }),
-        handleGoogle()
-        setLoading(true)
+        // handleGoogle()
+        // setLoading(true)
+
+        router.replace('/home/connect');
         
         }} style={[styles.authButton, styles.googleButton]}>
         <View style={styles.buttonContent}>
@@ -187,17 +189,19 @@ export default function SignInPage() {
         </View>
       </TouchableOpacity>
 
-      {/* <TouchableOpacity onPress={handleTwitter} style={[styles.authButton, styles.appleButton]}>
+      <TouchableOpacity onPress={
+        router.replace('/home/connect')
+      } style={[styles.authButton, styles.appleButton]}>
         <View style={styles.buttonContent}>
-          <Text style={styles.authButtonText}>Sign up with</Text>
-          <Image
+          <Text style={styles.authButtonText}>GUEST</Text>
+          {/* <Image
             source={{
               uri: 'https://cdn.prod.website-files.com/5d66bdc65e51a0d114d15891/64cebdd90aef8ef8c749e848_X-EverythingApp-Logo-Twitter.jpg',
             }}
             style={styles.authLogo}
-          />
+          /> */}
         </View>
-      </TouchableOpacity> */}
+      </TouchableOpacity>
 
       {/* <TouchableOpacity style={[styles.authButton, styles.phoneButton]}>
         <Text style={styles.authButtonText}>Log in with mobile number</Text>

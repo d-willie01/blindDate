@@ -1,10 +1,19 @@
 import React, {useRef, useEffect, useState,  } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ActivityIndicator, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ActivityIndicator, Image, Platform } from 'react-native';
 import { Ionicons, FontAwesome, Entypo } from '@expo/vector-icons';
 import { Link, useRouter } from 'expo-router';
 import api from '../../api/apiCalls';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Logo from '../../assets/images/logo.png'
+
+const getWebSocketUrl = () => {
+  if (Platform.OS === 'web') {
+    return process.env.NODE_ENV === 'development'
+      ? 'ws://localhost:3000'
+      : 'wss://stream-ses0.onrender.com';
+  }
+  return 'wss://stream-ses0.onrender.com'; // Default to production URL for native
+};
 
 const VideoChatScreen = () => {
 
@@ -51,8 +60,8 @@ const VideoChatScreen = () => {
       } catch (error) {
         if(error)
         {
-          alert('please login')
-            router.replace('/')
+          // alert('please login')
+          //   router.replace('/')
         }
       }
 
@@ -63,258 +72,413 @@ const VideoChatScreen = () => {
     fetchUserData();
     
 
-    // Initialize WebSocket connection
-    //socket.current = new WebSocket('ws://localhost:3000');
-    socket.current = new WebSocket('wss://stream-ses0.onrender.com/');
+    const initializeWebSocket = () => {
+      const wsUrl = getWebSocketUrl();
+      console.log('Connecting to WebSocket:', wsUrl);
+      
+      socket.current = new WebSocket(wsUrl);
 
-    // Set up WebSocket event listeners
-    socket.current.onmessage = handleSocketMessage;
+      socket.current.onmessage = handleSocketMessage;
 
-    socket.current.onopen = async() =>{
+      socket.current.onopen = async() => {
+        console.log('WebSocket connected');
+        setLoading(false);
+        try {
+          const getUserInfoRaw = await AsyncStorage.getItem('user');
+          const getUserPreferencesRaw = await AsyncStorage.getItem('preferences');
+          const getUserPremiumRaw = await AsyncStorage.getItem('premium');
 
-      const getUserInfoRaw = await AsyncStorage.getItem('user');
-      const getUserPreferencesRaw = await AsyncStorage.getItem('preferences');
-      const getUserPremiumRaw = await AsyncStorage.getItem('premium');
-
-
-    
-
-
-      const userInfo = JSON.parse(getUserInfoRaw)
-      const userGenderPreferences = JSON.parse(getUserPreferencesRaw)
-      const userPremium = JSON.parse(getUserPremiumRaw)
-
-      // //console.log("user:", userInfo, "user gender pref:",  userGenderPreferences, "premium status:", userPremium)
-
-      if(userPremium)
-      {
-        
-
-        if(userGenderPreferences === 'female')
-          {
-            setPreference('female');
-            const userPreferences = {
-              _id: userInfo.user.email,
-              gender: userInfo.user.gender,
-              lookingFor: `female`,
-              name: userInfo.user.name
-            }
-    
-            
-            socket.current.send(JSON.stringify({
-              type: 'auth',
-              userPreferences
-            }))
+          if (!getUserInfoRaw) {
+            console.error('No user info found');
+            return;
           }
-        
-        else if(userGenderPreferences === 'male')
-        {
-          setPreference('male');
+
+          const userInfo = JSON.parse(getUserInfoRaw);
+          const userGenderPreferences = getUserPreferencesRaw ? JSON.parse(getUserPreferencesRaw) : 'any';
+          const userPremium = getUserPremiumRaw ? JSON.parse(getUserPremiumRaw) : false;
+
           const userPreferences = {
             _id: userInfo.user.email,
             gender: userInfo.user.gender,
-            lookingFor: `male`,
+            lookingFor: userPremium ? userGenderPreferences : 'any',
             name: userInfo.user.name
-          }
-  
-          
+          };
+
           socket.current.send(JSON.stringify({
             type: 'auth',
             userPreferences
-          }))
+          }));
+        } catch (error) {
+          console.error('Error in WebSocket onopen:', error);
         }
-        else if(userGenderPreferences === 'both')
-          {
-            setPreference('both');
-            const userPreferences = {
-              _id: userInfo.user.email,
-              gender: userInfo.user.gender,
-              lookingFor: `any`,
-              name: userInfo.user.name
-            }
-    
-            
-            socket.current.send(JSON.stringify({
-              type: 'auth',
-              userPreferences
-            }))
+      };
+
+      socket.current.onerror = (error) => {
+        console.error('WebSocket error:', error);
+        setLoading(false);
+      };
+
+      socket.current.onclose = (event) => {
+        console.log('WebSocket closed:', event.code, event.reason);
+        setLoading(true);
+        // Attempt to reconnect after 5 seconds
+        setTimeout(() => {
+          if (socket.current?.readyState === WebSocket.CLOSED) {
+            console.log('Attempting to reconnect...');
+            initializeWebSocket();
           }
-
-       //Sending preferences for who they want to meet,
-      
-      }
-else{
-  
-  setPreference('both');
-  const userPreferences = {
-    _id: userInfo.user.email,
-    gender: userInfo.user.gender,
-    lookingFor: `any`,
-    name: userInfo.user.name
-
-  }
- 
-  socket.current.send(JSON.stringify({
-    type: 'auth',
-    userPreferences
-  }))
-}
-    
-    
-    }
-
-    // Clean up on unmount
-    return () => {
-      if (peerConnection.current) peerConnection.current.close();
-      if (socket.current) socket.current.close();
+        }, 5000);
+      };
     };
 
-    
+    initializeWebSocket();
+
+    // Cleanup function
+    return () => {
+      if (socket.current) {
+        socket.current.close();
+      }
+      if (peerConnection.current) {
+        peerConnection.current.close();
+      }
+      // Clean up any existing media streams
+      const remoteVideo = document.getElementById('remoteVideo');
+      if (remoteVideo && remoteVideo.srcObject) {
+        remoteVideo.srcObject.getTracks().forEach(track => track.stop());
+        remoteVideo.srcObject = null;
+      }
+    };
   }, []);
 
 
  
 
   const initializePeerConnection = () => {
-    peerConnection.current = new RTCPeerConnection();
-    stateStore.current.peerConnectionState = "new";
-    stateStore.current.remoteDescriptionSet = false;
-
-    // ICE Candidate handling
-    peerConnection.current.onicecandidate = (event) => {
-      if (event.candidate) {
-        socket.current.send(JSON.stringify({ type: 'candidate', candidate: event.candidate }));
+    try {
+      if (peerConnection.current) {
+        peerConnection.current.close();
       }
-    };
-
-    // Track event for remote media
-    peerConnection.current.ontrack = (event) => {
-      if (event.streams[0]) {
-
-        //console.log("track drop boi: ", event.streams[0].getTracks())
       
-         const remoteVideoElement = document.getElementById('remoteVideo');
-         remoteVideoElement.srcObject = event.streams[0];
+      const configuration = {
+        iceServers: [
+          { urls: 'stun:stun.l.google.com:19302' },
+          { urls: 'stun:stun1.l.google.com:19302' },
+          { urls: 'stun:stun2.l.google.com:19302' },
+          { urls: 'stun:stun3.l.google.com:19302' },
+          { urls: 'stun:stun4.l.google.com:19302' },
+          // Add TURN server for better connectivity
+          {
+            urls: 'turn:numb.viagenie.ca',
+            username: 'webrtc@live.com',
+            credential: 'muazkh'
+          }
+        ],
+        iceCandidatePoolSize: 10
+      };
+      
+      peerConnection.current = new RTCPeerConnection(configuration);
+      stateStore.current.peerConnectionState = "new";
+      stateStore.current.remoteDescriptionSet = false;
+      pendingCandidates.current = []; // Clear any existing candidates
+
+      // ICE Candidate handling
+      peerConnection.current.onicecandidate = (event) => {
+        if (event.candidate) {
+          socket.current.send(JSON.stringify({ 
+            type: 'ice-candidate', 
+            candidate: event.candidate 
+          }));
+        }
+      };
+
+      // Connection state changes
+      peerConnection.current.onconnectionstatechange = () => {
+        const state = peerConnection.current.connectionState;
+        console.log('Connection state changed:', state);
+        
+        switch (state) {
+          case 'connected':
+            setLoading(false);
+            break;
+          case 'disconnected':
+          case 'failed':
+            console.log('Connection failed or disconnected, attempting to reconnect...');
+            handleConnectionFailure();
+            break;
+          case 'closed':
+            cleanupConnection();
+            break;
+        }
+      };
+
+      // ICE connection state changes
+      peerConnection.current.oniceconnectionstatechange = () => {
+        console.log('ICE connection state changed:', peerConnection.current.iceConnectionState);
+        if (peerConnection.current.iceConnectionState === 'failed') {
+          console.log('ICE connection failed, attempting to reconnect...');
+          handleConnectionFailure();
+        }
+      };
+
+      // Signaling state changes
+      peerConnection.current.onsignalingstatechange = () => {
+        console.log('Signaling state changed:', peerConnection.current.signalingState);
+      };
+
+      // Track event for remote media
+      peerConnection.current.ontrack = (event) => {
+        console.log('Received remote track:', event.track.kind);
+        try {
+          if (event.streams && event.streams[0]) {
+            const remoteVideoElement = document.getElementById('remoteVideo');
+            if (remoteVideoElement) {
+              remoteVideoElement.srcObject = event.streams[0];
+              remoteVideoElement.onloadedmetadata = () => {
+                remoteVideoElement.play().catch(error => {
+                  console.error('Error playing video:', error);
+                  handleMediaError(error);
+                });
+              };
+            } else {
+              console.error('Remote video element not found');
+            }
+          } else {
+            console.error('No streams found in track event');
+          }
+        } catch (error) {
+          console.error('Error handling remote track:', error);
+          handleMediaError(error);
+        }
+      };
+
+    } catch (error) {
+      console.error('Error initializing peer connection:', error);
+      handleConnectionFailure();
+    }
+  };
+
+  const handleConnectionFailure = () => {
+    setLoading(true);
+    cleanupConnection();
+    
+    // Wait a moment before attempting to reconnect
+    setTimeout(() => {
+      if (socket.current?.readyState === WebSocket.OPEN) {
+        handleNext();
+      } else {
+        // If WebSocket is closed, attempt to reconnect
+        initializeWebSocket();
       }
-    };
+    }, 2000);
+  };
 
-    // Connection state change handlers
-    peerConnection.current.oniceconnectionstatechange = () => {
-      //console.log("ICE Connection State:", peerConnection.current.iceConnectionState);
-    };
+  const cleanupConnection = () => {
+    if (peerConnection.current) {
+      peerConnection.current.close();
+      peerConnection.current = null;
+    }
 
-    peerConnection.current.onconnectionstatechange = () => {
-      //console.log("Connection State:", peerConnection.current.connectionState);
-    };
+    const remoteVideo = document.getElementById('remoteVideo');
+    if (remoteVideo && remoteVideo.srcObject) {
+      remoteVideo.srcObject.getTracks().forEach(track => track.stop());
+      remoteVideo.srcObject = null;
+    }
 
-    peerConnection.onicecandidateerror = (event) => {
-      console.error("ICE Candidate Error:", event);
-    };
+    const localVideo = document.getElementById('localVideo');
+    if (localVideo && localVideo.srcObject) {
+      localVideo.srcObject.getTracks().forEach(track => track.stop());
+      localVideo.srcObject = null;
+    }
+  };
+
+  const handleMediaError = (error) => {
+    console.error('Media error:', error);
+    setLoading(true);
+    
+    // Attempt to restart media connection
+    if (peerConnection.current && peerConnection.current.connectionState === 'connected') {
+      navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+        .then(stream => {
+          const localVideoElement = document.getElementById('localVideo');
+          if (localVideoElement) {
+            localVideoElement.srcObject = stream;
+            stream.getTracks().forEach(track => 
+              peerConnection.current.addTrack(track, stream)
+            );
+          }
+        })
+        .catch(error => {
+          console.error('Failed to get user media:', error);
+          handleConnectionFailure();
+        });
+    } else {
+      handleConnectionFailure();
+    }
   };
 
   const handleSocketMessage = async (event) => {
-    const message = JSON.parse(event.data);
-    
+    try {
+      const message = JSON.parse(event.data);
+      console.log('Received message type:', message.type);
 
-    switch (message.type) {
-      case 'matched':
-        setLoading(false)
-        
-        if (stateStore.current.peerConnectionState === "new" || stateStore.current.peerConnectionState === "stable") {
-          await handleMatched();
-        }
-        break;
+      switch (message.type) {
+        case 'matched':
+          setLoading(false);
+          if (stateStore.current.peerConnectionState === "new" || stateStore.current.peerConnectionState === "stable") {
+            await handleMatched();
+          }
+          break;
 
-      case 'offer':
-        if (stateStore.current.peerConnectionState === "stable" || stateStore.current.peerConnectionState === "have-local-offer") {
+        case 'offer':
+          if (!message.offer) {
+            console.error('Received offer message without offer data');
+            return;
+          }
           await handleOffer(message.offer);
-        }
-        break;
+          break;
 
-      case 'answer':
-        if (stateStore.current.peerConnectionState === "have-local-offer") {
+        case 'answer':
+          if (!message.answer) {
+            console.error('Received answer message without answer data');
+            return;
+          }
           await handleAnswer(message.answer);
-        }
-        break;
+          break;
 
-      case 'candidate':
-        
-        
-        
-          pendingCandidates.current.push(message.candidate);
-        
-        break;
-      
+        case 'ice-candidate':
+          if (!message.candidate) {
+            console.error('Received ice-candidate message without candidate data');
+            return;
+          }
+          if (peerConnection.current && peerConnection.current.remoteDescription) {
+            try {
+              await peerConnection.current.addIceCandidate(new RTCIceCandidate(message.candidate));
+            } catch (err) {
+              console.error('Error adding received ice candidate:', err);
+            }
+          } else {
+            pendingCandidates.current.push(message.candidate);
+          }
+          break;
 
-      case 'partnerDisconnected':
-        setPartnerLeft(true);
+        case 'waiting':
+          console.log('Waiting for match...');
+          setLoading(true);
+          break;
 
+        case 'partnerDisconnected':
+          setPartnerLeft(true);
+          break;
 
-      break;
-
-      default:
-        console.warn("Unknown message type:", message.type);
+        default:
+          console.warn('Unknown message type:', message.type);
+      }
+    } catch (error) {
+      console.error('Error handling socket message:', error);
     }
   };
 
   const handleMatched = async () => {
-    if (!peerConnection.current) initializePeerConnection();
+    try {
+      if (!peerConnection.current) initializePeerConnection();
 
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-    const localVideoElement = document.getElementById('localVideo');
-    localVideoElement.srcObject = stream;
+      console.log('Getting user media...');
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      console.log('Got local stream:', stream.getTracks().map(t => t.kind));
+      
+      const localVideoElement = document.getElementById('localVideo');
+      if (localVideoElement) {
+        localVideoElement.srcObject = stream;
+        console.log('Set local video source');
+      } else {
+        console.error('Local video element not found');
+      }
 
-    // Add tracks and create an offer
-    stream.getTracks().forEach(track => peerConnection.current.addTrack(track, stream));
-    const offer = await peerConnection.current.createOffer();
-    await peerConnection.current.setLocalDescription(offer);
-    stateStore.current.peerConnectionState = "have-local-offer";
+      // Add tracks and create an offer
+      stream.getTracks().forEach(track => {
+        console.log('Adding track to peer connection:', track.kind);
+        peerConnection.current.addTrack(track, stream);
+      });
 
-    socket.current.send(JSON.stringify({ type: 'offer', offer }));
+      console.log('Creating offer...');
+      const offer = await peerConnection.current.createOffer();
+      console.log('Setting local description...');
+      await peerConnection.current.setLocalDescription(offer);
+      stateStore.current.peerConnectionState = "have-local-offer";
+
+      console.log('Sending offer via WebSocket...');
+      socket.current.send(JSON.stringify({ type: 'offer', offer }));
+    } catch (error) {
+      console.error('Error in handleMatched:', error);
+      handleConnectionFailure();
+    }
   };
 
   const handleOffer = async (offer) => {
-    if (!peerConnection.current) initializePeerConnection();
+    try {
+      if (!peerConnection.current) initializePeerConnection();
 
-    await peerConnection.current.setRemoteDescription(new RTCSessionDescription(offer));
-    stateStore.current.remoteDescriptionSet = true;
+      // Check if we're in a valid state to set remote description
+      if (peerConnection.current.signalingState !== 'stable') {
+        console.warn('Peer connection not in stable state for setting remote offer:', peerConnection.current.signalingState);
+        return;
+      }
 
+      await peerConnection.current.setRemoteDescription(new RTCSessionDescription(offer));
+      stateStore.current.remoteDescriptionSet = true;
 
-    // Process buffered candidates
-    while (pendingCandidates.current.length > 0) {
-      //console.log("prcessing in OFFER", pendingCandidates.current )
-      const candidate = pendingCandidates.current.shift();
-      await peerConnection.current.addIceCandidate(new RTCIceCandidate(candidate));
+      // Process buffered candidates
+      while (pendingCandidates.current.length > 0) {
+        const candidate = pendingCandidates.current.shift();
+        if (peerConnection.current.remoteDescription) {
+          await peerConnection.current.addIceCandidate(new RTCIceCandidate(candidate));
+        }
+      }
+
+      const answer = await peerConnection.current.createAnswer();
+      await peerConnection.current.setLocalDescription(answer);
+      stateStore.current.peerConnectionState = "stable";
+
+      socket.current.send(JSON.stringify({ type: 'answer', answer }));
+    } catch (error) {
+      console.error('Error handling offer:', error);
+      handleConnectionFailure();
     }
-    peerConnection.onicecandidateerror = (event) => {
-      console.error('ICE Candidate Error in OFFER:', event);
-    };
-
-    const answer = await peerConnection.current.createAnswer();
-    await peerConnection.current.setLocalDescription(answer);
-    stateStore.current.peerConnectionState = "stable";
-
-    socket.current.send(JSON.stringify({ type: 'answer', answer }));
   };
 
   const handleAnswer = async (answer) => {
-    await peerConnection.current.setRemoteDescription(new RTCSessionDescription(answer));
-    stateStore.current.remoteDescriptionSet = true;
-
-    // Process buffered candidates
-    while (pendingCandidates.current.length > 0 && stateStore.current.remoteDescriptionSet) {
-      //console.log("prcessing in ANSWER", pendingCandidates.current )
-      try {
-        const candidate = pendingCandidates.current.shift();
-        await peerConnection.current.addIceCandidate(new RTCIceCandidate(candidate));
-        //console.log('Added ICE candidate:', candidate);
-      } catch (error) {
-        console.error('Error adding ICE candidate:', error);
+    try {
+      if (!peerConnection.current) {
+        console.error('No peer connection when trying to handle answer');
+        return;
       }
-    }
-    
 
-    stateStore.current.peerConnectionState = "stable";
+      // Only set remote description if we're in the right state
+      if (peerConnection.current.signalingState !== 'have-local-offer') {
+        console.warn('Peer connection not in correct state for setting remote answer:', peerConnection.current.signalingState);
+        return;
+      }
+
+      await peerConnection.current.setRemoteDescription(new RTCSessionDescription(answer));
+      stateStore.current.remoteDescriptionSet = true;
+
+      // Process buffered candidates
+      while (pendingCandidates.current.length > 0 && stateStore.current.remoteDescriptionSet) {
+        try {
+          const candidate = pendingCandidates.current.shift();
+          if (peerConnection.current.remoteDescription) {
+            await peerConnection.current.addIceCandidate(new RTCIceCandidate(candidate));
+          }
+        } catch (error) {
+          console.error('Error adding ICE candidate:', error);
+        }
+      }
+
+      stateStore.current.peerConnectionState = "stable";
+    } catch (error) {
+      console.error('Error handling answer:', error);
+      handleConnectionFailure();
+    }
   };
 
   const handleNext = () => {
