@@ -10,9 +10,9 @@ const getWebSocketUrl = () => {
   if (Platform.OS === 'web') {
     return process.env.NODE_ENV === 'development'
       ? 'ws://localhost:3000'
-      : 'wss://stream-ses0.onrender.com';
+      : 'https://blinddate.onrender.com';
   }
-  return 'wss://stream-ses0.onrender.com'; // Default to production URL for native
+  return 'https://blinddate.onrender.com'; // Default to production URL for native
 };
 
 const VideoChatScreen = () => {
